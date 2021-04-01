@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using aiof.asset.data;
 using aiof.asset.services;
 
-namespace aiof.asset.core.Controllers
+namespace aiof.asset.core
 {
     [Authorize]
     [ApiController]
@@ -43,6 +43,17 @@ namespace aiof.asset.core.Controllers
             [FromQuery] DateTime? snapshotsEndDate)
         {
             return Ok(await _repo.GetAsync(id, snapshotsStartDate, snapshotsEndDate));
+        }
+
+        /// <summary>
+        /// Get Asset types
+        /// </summary>
+        [HttpGet]
+        [Route("types")]
+        [ProducesResponseType(typeof(IEnumerable<IAssetType>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAssetTypesAsync()
+        {
+            return Ok(await _repo.GetTypesAsync());
         }
     }
 }

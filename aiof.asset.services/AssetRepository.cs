@@ -30,6 +30,17 @@ namespace aiof.asset.services
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
+        private IQueryable<AssetType> GetTypesQuery(bool asNoTracking = true)
+        {
+            var query = _context.AssetTypes
+                .AsQueryable();
+
+            return asNoTracking
+                ? query.AsNoTracking()
+                : query;
+        }
+
+
         private IQueryable<Asset> GetBaseQuery(bool asNoTracking = true)
         {
             var assetsQuery = _context.Assets
@@ -60,14 +71,11 @@ namespace aiof.asset.services
                 : assetsQuery;
         }
 
-        private IQueryable<AssetType> GetTypesQuery(bool asNoTracking = true)
+        public async Task<IEnumerable<IAssetType>> GetTypesAsync()
         {
-            var query = _context.AssetTypes
-                .AsQueryable();
-
-            return asNoTracking
-                ? query.AsNoTracking()
-                : query;
+            return await GetTypesQuery()
+                .OrderBy(x => x.Name)
+                .ToListAsync();
         }
 
         public async Task<IAsset> GetAsync(

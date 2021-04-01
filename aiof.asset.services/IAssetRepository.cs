@@ -10,6 +10,8 @@ namespace aiof.asset.services
 {
     public interface IAssetRepository
     {
+        Task<IEnumerable<IAssetType>> GetTypesAsync();
+
         Task<IAsset> GetAsync(
             int id,
             DateTime? snapshotsStartDate = null,
