@@ -16,6 +16,9 @@ namespace aiof.asset.data
         public virtual DbSet<AssetType> AssetTypes { get; set; }
         public virtual DbSet<AssetSnapshot> AssetSnapshots { get; set; }
 
+        public AssetContext(DbContextOptions<AssetContext> options)
+            : base(options)
+        { }
 
         public AssetContext(DbContextOptions<AssetContext> options, ITenant tenant)
             : base(options)
