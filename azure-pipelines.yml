@@ -1,0 +1,72 @@
+trigger:
+- main
+
+resources:
+- repo: self
+
+variables:
+  configuration: release
+  targetFramework: net5.0
+  sdkVersion: 5.0.100
+  projectFile: aiof.asset.core/aiof.asset.core.csproj
+  projectFileTest: aiof.asset.tests/aiof.asset.tests.csproj
+  tag: $(Build.BuildId)
+
+stages:
+- stage: Build
+  displayName: Build
+  jobs:  
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - task: UseDotNet@2
+      displayName: install .net5 sdk
+      inputs:
+        packageType: sdk
+        version: $(sdkVersion)
+
+    - task: DotNetCoreCLI@2
+      displayName: restore
+      inputs:
+        command: restore
+        projects: $(projectFile)
+
+    - task: DotNetCoreCLI@2
+      displayName: build
+      inputs:
+        command: build
+        projects: $(projectFile)
+        arguments: -c $(configuration) -f $(targetFramework)
+
+    - task: DotNetCoreCLI@2
+      displayName: test
+      inputs:
+        command: test
+        projects: $(projectFileTest)
+        arguments: -c $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/coverage.cobertura.xml
+        publishTestResults: true
+
+    - task: PublishCodeCoverageResults@1
+      displayName: publish test code coverage
+      inputs:
+        codeCoverageTool: Cobertura
+        summaryFileLocation: $(Build.SourcesDirectory)/TestResults/Coverage/coverage.cobertura.xml
+
+    - task: DotNetCoreCLI@2
+      displayName: publish
+      inputs:
+        command: publish
+        arguments: -c $(configuration) -o app/publish -f $(targetFramework)
+        zipAfterPublish: false
+
+    - task: Docker@2
+      displayName: docker build and push
+      inputs:
+        containerRegistry: gkama-docker-cr
+        repository: gkama/aiof-asset
+        command: buildAndPush
+        Dockerfile: $(Build.SourcesDirectory)/Dockerfile
+        tags: |
+          latest

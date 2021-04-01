@@ -64,6 +64,8 @@ namespace aiof.asset.core
                 app.UseCors(x => x.WithOrigins(_config[Keys.CorsPortal]).AllowAnyHeader().AllowAnyMethod());
             }
 
+            app.UseAssetExceptionMiddleware();
+            app.UseAssetUnauthorizedMiddleware();
             app.UseHealthChecks("/health");
             app.UseSwagger();
 

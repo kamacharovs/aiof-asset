@@ -75,5 +75,15 @@ namespace aiof.asset.core
 
             return services;
         }
+
+        public static IApplicationBuilder UseAssetExceptionMiddleware(this IApplicationBuilder builder)
+        {
+            return builder.UseMiddleware<AssetExceptionMiddleware>();
+        }
+
+        public static IApplicationBuilder UseAssetUnauthorizedMiddleware(this IApplicationBuilder builder)
+        {
+            return builder.UseMiddleware<AssetUnauthorizedMiddleware>();
+        }
     }
 }
