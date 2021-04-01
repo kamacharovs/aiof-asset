@@ -167,5 +167,19 @@ namespace aiof.asset.services
 
             return asset;
         }
+
+        public async Task DeleteAsync(int id)
+        {
+            var asset = await GetAsync(id) as Asset;
+
+            asset.IsDeleted = true;
+
+            _context.Assets.Update(asset);
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation("{Tenant} | Soft Deleted Asset with Id={AssetId}",
+                _context.Tenant.Log,
+                id);
+        }
     }
 }

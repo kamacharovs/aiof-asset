@@ -25,5 +25,7 @@ namespace aiof.asset.services
         Task<IAsset> UpdateAsync(
             int id,
             AssetDto dto);
+
+        Task DeleteAsync(int id);
     }
 }

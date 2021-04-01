@@ -92,5 +92,19 @@ namespace aiof.asset.core
         {
             return Ok(await _repo.UpdateAsync(id, dto));
         }
+
+        /// <summary>
+        /// Delete Asset
+        /// </summary>
+        [HttpDelete]
+        [Route("{id}")]
+        [ProducesResponseType(typeof(IAssetProblemDetail), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> DeleteAsync([FromRoute, Required] int id)
+        {
+            await _repo.DeleteAsync(id);
+
+            return Ok();
+        }
     }
 }
