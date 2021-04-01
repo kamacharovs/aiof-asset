@@ -12,11 +12,8 @@ namespace aiof.asset.services
     {
         Task<IAsset> GetAsync(
             int id,
-            bool asNoTracking = true);
-        Task<IAsset> GetWithSnapshotsAsync(
-            int id,
-            DateTime? snapshotStartDate = null,
-            DateTime? snapshotEndDate = null,
+            DateTime? snapshotsStartDate = null,
+            DateTime? snapshotsEndDate = null,
             bool asNoTracking = true);
     }
 }

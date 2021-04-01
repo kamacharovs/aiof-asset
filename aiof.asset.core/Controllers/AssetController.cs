@@ -30,11 +30,19 @@ namespace aiof.asset.core.Controllers
             _repo = repo ?? throw new ArgumentNullException(nameof(repo));
         }
 
+        /// <summary>
+        /// Get Asset by id
+        /// </summary>
         [HttpGet]
         [Route("{id}")]
-        public async Task<IActionResult> GetAsync([FromRoute, Required] int id)
+        [ProducesResponseType(typeof(IAssetProblemDetail), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(IAsset), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAsync(
+            [FromRoute, Required] int id,
+            [FromQuery] DateTime? snapshotsStartDate,
+            [FromQuery] DateTime? snapshotsEndDate)
         {
-            return Ok(await _repo.GetAsync(id));
+            return Ok(await _repo.GetAsync(id, snapshotsStartDate, snapshotsEndDate));
         }
     }
 }

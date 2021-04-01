@@ -41,17 +41,17 @@ namespace aiof.asset.services
         }
 
         private IQueryable<Asset> GetQuery(
-            DateTime? snapshotStartDate = null,
-            DateTime? snapshotEndDate = null,
+            DateTime? snapshotsStartDate = null,
+            DateTime? snapshotsEndDate = null,
             bool asNoTracking = true)
         {
-            snapshotStartDate = snapshotStartDate ?? DateTime.UtcNow.AddMonths(-6);
-            snapshotEndDate = snapshotEndDate ?? DateTime.UtcNow;
+            snapshotsStartDate = snapshotsStartDate ?? DateTime.UtcNow.AddMonths(-6);
+            snapshotsEndDate = snapshotsEndDate ?? DateTime.UtcNow;
 
             var assetsQuery = _context.Assets
                 .Include(x => x.Type)
                 .Include(x => x.Snapshots
-                    .Where(x => x.Created > snapshotStartDate && x.Created <= snapshotEndDate)
+                    .Where(x => x.Created > snapshotsStartDate && x.Created <= snapshotsEndDate)
                     .OrderByDescending(x => x.Created))
                 .AsQueryable();
 
@@ -72,23 +72,13 @@ namespace aiof.asset.services
 
         public async Task<IAsset> GetAsync(
             int id,
+            DateTime? snapshotsStartDate = null,
+            DateTime? snapshotsEndDate = null,
             bool asNoTracking = true)
         {
-            return await GetBaseQuery(asNoTracking)
+            return await GetQuery(snapshotsStartDate, snapshotsEndDate, asNoTracking)
                 .FirstOrDefaultAsync(x => x.Id == id)
                 ?? throw new AssetNotFoundException($"Asset with Id={id} was not found");
         }
-
-        public async Task<IAsset> GetWithSnapshotsAsync(
-            int id,
-            DateTime? snapshotStartDate = null,
-            DateTime? snapshotEndDate = null,
-            bool asNoTracking = true)
-        {
-            return await GetQuery(snapshotStartDate, snapshotEndDate, asNoTracking)
-                .FirstOrDefaultAsync(x => x.Id == id)
-                ?? throw new AssetNotFoundException($"Asset with Id={id} was not found");
-        }
-
     }
 }
