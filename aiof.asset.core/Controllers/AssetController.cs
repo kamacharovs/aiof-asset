@@ -51,7 +51,7 @@ namespace aiof.asset.core
         [HttpGet]
         [Route("types")]
         [ProducesResponseType(typeof(IEnumerable<IAssetType>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAssetTypesAsync()
+        public async Task<IActionResult> GetTypesAsync()
         {
             return Ok(await _repo.GetTypesAsync());
         }
@@ -62,7 +62,7 @@ namespace aiof.asset.core
         [HttpPost]
         [ProducesResponseType(typeof(IAssetProblemDetail), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(IAsset), StatusCodes.Status201Created)]
-        public async Task<IActionResult> AddAssetAsync([FromBody] AssetDto dto)
+        public async Task<IActionResult> AddAsync([FromBody, Required] AssetDto dto)
         {
             return Created(nameof(Asset), await _repo.AddAsync(dto));
         }
@@ -74,9 +74,23 @@ namespace aiof.asset.core
         [Route("snapshot")]
         [ProducesResponseType(typeof(IAssetProblemDetail), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(IAssetSnapshot), StatusCodes.Status201Created)]
-        public async Task<IActionResult> AddAssetSnapshotAsync([FromBody] AssetSnapshotDto dto)
+        public async Task<IActionResult> AddSnapshotAsync([FromBody, Required] AssetSnapshotDto dto)
         {
             return Created(nameof(AssetSnapshot), await _repo.AddSnapshotAsync(dto));
+        }
+
+        /// <summary>
+        /// Update Asset
+        /// </summary>
+        [HttpPut]
+        [Route("{id}")]
+        [ProducesResponseType(typeof(IAssetProblemDetail), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IAssetSnapshot), StatusCodes.Status200OK)]
+        public async Task<IActionResult> UpdateAsync(
+            [FromRoute, Required] int id,
+            [FromBody, Required] AssetDto dto)
+        {
+            return Ok(await _repo.UpdateAsync(id, dto));
         }
     }
 }

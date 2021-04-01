@@ -20,17 +20,18 @@ namespace aiof.asset.data
                 .NotNull();
 
             RuleFor(x => x.Name)
-                .NotNull()
-                .NotEmpty();
+                .NotEmpty()
+                .When(x => x.Name != null);
 
             RuleFor(x => x.TypeName)
-                .NotNull()
-                .NotEmpty();
+                .NotEmpty()
+                .When(x => x.Name != null);
 
             RuleFor(x => x.Value)
                 .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
                 .LessThan(CommonValidator.MaximumValue)
-                .WithMessage(CommonValidator.ValueMessage);
+                .WithMessage(CommonValidator.ValueMessage)
+                .When(x => x.Value.HasValue);
         }
     }
 

@@ -21,5 +21,9 @@ namespace aiof.asset.services
         Task<IAsset> AddAsync(AssetDto dto);
 
         Task<IAssetSnapshot> AddSnapshotAsync(AssetSnapshotDto dto);
+
+        Task<IAsset> UpdateAsync(
+            int id,
+            AssetDto dto);
     }
 }

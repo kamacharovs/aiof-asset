@@ -108,10 +108,11 @@ namespace aiof.asset.services
             await _context.SaveChangesAsync();
 
             // Create snapshot entry
-            var snapshot = _mapper.Map<AssetSnapshot>(asset);
+            var snapshotDto = _mapper.Map<AssetSnapshotDto>(dto);
 
-            await _context.AssetSnapshots.AddAsync(snapshot);
-            await _context.SaveChangesAsync();
+            snapshotDto.AssetId = asset.Id;
+
+            await AddSnapshotAsync(snapshotDto);
 
             _logger.LogInformation("{Tenant} | Created Asset with Id={AssetId}, PublicKey={AssetPublicKey} and UserId={AssetUserId}",
                 _context.Tenant.Log,
@@ -136,6 +137,35 @@ namespace aiof.asset.services
                 snapshot.AssetId);
 
             return snapshot;
+        }
+
+        public async Task<IAsset> UpdateAsync(
+            int id,
+            AssetDto dto)
+        {
+            await _dtoValidator.ValidateAndThrowAsync(dto);
+
+            var asset = await GetAsync(id, asNoTracking: false) as Asset;
+
+            asset = _mapper.Map(dto, asset);
+
+            _context.Assets.Update(asset);
+            await _context.SaveChangesAsync();
+
+            // Create snapshot entry
+            var snapshotDto = _mapper.Map<AssetSnapshotDto>(dto);
+
+            snapshotDto.AssetId = asset.Id;
+
+            await AddSnapshotAsync(snapshotDto);
+
+            _logger.LogInformation("{Tenant} | Updated Asset with Id={AssetId}, PublicKey={AssetPublicKey} and UserId={AssetUserId}",
+                _context.Tenant.Log,
+                asset.Id,
+                asset.PublicKey,
+                asset.UserId);
+
+            return asset;
         }
     }
 }
