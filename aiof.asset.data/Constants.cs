@@ -43,5 +43,19 @@ namespace aiof.asset.data
         public const string OpenApiContactUrl = nameof(OpenApi) + ":" + nameof(Contact) + ":" + nameof(Url);
         public const string OpenApiLicenseName = nameof(OpenApi) + ":" + nameof(License) + ":" + nameof(Name);
         public const string OpenApiLicenseUrl = nameof(OpenApi) + ":" + nameof(License) + ":" + nameof(Url);
+
+        public static class Claim
+        {
+            public const string UserId = "user_id";
+            public const string ClientId = "client_id";
+            public const string PublicKey = "public_key";
+        }
+
+        public static class Entity
+        {
+            public static string Asset = nameof(data.Asset).ToSnakeCase();
+            public static string AssetType = nameof(data.AssetType).ToSnakeCase();
+            public static string AssetSnapshot = nameof(data.AssetSnapshot).ToSnakeCase();
+        }
     }
 }
