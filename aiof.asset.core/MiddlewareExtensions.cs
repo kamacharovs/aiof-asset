@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
 
+using FluentValidation;
+
 using aiof.asset.data;
 
 namespace aiof.asset.core
@@ -72,6 +74,8 @@ namespace aiof.asset.core
 
         public static IServiceCollection AddAssetFluentValidators(this IServiceCollection services)
         {
+            services.AddSingleton<AbstractValidator<AssetDto>, AssetDtoValidator>()
+                .AddSingleton<AbstractValidator<AssetSnapshotDto>, AssetSnapshotDtoValidator>();
 
             return services;
         }

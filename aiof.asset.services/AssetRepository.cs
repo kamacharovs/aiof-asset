@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 using AutoMapper;
+using FluentValidation;
 
 using aiof.asset.data;
 
@@ -19,15 +20,21 @@ namespace aiof.asset.services
         private readonly ILogger<AssetRepository> _logger;
         private readonly IMapper _mapper;
         private readonly AssetContext _context;
+        private readonly AbstractValidator<AssetDto> _dtoValidator;
+        private readonly AbstractValidator<AssetSnapshotDto> _snapshotDtoValidator;
 
         public AssetRepository(
             ILogger<AssetRepository> logger,
             IMapper mapper,
-            AssetContext context)
+            AssetContext context,
+            AbstractValidator<AssetDto> dtoValidator,
+            AbstractValidator<AssetSnapshotDto> snapshotDtoValidator)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _context = context ?? throw new ArgumentNullException(nameof(context));
+            _dtoValidator = dtoValidator ?? throw new ArgumentNullException(nameof(dtoValidator));
+            _snapshotDtoValidator = snapshotDtoValidator ?? throw new ArgumentNullException(nameof(snapshotDtoValidator));
         }
 
         private IQueryable<AssetType> GetTypesQuery(bool asNoTracking = true)
@@ -87,6 +94,48 @@ namespace aiof.asset.services
             return await GetQuery(snapshotsStartDate, snapshotsEndDate, asNoTracking)
                 .FirstOrDefaultAsync(x => x.Id == id)
                 ?? throw new AssetNotFoundException($"Asset with Id={id} was not found");
+        }
+
+        public async Task<IAsset> AddAsync(AssetDto dto)
+        {
+            await _dtoValidator.ValidateAndThrowAsync(dto);
+
+            var asset = _mapper.Map<Asset>(dto);
+
+            asset.UserId = _context.Tenant.UserId;
+
+            await _context.Assets.AddAsync(asset);
+            await _context.SaveChangesAsync();
+
+            // Create snapshot entry
+            var snapshot = _mapper.Map<AssetSnapshot>(asset);
+
+            await _context.AssetSnapshots.AddAsync(snapshot);
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation("{Tenant} | Created Asset with Id={AssetId}, PublicKey={AssetPublicKey} and UserId={AssetUserId}",
+                _context.Tenant.Log,
+                asset.Id,
+                asset.PublicKey,
+                asset.UserId);
+
+            return asset;
+        }
+
+        public async Task<IAssetSnapshot> AddSnapshotAsync(AssetSnapshotDto dto)
+        {
+            await _snapshotDtoValidator.ValidateAndThrowAsync(dto);
+
+            var snapshot = _mapper.Map<AssetSnapshot>(dto);
+
+            await _context.AssetSnapshots.AddAsync(snapshot);
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation("{Tenant} | Created AssetSnapshot for AssetId={AssetId}",
+                _context.Tenant.Log,
+                snapshot.AssetId);
+
+            return snapshot;
         }
     }
 }

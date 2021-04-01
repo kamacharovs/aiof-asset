@@ -55,5 +55,28 @@ namespace aiof.asset.core
         {
             return Ok(await _repo.GetTypesAsync());
         }
+
+        /// <summary>
+        /// Add Asset
+        /// </summary>
+        [HttpPost]
+        [ProducesResponseType(typeof(IAssetProblemDetail), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IAsset), StatusCodes.Status201Created)]
+        public async Task<IActionResult> AddAssetAsync([FromBody] AssetDto dto)
+        {
+            return Created(nameof(Asset), await _repo.AddAsync(dto));
+        }
+
+        /// <summary>
+        /// Add Asset snapshot
+        /// </summary>
+        [HttpPost]
+        [Route("snapshot")]
+        [ProducesResponseType(typeof(IAssetProblemDetail), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IAssetSnapshot), StatusCodes.Status201Created)]
+        public async Task<IActionResult> AddAssetSnapshotAsync([FromBody] AssetSnapshotDto dto)
+        {
+            return Created(nameof(AssetSnapshot), await _repo.AddSnapshotAsync(dto));
+        }
     }
 }
