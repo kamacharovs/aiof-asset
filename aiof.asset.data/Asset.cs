@@ -30,6 +30,9 @@ namespace aiof.asset.data
         [JsonIgnore]
         public int UserId { get; set; }
 
+        [Required]
+        public DateTime Created { get; set; } = DateTime.UtcNow;
+
         [JsonIgnore]
         public bool IsDeleted { get; set; } = false;
 

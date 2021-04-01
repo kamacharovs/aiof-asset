@@ -5,6 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+    <PackageReference Include="FluentValidation" Version="9.5.3" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.17.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.4" />
@@ -15,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\aiof.asset.data\aiof.asset.data.csproj" />
+    <ProjectReference Include="..\aiof.asset.services\aiof.asset.services.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

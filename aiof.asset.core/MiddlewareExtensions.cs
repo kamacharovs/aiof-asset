@@ -18,7 +18,7 @@ namespace aiof.asset.core
 {
     public static partial class MiddlewareExtensions
     {
-        public static IServiceCollection AddAiofAuthentication(this IServiceCollection services)
+        public static IServiceCollection AddAssetAuthentication(this IServiceCollection services)
         {
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(
@@ -43,7 +43,7 @@ namespace aiof.asset.core
             return services;
         }
 
-        public static IServiceCollection AddAiofSwaggerGen(this IServiceCollection services)
+        public static IServiceCollection AddAssetSwaggerGen(this IServiceCollection services)
         {
             services.AddSwaggerGen(x =>
             {
@@ -66,6 +66,12 @@ namespace aiof.asset.core
                 });
                 x.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
             });
+
+            return services;
+        }
+
+        public static IServiceCollection AddAssetFluentValidators(this IServiceCollection services)
+        {
 
             return services;
         }

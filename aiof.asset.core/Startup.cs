@@ -6,16 +6,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Diagnostics.CodeAnalysis;
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.FeatureManagement;
 
 using aiof.asset.data;
+using aiof.asset.services;
 
 namespace aiof.asset.core
 {
@@ -31,18 +31,22 @@ namespace aiof.asset.core
             _env = env ?? throw new ArgumentNullException(nameof(env));
         }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddDbContext<AiofContext>(o => o.UseNpgsql(_config[Keys.DataPostgreSQL], o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
+            services.AddScoped<IAssetRepository, AssetRepository>()
+                .AddScoped<ITenant, Tenant>()
+                .AddAutoMapper(typeof(AutoMappingProfile).Assembly);
+
+            services.AddDbContext<AssetContext>(o => o.UseNpgsql(_config[Keys.DataPostgreSQL], o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
 
             services.AddHealthChecks();
             services.AddFeatureManagement();
             services.AddLogging()
                 .AddHttpContextAccessor()
                 .AddApplicationInsightsTelemetry()
-                .AddAiofAuthentication()
-                .AddAiofSwaggerGen();
+                .AddAssetAuthentication()
+                .AddAssetSwaggerGen()
+                .AddAssetFluentValidators();
 
             services.AddControllers()
                 .AddJsonOptions(o =>
@@ -53,7 +57,6 @@ namespace aiof.asset.core
                 });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app)
         {
             if (_env.IsDevelopment())

@@ -42,6 +42,7 @@ namespace aiof.asset.data
                 e.Property(x => x.TypeName).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
                 e.Property(x => x.Value).HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.UserId).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.Created).HasColumnType("timestamp").HasSnakeCaseColumnName().IsRequired();
                 e.Property(x => x.IsDeleted).HasSnakeCaseColumnName().IsRequired();
 
                 e.HasOne(x => x.Type)

@@ -30,6 +30,9 @@ namespace aiof.asset.data
         [JsonIgnore]
         int UserId { get; set; }
 
+        [Required]
+        DateTime Created { get; set; }
+
         [JsonIgnore]
         public bool IsDeleted { get; set; }
 

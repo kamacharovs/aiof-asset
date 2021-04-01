@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "aiof.asset.core", "aiof.ass
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aiof.asset.data", "aiof.asset.data\aiof.asset.data.csproj", "{D8C68F9C-A921-495D-A051-D20FDAD52558}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aiof.asset.services", "aiof.asset.services\aiof.asset.services.csproj", "{3A6850F2-E1DE-449D-AA94-07E7916C7911}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aiof.asset.tests", "aiof.asset.tests\aiof.asset.tests.csproj", "{AC3615A7-5370-4665-B4AF-A831F7DFFB45}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{D8C68F9C-A921-495D-A051-D20FDAD52558}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D8C68F9C-A921-495D-A051-D20FDAD52558}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D8C68F9C-A921-495D-A051-D20FDAD52558}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A6850F2-E1DE-449D-AA94-07E7916C7911}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A6850F2-E1DE-449D-AA94-07E7916C7911}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A6850F2-E1DE-449D-AA94-07E7916C7911}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A6850F2-E1DE-449D-AA94-07E7916C7911}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC3615A7-5370-4665-B4AF-A831F7DFFB45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC3615A7-5370-4665-B4AF-A831F7DFFB45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC3615A7-5370-4665-B4AF-A831F7DFFB45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC3615A7-5370-4665-B4AF-A831F7DFFB45}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
