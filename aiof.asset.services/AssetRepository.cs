@@ -47,7 +47,6 @@ namespace aiof.asset.services
                 : query;
         }
 
-
         private IQueryable<Asset> GetBaseQuery(bool asNoTracking = true)
         {
             var assetsQuery = _context.Assets

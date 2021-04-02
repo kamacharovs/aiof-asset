@@ -45,7 +45,19 @@ namespace aiof.asset.tests
             Assert.NotEqual(0, asset.UserId);
             Assert.NotEqual(new DateTime(), asset.Created);
             Assert.False(asset.IsDeleted);
-            Assert.NotNull(asset.Snapshots);
+
+            var snapshots = asset.Snapshots;
+            var snapshot = snapshots?.FirstOrDefault();
+
+            if (snapshot is not null)
+            {
+                Assert.NotNull(snapshots);
+                Assert.NotEqual(0, snapshot.Id);
+                Assert.NotEqual(Guid.Empty, snapshot.PublicKey);
+                Assert.NotEqual(0, snapshot.AssetId);
+                Assert.True(snapshot.Name != null || snapshot.TypeName != null || snapshot.Value != null);
+                Assert.NotEqual(new DateTime(), snapshot.Created);
+            }
         }
 
         [Theory]
@@ -59,6 +71,32 @@ namespace aiof.asset.tests
             Assert.NotNull(exception);
             Assert.Equal(404, exception.StatusCode);
             Assert.Contains("not found", exception.Message, StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.AssetsIdUserId), MemberType = typeof(Helper))]
+        public async Task GetAsync_WithRandomSnapshotsStartEndDates_IsSuccessful(int id, int userId)
+        {
+            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
+            var snapshotsStartDate = Helper.RandomStartDate();
+            var snapshotsEndDate = Helper.RandomEndDate(snapshotsStartDate);
+
+            var asset = await repo.GetAsync(id, snapshotsStartDate, snapshotsEndDate);
+
+            Assert.NotNull(asset);
+
+            var snapshots = asset.Snapshots;
+            var snapshot = snapshots?.FirstOrDefault();
+
+            if (snapshot is not null)
+            {
+                Assert.NotNull(snapshots);
+                Assert.NotEqual(0, snapshot.Id);
+                Assert.NotEqual(Guid.Empty, snapshot.PublicKey);
+                Assert.NotEqual(0, snapshot.AssetId);
+                Assert.True(snapshot.Name != null || snapshot.TypeName != null || snapshot.Value != null);
+                Assert.NotEqual(new DateTime(), snapshot.Created);
+            }
         }
 
         [Theory]

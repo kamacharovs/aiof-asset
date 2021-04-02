@@ -145,6 +145,32 @@ namespace aiof.asset.tests
                 .RuleFor(x => x.TypeName, f => f.Random.ListItem(validAssetTypes))
                 .RuleFor(x => x.Value, f => f.Random.Int(1000, 10000));
         }
+
+        public static DateTime RandomStartDate()
+        {
+            var randomDays = new Faker()
+                .Random
+                .Int(5, 365);
+
+            return DateTime.UtcNow.AddDays(-randomDays);
+        }
+        public static DateTime RandomEndDate(DateTime? startDate)
+        {
+            var endDate = new DateTime();
+
+            if (startDate != null)
+                endDate = DateTime.UtcNow.AddDays(-startDate.Value.Day);
+            else
+            {
+                var randomDays = new Faker()
+                    .Random
+                    .Int(5, 365);
+
+                endDate = DateTime.UtcNow.AddDays(-randomDays);
+            }
+
+            return endDate;
+        }
         #endregion
     }
 }
