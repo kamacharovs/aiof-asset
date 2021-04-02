@@ -47,25 +47,23 @@ stages:
         arguments: -c $(buildConfiguration)
         publishTestResults: true
 
+    - task: CopyFiles@2
+      displayName: copy dockerfile
+      inputs:
+        sourceFolder: $(System.DefaultWorkingDirectory)
+        contents: Dockerfile
+        targetFolder: app/publish
+
     - task: DotNetCoreCLI@2
       displayName: publish
       inputs:
         command: publish
         arguments: -c $(configuration) -o app/publish -f $(targetFramework)
-        zipAfterPublish: false
-
-    - task: ArchiveFiles@2
-      displayName: archive
-      inputs:
-        rootFolderOrFile: $(System.DefaultWorkingDirectory)
-        includeRootFolder: true
-        archiveType: 'zip'
-        archiveFile: $(Build.ArtifactStagingDirectory)/aiof-asset-$(Build.BuildId).zip
-        replaceExistingArchive: true
+        zipAfterPublish: true
 
     - task: PublishBuildArtifacts@1
       displayName: publish artifacts
       inputs:
-        pathtoPublish: $(Build.ArtifactStagingDirectory)/aiof-asset-$(Build.BuildId).zip
+        pathtoPublish: app/publish
         artifactName: aiof-asset
         publishLocation: Container
