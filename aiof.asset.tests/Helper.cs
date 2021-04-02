@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using AutoMapper;
 using FluentValidation;
 using Moq;
+using Bogus;
 
 using aiof.asset.data;
 using aiof.asset.services;
@@ -76,6 +77,8 @@ namespace aiof.asset.tests
         public static FakeDataManager _Fake
             => new ServiceHelper().GetRequiredService<FakeDataManager>() ?? throw new ArgumentNullException(nameof(FakeDataManager));
 
+        public static int GeneratedAmount = 3;
+
         public static IEnumerable<object[]> AssetsIdUserId()
         {
             return _Fake.GetFakeAssetsData(
@@ -93,6 +96,54 @@ namespace aiof.asset.tests
         {
             return _Fake.GetFakeAssetsData(
                 userId: true);
+        }
+
+        public static AssetDto RandomAssetDto()
+        {
+            return FakerAssetDto().Generate();
+        }
+        public static List<AssetDto> RandomAssetDtos(int? n = null)
+        {
+            return FakerAssetDto().Generate(n ?? GeneratedAmount);
+        }
+        private static Faker<AssetDto> FakerAssetDto()
+        {
+            var validAssetTypes = _Fake.GetFakeAssetTypes()
+                .Select(x => x.Name)
+                .Distinct()
+                .ToList();
+
+            return new Faker<AssetDto>()
+                .RuleFor(x => x.Name, f => f.Random.String2(10))
+                .RuleFor(x => x.TypeName, f => f.Random.ListItem(validAssetTypes))
+                .RuleFor(x => x.Value, f => f.Random.Int(1000, 10000));
+        }
+
+        public static AssetSnapshotDto RandomAssetSnapshotDto()
+        {
+            return FakerAssetSnapshotDto().Generate();
+        }
+        public static List<AssetSnapshotDto> RandomAssetSnapshotDtos(int? n = null)
+        {
+            return FakerAssetSnapshotDto().Generate(n ?? GeneratedAmount);
+        }
+        private static Faker<AssetSnapshotDto> FakerAssetSnapshotDto()
+        {
+            var validAssetIds = _Fake.GetFakeAssetSnapshots()
+                .Select(x => x.AssetId)
+                .Distinct()
+                .ToList();
+
+            var validAssetTypes = _Fake.GetFakeAssetTypes()
+                .Select(x => x.Name)
+                .Distinct()
+                .ToList();
+
+            return new Faker<AssetSnapshotDto>()
+                .RuleFor(x => x.AssetId, f => f.Random.ListItem(validAssetIds))
+                .RuleFor(x => x.Name, f => f.Random.String2(10))
+                .RuleFor(x => x.TypeName, f => f.Random.ListItem(validAssetTypes))
+                .RuleFor(x => x.Value, f => f.Random.Int(1000, 10000));
         }
         #endregion
     }
