@@ -41,6 +41,13 @@ stages:
         arguments: -c $(configuration) -f $(targetFramework)
 
     - task: DotNetCoreCLI@2
+      displayName: create migration
+      inputs:
+        command: custom
+        custom: ef
+        arguments: migrations script -i -o migration.sql
+
+    - task: DotNetCoreCLI@2
       displayName: test
       inputs:
         command: test
