@@ -9,6 +9,7 @@ variables:
   targetFramework: net5.0
   sdkVersion: 5.0.100
   projectFile: aiof.asset.core/aiof.asset.core.csproj
+  projectDataFile: aiof.asset.data/aiof.asset.data.csproj
   projectFileTest: aiof.asset.tests/aiof.asset.tests.csproj
   tag: $(Build.BuildId)
 
@@ -52,7 +53,7 @@ stages:
       inputs:
         command: custom
         custom: ef
-        arguments: migrations script -i -o migration.sql
+        arguments: migrations script -s $(projectFile) -p $(projectDataFile) -i -o migration.sql
 
     - task: DotNetCoreCLI@2
       displayName: test
