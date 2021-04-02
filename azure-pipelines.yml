@@ -61,8 +61,16 @@ stages:
         arguments: -c $(configuration) -o app/publish -f $(targetFramework)
         zipAfterPublish: false
 
-    - task: PublishBuildArtifacts@1
+    - task: CopyFiles@2
+      displayName: copy files
       inputs:
-        PathtoPublish: $(Build.ArtifactStagingDirectory)
-        ArtifactName: aiof-asset
+        sourceFolder: $(agent.builddirectory)
+        contents: '**'
+        targetFolder: $(Build.ArtifactStagingDirectory)
+
+    - task: PublishBuildArtifacts@1
+      displayName: publish artifacts
+      inputs:
+        pathtoPublish: $(Build.ArtifactStagingDirectory)
+        artifactName: aiof-asset
         publishLocation: Container
