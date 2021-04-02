@@ -29,6 +29,7 @@ namespace aiof.asset.tests
             Assert.NotEqual(0, asset.UserId);
             Assert.NotEqual(new DateTime(), asset.Created);
             Assert.False(asset.IsDeleted);
+            Assert.NotNull(asset.Snapshots);
         }
     }
 }
