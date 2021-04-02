@@ -60,4 +60,9 @@ stages:
         command: publish
         arguments: -c $(configuration) -o app/publish -f $(targetFramework)
         zipAfterPublish: false
-        
+
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: $(Build.ArtifactStagingDirectory)
+        ArtifactName: aiof-asset
+        publishLocation: Container
