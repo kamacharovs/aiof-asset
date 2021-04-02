@@ -27,6 +27,8 @@ namespace aiof.asset.data
 
             _context.AssetSnapshots
                 .AddRange(GetFakeAssetSnapshots());
+
+            _context.SaveChanges();
         }
 
         public IEnumerable<AssetType> GetFakeAssetTypes()
@@ -142,6 +144,76 @@ namespace aiof.asset.data
                     Created = DateTime.UtcNow
                 }
             };
-       }
+        }
+
+        public IEnumerable<object[]> GetFakeAssetsData(
+            bool id = false,
+            bool typeName = false,
+            bool userId = false,
+            bool isDeleted = false)
+        {
+            var fakeAssets = GetFakeAssets()
+                .Where(x => x.IsDeleted == isDeleted)
+                .ToArray();
+
+            var toReturn = new List<object[]>();
+
+            if (id
+                && userId)
+            {
+                foreach (var fakeAsset in fakeAssets)
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakeAsset.Id,
+                        fakeAsset.UserId
+                    });
+                }
+            }
+            else if (typeName
+                && userId)
+            {
+                foreach (var fakeAsset in fakeAssets)
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakeAsset.TypeName,
+                        fakeAsset.UserId
+                    });
+                }
+            }
+            else if (id)
+            {
+                foreach (var fakeAssetId in fakeAssets.Select(x => x.Id))
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakeAssetId
+                    });
+                }
+            }
+            else if (typeName)
+            {
+                foreach (var fakeAssetTypeName in fakeAssets.Select(x => x.TypeName).Distinct())
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakeAssetTypeName
+                    });
+                }
+            }
+            else if (userId)
+            {
+                foreach (var fakeAssetUserId in fakeAssets.Select(x => x.UserId).Distinct())
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakeAssetUserId
+                    });
+                }
+            }
+
+            return toReturn;
+        }
     }
 }
