@@ -10,7 +10,6 @@ variables:
   sdkVersion: 5.0.100
   projectFile: aiof.asset.core/aiof.asset.core.csproj
   projectFileTest: aiof.asset.tests/aiof.asset.tests.csproj
-  tag: $(Build.BuildId)
 
 stages:
 - stage: Build
@@ -56,16 +55,17 @@ stages:
         zipAfterPublish: false
 
     - task: ArchiveFiles@2
+      displayName: archive
       inputs:
-        rootFolderOrFile: $(Build.BinariesDirectory)
-        includeRootFolder: false
-        archiveType: zip
+        rootFolderOrFile: $(System.DefaultWorkingDirectory)
+        includeRootFolder: true
+        archiveType: 'zip'
         archiveFile: $(Build.ArtifactStagingDirectory)/aiof-asset-$(Build.BuildId).zip
         replaceExistingArchive: true
 
     - task: PublishBuildArtifacts@1
       displayName: publish artifacts
       inputs:
-        pathtoPublish: $(Build.ArtifactStagingDirectory)
+        pathtoPublish: $(Build.ArtifactStagingDirectory)/aiof-asset-$(Build.BuildId).zip
         artifactName: aiof-asset
         publishLocation: Container
