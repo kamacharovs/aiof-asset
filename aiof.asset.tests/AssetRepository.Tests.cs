@@ -191,5 +191,37 @@ namespace aiof.asset.tests
             Assert.NotNull(exception);
             Assert.Equal(nameof(AssetDto.Value), exception.Errors.First().PropertyName);
         }
+
+        [Theory]
+        [MemberData(nameof(Helper.AssetsIdUserId), MemberType = typeof(Helper))]
+        public async Task AddSnapshotAsync_IsSuccessful(int id, int userId)
+        {
+            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
+
+            var dto = Helper.RandomAssetSnapshotDto(id);
+            var snapshot = await repo.AddSnapshotAsync(dto);
+
+            Assert.NotNull(snapshot);
+            Assert.NotEqual(0, snapshot.Id);
+            Assert.NotEqual(Guid.Empty, snapshot.PublicKey);
+            Assert.NotEqual(0, snapshot.AssetId);
+            Assert.Equal(id, snapshot.AssetId);
+            Assert.True(snapshot.Name != null || snapshot.TypeName != null || snapshot.Value != null);
+            Assert.NotEqual(new DateTime(), snapshot.Created);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.AssetsIdUserId), MemberType = typeof(Helper))]
+        public async Task DeleteAsync_IsSuccessful(int id, int userId)
+        {
+            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
+
+            await repo.DeleteAsync(id);
+
+            var exception = await Assert.ThrowsAsync<AssetNotFoundException>(() => repo.GetAsync(id));
+
+            Assert.NotNull(exception);
+            Assert.Equal(404, exception.StatusCode);
+        }
     }
 }

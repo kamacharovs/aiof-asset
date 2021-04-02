@@ -119,28 +119,23 @@ namespace aiof.asset.tests
                 .RuleFor(x => x.Value, f => f.Random.Int(1000, 10000));
         }
 
-        public static AssetSnapshotDto RandomAssetSnapshotDto()
+        public static AssetSnapshotDto RandomAssetSnapshotDto(int assetId)
         {
-            return FakerAssetSnapshotDto().Generate();
+            return FakerAssetSnapshotDto(assetId).Generate();
         }
-        public static List<AssetSnapshotDto> RandomAssetSnapshotDtos(int? n = null)
+        public static List<AssetSnapshotDto> RandomAssetSnapshotDtos(int assetId, int? n = null)
         {
-            return FakerAssetSnapshotDto().Generate(n ?? GeneratedAmount);
+            return FakerAssetSnapshotDto(assetId).Generate(n ?? GeneratedAmount);
         }
-        private static Faker<AssetSnapshotDto> FakerAssetSnapshotDto()
+        private static Faker<AssetSnapshotDto> FakerAssetSnapshotDto(int assetId)
         {
-            var validAssetIds = _Fake.GetFakeAssetSnapshots()
-                .Select(x => x.AssetId)
-                .Distinct()
-                .ToList();
-
             var validAssetTypes = _Fake.GetFakeAssetTypes()
                 .Select(x => x.Name)
                 .Distinct()
                 .ToList();
 
             return new Faker<AssetSnapshotDto>()
-                .RuleFor(x => x.AssetId, f => f.Random.ListItem(validAssetIds))
+                .RuleFor(x => x.AssetId, f => assetId)
                 .RuleFor(x => x.Name, f => f.Random.String2(10))
                 .RuleFor(x => x.TypeName, f => f.Random.ListItem(validAssetTypes))
                 .RuleFor(x => x.Value, f => f.Random.Int(1000, 10000));
