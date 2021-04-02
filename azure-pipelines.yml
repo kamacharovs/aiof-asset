@@ -53,14 +53,15 @@ stages:
       inputs:
         command: publish
         arguments: -c $(configuration) -o app/publish -f $(targetFramework)
-        zipAfterPublish: true
+        zipAfterPublish: false
 
-    - task: CopyFiles@2
-      displayName: copy files
+    - task: ArchiveFiles@2
       inputs:
-        sourceFolder: app/publish
-        contents: '**'
-        targetFolder: $(Build.ArtifactStagingDirectory)
+        rootFolderOrFile: $(Build.BinariesDirectory)
+        includeRootFolder: false
+        archiveType: zip
+        archiveFile: $(Build.ArtifactStagingDirectory)/aiof-asset-$(Build.BuildId).zip
+        replaceExistingArchive: true
 
     - task: PublishBuildArtifacts@1
       displayName: publish artifacts
