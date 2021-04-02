@@ -41,6 +41,13 @@ stages:
         arguments: -c $(configuration) -f $(targetFramework)
 
     - task: DotNetCoreCLI@2
+      displayName: install dotnet ef tools
+      inputs:
+        command: custom
+        custom: tool
+        arguments: install --global dotnet-ef
+
+    - task: DotNetCoreCLI@2
       displayName: create migration
       inputs:
         command: custom
