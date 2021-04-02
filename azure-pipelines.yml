@@ -60,13 +60,4 @@ stages:
         command: publish
         arguments: -c $(configuration) -o app/publish -f $(targetFramework)
         zipAfterPublish: false
-
-    - task: Docker@2
-      displayName: docker build and push
-      inputs:
-        containerRegistry: gkama-docker-cr
-        repository: gkama/aiof-asset
-        command: buildAndPush
-        Dockerfile: $(Build.SourcesDirectory)/Dockerfile
-        tags: |
-          latest
+        
