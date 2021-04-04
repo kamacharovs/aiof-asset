@@ -223,5 +223,17 @@ namespace aiof.asset.tests
             Assert.NotNull(exception);
             Assert.Equal(404, exception.StatusCode);
         }
+
+        [Theory]
+        [MemberData(nameof(Helper.AssetsIdUserId), MemberType = typeof(Helper))]
+        public async Task DeleteAsync_NotFound_ThrowsAssetNotFoundException(int id, int userId)
+        {
+            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
+
+            var exception = await Assert.ThrowsAsync<AssetNotFoundException>(() => repo.DeleteAsync(id * 1000));
+
+            Assert.NotNull(exception);
+            Assert.Equal(404, exception.StatusCode);
+        }
     }
 }

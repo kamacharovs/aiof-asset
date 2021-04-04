@@ -169,7 +169,8 @@ namespace aiof.asset.services
         public async Task DeleteAsync(int id)
         {
             var asset = await GetBaseQuery(false)
-                .FirstOrDefaultAsync(x => x.Id == id);
+                .FirstOrDefaultAsync(x => x.Id == id)
+                ?? throw new AssetNotFoundException($"Asset with Id={id} was not found");
 
             asset.IsDeleted = true;
 
