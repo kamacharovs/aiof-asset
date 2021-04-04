@@ -10,6 +10,7 @@ variables:
   sdkVersion: 5.0.100
   projectFile: aiof.asset.core/aiof.asset.core.csproj
   projectFileTest: aiof.asset.tests/aiof.asset.tests.csproj
+  outputPath: app/publish
 
 stages:
 - stage: Build
@@ -52,18 +53,18 @@ stages:
       inputs:
         sourceFolder: $(System.DefaultWorkingDirectory)
         contents: Dockerfile
-        targetFolder: app/publish
+        targetFolder: $(outputPath)
 
     - task: DotNetCoreCLI@2
       displayName: publish
       inputs:
         command: publish
-        arguments: -c $(configuration) -o app/publish -f $(targetFramework)
+        arguments: -c $(configuration) -o $(outputPath) -f $(targetFramework)
         zipAfterPublish: true
 
     - task: PublishBuildArtifacts@1
       displayName: publish artifacts
       inputs:
-        pathtoPublish: app/publish
+        pathtoPublish: $(outputPath)
         artifactName: aiof-asset
         publishLocation: Container
