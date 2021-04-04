@@ -11,7 +11,8 @@ using aiof.asset.services;
 
 namespace aiof.asset.tests
 {
-    public class AssetsRepositoryTests
+    [Trait(Helper.Category, Helper.UnitTest)]
+    public class AssetRepositoryTests
     {
         [Fact]
         public async Task GetTypesAsync_IsSuccessful()
@@ -187,6 +188,81 @@ namespace aiof.asset.tests
             dto.Value = CommonValidator.MaximumValue + 1;
 
             var exception = await Assert.ThrowsAsync<ValidationException>(() => repo.AddAsync(dto));
+
+            Assert.NotNull(exception);
+            Assert.Equal(nameof(AssetDto.Value), exception.Errors.First().PropertyName);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.AssetsIdUserId), MemberType = typeof(Helper))]
+        public async Task UpdateAsync_IsSuccessful(int id, int userId)
+        {
+            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
+
+            var dto = Helper.RandomAssetDto();
+
+            var asset = await repo.UpdateAsync(id, dto);
+
+            Assert.NotNull(asset);
+            Assert.Equal(id, asset.Id);
+            Assert.Equal(dto.Name, asset.Name);
+            Assert.Equal(dto.TypeName, asset.TypeName);
+            Assert.Equal(dto.Value, asset.Value);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.AssetsIdUserId), MemberType = typeof(Helper))]
+        public async Task UpdateAsync_NotFound_ThrowsAssetNotFoundException(int id, int userId)
+        {
+            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
+
+            var exception = await Assert.ThrowsAsync<AssetNotFoundException>(() => repo.UpdateAsync(id * 1000, Helper.RandomAssetDto()));
+
+            Assert.NotNull(exception);
+            Assert.Equal(404, exception.StatusCode);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.AssetsIdUserId), MemberType = typeof(Helper))]
+        public async Task UpdateAsync_Name_Empty_ThrowsValidationError(int id, int userId)
+        {
+            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
+
+            var dto = Helper.RandomAssetDto();
+
+            dto.Name = string.Empty;
+
+            var exception = await Assert.ThrowsAsync<ValidationException>(() => repo.UpdateAsync(id, dto));
+
+            Assert.NotNull(exception);
+            Assert.Equal(nameof(AssetDto.Name), exception.Errors.First().PropertyName);
+        }
+        [Theory]
+        [MemberData(nameof(Helper.AssetsIdUserId), MemberType = typeof(Helper))]
+        public async Task UpdateAsync_Value_Negative_ThrowsValidationError(int id, int userId)
+        {
+            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
+
+            var dto = Helper.RandomAssetDto();
+
+            dto.Value = -1M;
+
+            var exception = await Assert.ThrowsAsync<ValidationException>(() => repo.UpdateAsync(id, dto));
+
+            Assert.NotNull(exception);
+            Assert.Equal(nameof(AssetDto.Value), exception.Errors.First().PropertyName);
+        }
+        [Theory]
+        [MemberData(nameof(Helper.AssetsIdUserId), MemberType = typeof(Helper))]
+        public async Task UpdateAsync_Value_TooBig_ThrowsValidationError(int id, int userId)
+        {
+            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
+
+            var dto = Helper.RandomAssetDto();
+
+            dto.Value = CommonValidator.MaximumValue + 1;
+
+            var exception = await Assert.ThrowsAsync<ValidationException>(() => repo.UpdateAsync(id, dto));
 
             Assert.NotNull(exception);
             Assert.Equal(nameof(AssetDto.Value), exception.Errors.First().PropertyName);

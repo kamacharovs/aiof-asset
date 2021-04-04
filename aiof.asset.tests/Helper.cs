@@ -98,6 +98,43 @@ namespace aiof.asset.tests
                 userId: true);
         }
 
+        public static IEnumerable<object[]> InvalidNames()
+        {
+            var invalidNames = new List<object[]>();
+
+            invalidNames.Add(new object[] { "" });
+            invalidNames.Add(new object[] { Repeat("nametoolong") });
+
+            return invalidNames;
+        }
+
+        public static IEnumerable<object[]> InvalidTypeNames()
+        {
+            var invalidTypeNames = new List<object[]>();
+
+            invalidTypeNames.Add(new object[] { "" });
+            invalidTypeNames.Add(new object[] { Repeat("typenametoolong") });
+
+            return invalidTypeNames;
+        }
+
+        public static IEnumerable<object[]> InvalidValues()
+        {
+            var invalidValues = new List<object[]>();
+
+            invalidValues.Add(new object[] { -1 });
+            invalidValues.Add(new object[] { -50 });
+            invalidValues.Add(new object[] { CommonValidator.MaximumValue + 1 });
+            invalidValues.Add(new object[] { CommonValidator.MaximumValue + 50 });
+
+            return invalidValues;
+        }
+
+        public static string Repeat(string s, int n = 101)
+        {
+            return string.Concat(Enumerable.Repeat(s, n));
+        }
+
         public static AssetDto RandomAssetDto()
         {
             return FakerAssetDto().Generate();

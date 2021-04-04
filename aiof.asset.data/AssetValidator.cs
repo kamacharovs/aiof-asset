@@ -21,11 +21,13 @@ namespace aiof.asset.data
 
             RuleFor(x => x.Name)
                 .NotEmpty()
+                .MaximumLength(100)
                 .When(x => x.Name != null);
 
             RuleFor(x => x.TypeName)
                 .NotEmpty()
-                .When(x => x.Name != null);
+                .MaximumLength(100)
+                .When(x => x.TypeName != null);
 
             RuleFor(x => x.Value)
                 .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
@@ -50,10 +52,12 @@ namespace aiof.asset.data
 
             RuleFor(x => x.Name)
                 .NotEmpty()
+                .MaximumLength(100)
                 .When(x => x.Name != null);
 
             RuleFor(x => x.TypeName)
                 .NotEmpty()
+                .MaximumLength(100)
                 .When(x => x.Name != null);
 
             RuleFor(x => x.Value)
