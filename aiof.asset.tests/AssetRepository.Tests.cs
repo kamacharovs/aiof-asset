@@ -14,6 +14,7 @@ namespace aiof.asset.tests
     [Trait(Helper.Category, Helper.UnitTest)]
     public class AssetRepositoryTests
     {
+        #region GetTypesAsync
         [Fact]
         public async Task GetTypesAsync_IsSuccessful()
         {
@@ -28,7 +29,9 @@ namespace aiof.asset.tests
             Assert.NotNull(type.Name);
             Assert.NotEqual(Guid.Empty, type.PublicKey);
         }
+        #endregion
 
+        #region GetAsync
         [Theory]
         [MemberData(nameof(Helper.AssetsIdUserId), MemberType = typeof(Helper))]
         public async Task GetAsync_IsSuccessful(int id, int userId)
@@ -99,7 +102,9 @@ namespace aiof.asset.tests
                 Assert.NotEqual(new DateTime(), snapshot.Created);
             }
         }
+        #endregion
 
+        #region AddAsync
         [Theory]
         [MemberData(nameof(Helper.AssetsUserId), MemberType = typeof(Helper))]
         public async Task AddAsync_IsSuccessful(int userId)
@@ -177,6 +182,7 @@ namespace aiof.asset.tests
             Assert.NotNull(exception);
             Assert.Equal(nameof(AssetDto.Value), exception.Errors.First().PropertyName);
         }
+
         [Theory]
         [MemberData(nameof(Helper.AssetsUserId), MemberType = typeof(Helper))]
         public async Task AddAsync_Value_TooBig_ThrowsValidationError(int userId)
@@ -192,7 +198,9 @@ namespace aiof.asset.tests
             Assert.NotNull(exception);
             Assert.Equal(nameof(AssetDto.Value), exception.Errors.First().PropertyName);
         }
+        #endregion
 
+        #region UpdateAsync
         [Theory]
         [MemberData(nameof(Helper.AssetsIdUserId), MemberType = typeof(Helper))]
         public async Task UpdateAsync_IsSuccessful(int id, int userId)
@@ -237,6 +245,7 @@ namespace aiof.asset.tests
             Assert.NotNull(exception);
             Assert.Equal(nameof(AssetDto.Name), exception.Errors.First().PropertyName);
         }
+
         [Theory]
         [MemberData(nameof(Helper.AssetsIdUserId), MemberType = typeof(Helper))]
         public async Task UpdateAsync_Value_Negative_ThrowsValidationError(int id, int userId)
@@ -252,6 +261,7 @@ namespace aiof.asset.tests
             Assert.NotNull(exception);
             Assert.Equal(nameof(AssetDto.Value), exception.Errors.First().PropertyName);
         }
+
         [Theory]
         [MemberData(nameof(Helper.AssetsIdUserId), MemberType = typeof(Helper))]
         public async Task UpdateAsync_Value_TooBig_ThrowsValidationError(int id, int userId)
@@ -267,7 +277,9 @@ namespace aiof.asset.tests
             Assert.NotNull(exception);
             Assert.Equal(nameof(AssetDto.Value), exception.Errors.First().PropertyName);
         }
+        #endregion
 
+        #region AddSnapshotAsync
         [Theory]
         [MemberData(nameof(Helper.AssetsIdUserId), MemberType = typeof(Helper))]
         public async Task AddSnapshotAsync_IsSuccessful(int id, int userId)
@@ -285,7 +297,9 @@ namespace aiof.asset.tests
             Assert.True(snapshot.Name != null || snapshot.TypeName != null || snapshot.Value != null);
             Assert.NotEqual(new DateTime(), snapshot.Created);
         }
+        #endregion
 
+        #region DeleteAsync
         [Theory]
         [MemberData(nameof(Helper.AssetsIdUserId), MemberType = typeof(Helper))]
         public async Task DeleteAsync_IsSuccessful(int id, int userId)
@@ -311,5 +325,6 @@ namespace aiof.asset.tests
             Assert.NotNull(exception);
             Assert.Equal(404, exception.StatusCode);
         }
+        #endregion
     }
 }

@@ -17,6 +17,8 @@ namespace aiof.asset.tests
         private readonly AbstractValidator<AssetDto> _dtoValidator;
         private readonly AbstractValidator<AssetSnapshotDto> _snapshotValidator;
 
+        private const int _defaultAssetId = 1;
+
         public AssetValidatorTests()
         {
             var service = new ServiceHelper();
@@ -25,6 +27,7 @@ namespace aiof.asset.tests
             _snapshotValidator = service.GetRequiredService<AbstractValidator<AssetSnapshotDto>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<AssetSnapshotDto>));
         }
 
+        #region AssetDto
         [Theory]
         [MemberData(nameof(Helper.InvalidNames), MemberType = typeof(Helper))]
         public void AssetDto_Validation_Name_IsInvalid(string name)
@@ -57,5 +60,41 @@ namespace aiof.asset.tests
 
             Assert.False(_dtoValidator.Validate(dto).IsValid);
         }
+        #endregion
+
+        #region SnapshotDto
+        [Theory]
+        [MemberData(nameof(Helper.InvalidNames), MemberType = typeof(Helper))]
+        public void AssetSnapshotDto_Validation_Name_IsInvalid(string name)
+        {
+            var dto = Helper.RandomAssetSnapshotDto(_defaultAssetId);
+
+            dto.Name = name;
+
+            Assert.False(_snapshotValidator.Validate(dto).IsValid);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.InvalidTypeNames), MemberType = typeof(Helper))]
+        public void AssetSnapshotDto_Validation_TypeName_IsInvalid(string typeName)
+        {
+            var dto = Helper.RandomAssetSnapshotDto(_defaultAssetId);
+
+            dto.TypeName = typeName;
+
+            Assert.False(_snapshotValidator.Validate(dto).IsValid);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.InvalidValues), MemberType = typeof(Helper))]
+        public void AssetSnapshotDto_Validation_Value_IsInvalid(decimal value)
+        {
+            var dto = Helper.RandomAssetSnapshotDto(_defaultAssetId);
+
+            dto.Value = value;
+
+            Assert.False(_snapshotValidator.Validate(dto).IsValid);
+        }
+        #endregion
     }
 }
