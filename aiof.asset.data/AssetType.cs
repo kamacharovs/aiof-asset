@@ -12,7 +12,6 @@ namespace aiof.asset.data
         [MaxLength(100)]
         public string Name { get; set; }
 
-        [JsonIgnore]
         [Required]
         public Guid PublicKey { get; set; } = Guid.NewGuid();
     }

@@ -47,11 +47,9 @@ namespace aiof.asset.services
                 : query;
         }
 
-
         private IQueryable<Asset> GetBaseQuery(bool asNoTracking = true)
         {
-            var assetsQuery = _context.Assets
-                .Include(x => x.Type);
+            var assetsQuery = _context.Assets;
 
             return asNoTracking
                 ? assetsQuery.AsNoTracking()
@@ -170,7 +168,9 @@ namespace aiof.asset.services
 
         public async Task DeleteAsync(int id)
         {
-            var asset = await GetAsync(id) as Asset;
+            var asset = await GetBaseQuery(false)
+                .FirstOrDefaultAsync(x => x.Id == id)
+                ?? throw new AssetNotFoundException($"Asset with Id={id} was not found");
 
             asset.IsDeleted = true;
 

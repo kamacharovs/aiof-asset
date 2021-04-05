@@ -21,13 +21,13 @@ namespace aiof.asset.data
         [MaxLength(100)]
         public string TypeName { get; set; }
 
-        [JsonIgnore]
+        [Required]
         public AssetType Type { get; set; }
 
         [Required]
         public decimal Value { get; set; }
 
-        [JsonIgnore]
+        [Required]
         public int UserId { get; set; }
 
         [Required]
