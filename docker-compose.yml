@@ -17,7 +17,7 @@ services:
     depends_on:
       - aiofdata
     ports:
-      - 8001:80
+      - 8000:80
     environment: 
       ASPNETCORE_ENVIRONMENT: Development
       Data__PostgreSQL: Server=aiofdata;Port=5432;Database=aiof;User Id=aiof;Password=aiofiscool;
