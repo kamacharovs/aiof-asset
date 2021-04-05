@@ -15,7 +15,7 @@ namespace aiof.asset.core
 {
     [Authorize]
     [ApiController]
-    [Route("api")]
+    [Route("assets")]
     [Produces(Constants.ApplicationJson)]
     [Consumes(Constants.ApplicationJson)]
     [ProducesResponseType(typeof(IAssetProblemDetail), StatusCodes.Status500InternalServerError)]
@@ -43,6 +43,19 @@ namespace aiof.asset.core
             [FromQuery] DateTime? snapshotsEndDate)
         {
             return Ok(await _repo.GetAsync(id, snapshotsStartDate, snapshotsEndDate));
+        }
+
+        /// <summary>
+        /// Get Assets
+        /// </summary>
+        [HttpGet]
+        [ProducesResponseType(typeof(IAssetProblemDetail), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(IEnumerable<IAsset>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAsync(
+            [FromQuery] DateTime? snapshotsStartDate,
+            [FromQuery] DateTime? snapshotsEndDate)
+        {
+            return Ok(await _repo.GetAsync(snapshotsStartDate, snapshotsEndDate));
         }
 
         /// <summary>

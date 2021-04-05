@@ -65,6 +65,44 @@ namespace aiof.asset.tests
         }
 
         [Theory]
+        [MemberData(nameof(Helper.AssetsUserId), MemberType = typeof(Helper))]
+        public async Task GetAsync_All_IsSuccessfull(int userId)
+        {
+            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
+            var assets = await repo.GetAsync();
+
+            Assert.NotNull(assets);
+            Assert.NotEmpty(assets);
+
+            foreach (var asset in assets)
+            {
+                Assert.NotNull(asset);
+                Assert.NotEqual(0, asset.Id);
+                Assert.NotEqual(Guid.Empty, asset.PublicKey);
+                Assert.NotNull(asset.Name);
+                Assert.NotNull(asset.TypeName);
+                Assert.NotNull(asset.Type);
+                Assert.NotEqual(0, asset.Value);
+                Assert.NotEqual(0, asset.UserId);
+                Assert.NotEqual(new DateTime(), asset.Created);
+                Assert.False(asset.IsDeleted);
+
+                var snapshots = asset.Snapshots;
+                var snapshot = snapshots?.FirstOrDefault();
+
+                if (snapshot is not null)
+                {
+                    Assert.NotNull(snapshots);
+                    Assert.NotEqual(0, snapshot.Id);
+                    Assert.NotEqual(Guid.Empty, snapshot.PublicKey);
+                    Assert.NotEqual(0, snapshot.AssetId);
+                    Assert.True(snapshot.Name != null || snapshot.TypeName != null || snapshot.Value != null);
+                    Assert.NotEqual(new DateTime(), snapshot.Created);
+                }
+            }
+        }
+
+        [Theory]
         [MemberData(nameof(Helper.AssetsIdUserId), MemberType = typeof(Helper))]
         public async Task GetAsync_NotFound_ThrowsAssetNotFoundException(int id, int userId)
         {

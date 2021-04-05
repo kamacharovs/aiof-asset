@@ -17,6 +17,9 @@ namespace aiof.asset.services
             DateTime? snapshotsStartDate = null,
             DateTime? snapshotsEndDate = null,
             bool asNoTracking = true);
+        Task<IEnumerable<IAsset>> GetAsync(
+            DateTime? snapshotsStartDate = null,
+            DateTime? snapshotsEndDate = null);
 
         Task<IAsset> AddAsync(AssetDto dto);
 

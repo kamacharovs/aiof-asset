@@ -94,6 +94,14 @@ namespace aiof.asset.services
                 ?? throw new AssetNotFoundException($"Asset with Id={id} was not found");
         }
 
+        public async Task<IEnumerable<IAsset>> GetAsync(
+            DateTime? snapshotsStartDate = null,
+            DateTime? snapshotsEndDate = null)
+        {
+            return await GetQuery(snapshotsStartDate, snapshotsEndDate)
+                .ToListAsync();
+        }
+
         public async Task<IAsset> AddAsync(AssetDto dto)
         {
             await _dtoValidator.ValidateAndThrowAsync(dto);
