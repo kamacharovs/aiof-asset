@@ -58,7 +58,7 @@ namespace aiof.asset.data
             RuleFor(x => x.TypeName)
                 .NotEmpty()
                 .MaximumLength(100)
-                .When(x => x.Name != null);
+                .When(x => x.TypeName != null);
 
             RuleFor(x => x.Value)
                 .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
