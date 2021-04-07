@@ -23,6 +23,8 @@ namespace aiof.asset.data
 
         decimal? Value { get; set; }
 
+        decimal? ValueChange { get; set; }
+
         [Required]
         DateTime Created { get; set; }
     }
