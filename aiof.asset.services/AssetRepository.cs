@@ -56,6 +56,15 @@ namespace aiof.asset.services
                 : assetsQuery;
         }
 
+        private IQueryable<AssetSnapshot> GetSnapshotQuery(bool asNoTracking = true)
+        {
+            var assetSnapshotsQuery = _context.AssetSnapshots;
+
+            return asNoTracking
+                ? assetSnapshotsQuery.AsNoTracking()
+                : assetSnapshotsQuery;
+        }
+
         private IQueryable<Asset> GetQuery(
             DateTime? snapshotsStartDate = null,
             DateTime? snapshotsEndDate = null,
@@ -100,6 +109,16 @@ namespace aiof.asset.services
         {
             return await GetQuery(snapshotsStartDate, snapshotsEndDate)
                 .ToListAsync();
+        }
+
+        public async Task<IAssetSnapshot> GetLatestSnapshotAsync(
+            int assetId,
+            bool asNoTracking = true)
+        {
+            return await GetSnapshotQuery(asNoTracking)
+                .Where(x => x.AssetId == assetId)
+                .OrderByDescending(x => x.Created)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<IAsset> AddAsync(AssetDto dto)
