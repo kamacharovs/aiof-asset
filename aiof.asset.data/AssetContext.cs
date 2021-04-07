@@ -79,6 +79,7 @@ namespace aiof.asset.data
                 e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100);
                 e.Property(x => x.TypeName).HasSnakeCaseColumnName().HasMaxLength(100);
                 e.Property(x => x.Value).HasSnakeCaseColumnName();
+                e.Property(x => x.ValueChange).HasSnakeCaseColumnName();
                 e.Property(x => x.Created).HasColumnType("timestamp").HasSnakeCaseColumnName().IsRequired();
             });
         }

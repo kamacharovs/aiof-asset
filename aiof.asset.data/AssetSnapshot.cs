@@ -23,6 +23,8 @@ namespace aiof.asset.data
 
         public decimal? Value { get; set; }
 
+        public decimal? ValueChange { get; set; } = 0;
+
         [Required]
         public DateTime Created { get; set; } = DateTime.UtcNow;
     }

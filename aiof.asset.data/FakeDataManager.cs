@@ -81,7 +81,7 @@ namespace aiof.asset.data
                     Id = 2,
                     Name = "house",
                     TypeName = "house",
-                    Value = 250550M,
+                    Value = 300000M,
                     UserId = 1,
                     Created = DateTime.UtcNow.AddYears(-5),
                     IsDeleted = false,
@@ -117,14 +117,20 @@ namespace aiof.asset.data
                 {
                     Id = 1,
                     AssetId = 1,
+                    Name = "car",
+                    TypeName = "car",
                     Value = 13762.12M,
-                    Created = DateTime.UtcNow,
+                    ValueChange = 0,
+                    Created = DateTime.UtcNow
                 },
                 new AssetSnapshot
                 {
                     Id = 2,
                     AssetId = 2,
+                    Name = "house",
+                    TypeName = "house",
                     Value = 260550M,
+                    ValueChange = 0,
                     Created = DateTime.UtcNow.AddYears(-4)
                 },
                 new AssetSnapshot
@@ -132,6 +138,7 @@ namespace aiof.asset.data
                     Id = 3,
                     AssetId = 2,
                     Value = 270550M,
+                    ValueChange = 10000M,
                     Created = DateTime.UtcNow.AddYears(-3)
                 },
                 new AssetSnapshot
@@ -139,6 +146,7 @@ namespace aiof.asset.data
                     Id = 4,
                     AssetId = 2,
                     Value = 300000M,
+                    ValueChange = 29450M,
                     Created = DateTime.UtcNow
                 },
                 new AssetSnapshot
@@ -148,6 +156,7 @@ namespace aiof.asset.data
                     Name = "hardcoded guid",
                     TypeName = "investment",
                     Value = 999999M,
+                    ValueChange = 0,
                     Created = DateTime.UtcNow.AddDays(1)
                 },
                 new AssetSnapshot
@@ -157,6 +166,7 @@ namespace aiof.asset.data
                     Name = "asset",
                     TypeName = "cash",
                     Value = 99M,
+                    ValueChange = 0,
                     Created = DateTime.UtcNow.AddDays(1)
                 }
             };

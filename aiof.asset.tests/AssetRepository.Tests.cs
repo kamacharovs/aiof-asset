@@ -167,10 +167,45 @@ namespace aiof.asset.tests
             Assert.NotNull(snapshot.Name);
             Assert.NotNull(snapshot.TypeName);
             Assert.NotNull(snapshot.Value);
+            Assert.Equal(0, snapshot.ValueChange);
             Assert.NotEqual(new DateTime(), snapshot.Created);
             Assert.Equal(dto.Name, snapshot.Name);
             Assert.Equal(dto.TypeName, snapshot.TypeName);
             Assert.Equal(dto.Value, snapshot.Value);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.AssetsUserId), MemberType = typeof(Helper))]
+        public async Task AddAsync_UpdateAsync_IsSuccessful(int userId)
+        {
+            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
+
+            var value = 1500M;
+            var valueToChange = 500M;
+
+            var dto = Helper.RandomAssetDto();
+
+            dto.Value = value;
+
+            var asset = await repo.AddAsync(dto);
+
+            Assert.NotNull(asset);
+            Assert.NotEqual(0, asset.Id);
+            Assert.NotEqual(Guid.Empty, asset.PublicKey);
+
+            var updatedAsset = await repo.UpdateAsync(asset.Id, 
+                new AssetDto { Value = value + valueToChange });
+
+            Assert.NotNull(updatedAsset);
+            Assert.NotEqual(0, updatedAsset.Id);
+            Assert.NotEqual(Guid.Empty, updatedAsset.PublicKey);
+
+            var latestSnapshot = await repo.GetLatestSnapshotWithValueAsync(updatedAsset.Id);
+
+            Assert.NotNull(latestSnapshot);
+            Assert.NotNull(latestSnapshot.Value);
+            Assert.NotNull(latestSnapshot.ValueChange);
+            Assert.Equal(valueToChange, latestSnapshot.ValueChange);
         }
 
         [Theory]
@@ -254,6 +289,7 @@ namespace aiof.asset.tests
             Assert.Equal(dto.Name, asset.Name);
             Assert.Equal(dto.TypeName, asset.TypeName);
             Assert.Equal(dto.Value, asset.Value);
+            Assert.NotNull(asset.Snapshots.First().ValueChange);
         }
 
         [Theory]
@@ -314,6 +350,20 @@ namespace aiof.asset.tests
 
             Assert.NotNull(exception);
             Assert.Equal(nameof(AssetDto.Value), exception.Errors.First().PropertyName);
+        }
+        #endregion
+
+        #region GetLatestSnapshotWithValueAsync
+        [Theory]
+        [MemberData(nameof(Helper.AssetsIdUserId), MemberType = typeof(Helper))]
+        public async Task GetLatestSnapshotWithValueAsync_IsSuccessful(int id, int userId)
+        {
+            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
+
+            var snapshot = await repo.GetLatestSnapshotWithValueAsync(id);
+
+            Assert.NotNull(snapshot);
+            Assert.True(snapshot.ValueChange == 0 || snapshot.ValueChange < 0 || snapshot.ValueChange > 0);
         }
         #endregion
 

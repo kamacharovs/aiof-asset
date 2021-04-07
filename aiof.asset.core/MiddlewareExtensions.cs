@@ -30,7 +30,7 @@ namespace aiof.asset.core
                     var rsa = RSA.Create();
                     rsa.FromXmlString(Startup._config[Keys.JwtPublicKey]);
 
-                    x.TokenValidationParameters = new TokenValidationParameters()
+                    x.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,
                         ValidIssuer = Startup._config[Keys.JwtIssuer],

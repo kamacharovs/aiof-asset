@@ -56,6 +56,15 @@ namespace aiof.asset.services
                 : assetsQuery;
         }
 
+        private IQueryable<AssetSnapshot> GetSnapshotQuery(bool asNoTracking = true)
+        {
+            var assetSnapshotsQuery = _context.AssetSnapshots;
+
+            return asNoTracking
+                ? assetSnapshotsQuery.AsNoTracking()
+                : assetSnapshotsQuery;
+        }
+
         private IQueryable<Asset> GetQuery(
             DateTime? snapshotsStartDate = null,
             DateTime? snapshotsEndDate = null,
@@ -96,10 +105,22 @@ namespace aiof.asset.services
 
         public async Task<IEnumerable<IAsset>> GetAsync(
             DateTime? snapshotsStartDate = null,
-            DateTime? snapshotsEndDate = null)
+            DateTime? snapshotsEndDate = null,
+            bool asNoTracking = true)
         {
-            return await GetQuery(snapshotsStartDate, snapshotsEndDate)
+            return await GetQuery(snapshotsStartDate, snapshotsEndDate, asNoTracking)
                 .ToListAsync();
+        }
+
+        public async Task<IAssetSnapshot> GetLatestSnapshotWithValueAsync(
+            int assetId,
+            bool asNoTracking = true)
+        {
+            return await GetSnapshotQuery(asNoTracking)
+                .Where(x => x.AssetId == assetId
+                    && x.Value.HasValue)
+                .OrderByDescending(x => x.Created)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<IAsset> AddAsync(AssetDto dto)
@@ -134,6 +155,19 @@ namespace aiof.asset.services
             await _snapshotDtoValidator.ValidateAndThrowAsync(dto);
 
             var snapshot = _mapper.Map<AssetSnapshot>(dto);
+
+            // Calculate ValueChange
+            if (dto.Value.HasValue)
+            {
+                var latestSnapshot = await GetLatestSnapshotWithValueAsync(dto.AssetId);
+                var latestSnapshotValue = latestSnapshot is not null
+                    ? latestSnapshot.Value
+                    : snapshot.ValueChange;
+
+                snapshot.ValueChange = latestSnapshotValue == 0
+                    ? snapshot.ValueChange
+                    : dto.Value - latestSnapshotValue;
+            }
 
             await _context.AssetSnapshots.AddAsync(snapshot);
             await _context.SaveChangesAsync();
