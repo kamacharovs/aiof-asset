@@ -1,0 +1,34 @@
+name: build
+
+env:
+  configuration: release
+  project_file: aiof.asset.core/aiof.asset.core.csproj
+  project_test_file: aiof.asset.tests/aiof.asset.tests.csproj
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: setup
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+
+    - name: restore
+      run: dotnet restore ${{env.project_file}}
+      
+    - name: build
+      run: dotnet build -c ${{env.configuration}} ${{env.project_file}} --no-restore
+
+    - name: test
+      run: dotnet test -c ${{env.configuration}} ${{env.project_test_file}} -l trx -v normal --no-build
