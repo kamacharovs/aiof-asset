@@ -24,10 +24,10 @@ jobs:
         dotnet-version: 5.0.x
 
     - name: restore
-      run: dotnet restore ${{project_file}}
+      run: dotnet restore ${{env.project_file}}
       
     - name: build
-      run: dotnet build -c ${{configuration}} ${{project_file}} --no-restore
+      run: dotnet build -c ${{env.configuration}} ${{env.project_file}} --no-restore
 
     - name: test
-      run: dotnet test -c ${{configuration}} ${{project_test_file}} --no-build --verbosity normal
+      run: dotnet test -c ${{env.configuration}} ${{env.project_test_file}} --no-build --verbosity normal
