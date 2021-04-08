@@ -30,4 +30,4 @@ jobs:
       run: dotnet build -c ${{env.configuration}} ${{env.project_file}} --no-restore
 
     - name: test
-      run: dotnet test -c ${{env.configuration}} ${{env.project_test_file}} --no-build --verbosity normal
+      run: dotnet test -c ${{env.configuration}} ${{env.project_test_file}} -l trx -v detailed --no-build
