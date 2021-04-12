@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Text.Json;
+
+using Microsoft.AspNetCore.Http;
 
 namespace aiof.asset.data
 {
@@ -18,6 +20,14 @@ namespace aiof.asset.data
             StatusCodes.Status401Unauthorized,
             StatusCodes.Status403Forbidden
         };
+
+        public static JsonSerializerOptions JsonSerializerSettings
+            => new JsonSerializerOptions
+            {
+                WriteIndented = true,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                IgnoreNullValues = true
+            };
     }
 
     public static class Keys

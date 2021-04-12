@@ -47,7 +47,7 @@ namespace aiof.asset.core
             }
 
             var problemJson = JsonSerializer
-                .Serialize(problem, new JsonSerializerOptions { IgnoreNullValues = true });
+                .Serialize(problem, Constants.JsonSerializerSettings);
 
             httpContext.Response.ContentType = Constants.ApplicationProblemJson;
 

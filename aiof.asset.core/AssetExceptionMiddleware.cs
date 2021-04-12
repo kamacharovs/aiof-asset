@@ -83,7 +83,7 @@ namespace aiof.asset.core
             }
 
             var problemjson = JsonSerializer
-                .Serialize(problem, new JsonSerializerOptions { IgnoreNullValues = true });
+                .Serialize(problem, Constants.JsonSerializerSettings);
 
             httpContext.Response.StatusCode = problem.Code ?? StatusCodes.Status500InternalServerError;
             httpContext.Response.ContentType = "application/problem+json";

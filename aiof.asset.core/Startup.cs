@@ -53,7 +53,6 @@ namespace aiof.asset.core
                 {
                     o.JsonSerializerOptions.WriteIndented = true;
                     o.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-                    o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
                 });
         }
 
