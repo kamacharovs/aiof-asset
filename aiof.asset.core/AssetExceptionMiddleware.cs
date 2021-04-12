@@ -74,7 +74,10 @@ namespace aiof.asset.core
             };
 
             if (e is AssetException ae)
+            {
                 problem.Code = ae.StatusCode;
+                problem.Message = ae.Message;
+            }
             else if (e is ValidationException ve)
             {
                 problem.Code = StatusCodes.Status400BadRequest;
