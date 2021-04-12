@@ -1,4 +1,10 @@
-﻿using FluentValidation;
+﻿using System;
+using System.Threading.Tasks;
+using System.Linq;
+
+using Microsoft.EntityFrameworkCore;
+
+using FluentValidation;
 
 namespace aiof.asset.data
 {
@@ -8,13 +14,41 @@ namespace aiof.asset.data
         public const decimal MaximumValue = 99999999M;
 
         public static string ValueMessage = $"Value must be between {MinimumValue} and {MaximumValue}";
+        public static string TypeNameMessage = $"Invalid {nameof(AssetDto.TypeName)}";
+    }
+
+    public class AssetTypeValidator : AbstractValidator<string>
+    {
+        private readonly AssetContext _context;
+
+        public AssetTypeValidator(AssetContext context)
+        {
+            ValidatorOptions.Global.CascadeMode = CascadeMode.Stop;
+
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+
+            RuleFor(assetType => assetType)
+                .NotNull()
+                .NotEmpty()
+                .MaximumLength(100)
+                .MustAsync(async (type, cancellation) =>
+                {
+                    return await _context.AssetTypes
+                        .AnyAsync(x => x.Name == type);
+                })
+                .WithMessage(CommonValidator.TypeNameMessage);
+        }
     }
 
     public class AssetDtoValidator : AbstractValidator<AssetDto>
     {
-        public AssetDtoValidator()
+        private readonly AssetContext _context;
+
+        public AssetDtoValidator(AssetContext context)
         {
             ValidatorOptions.Global.CascadeMode = CascadeMode.Stop;
+
+            _context = context ?? throw new ArgumentNullException(nameof(context));
 
             RuleFor(x => x)
                 .NotNull();
@@ -25,8 +59,7 @@ namespace aiof.asset.data
                 .When(x => x.Name != null);
 
             RuleFor(x => x.TypeName)
-                .NotEmpty()
-                .MaximumLength(100)
+                .SetValidator(new AssetTypeValidator(_context))
                 .When(x => x.TypeName != null);
 
             RuleFor(x => x.Value)
@@ -39,9 +72,13 @@ namespace aiof.asset.data
 
     public class AssetSnapshotDtoValidator : AbstractValidator<AssetSnapshotDto>
     {
-        public AssetSnapshotDtoValidator()
+        private readonly AssetContext _context;
+
+        public AssetSnapshotDtoValidator(AssetContext context)
         {
             ValidatorOptions.Global.CascadeMode = CascadeMode.Stop;
+
+            _context = context ?? throw new ArgumentNullException(nameof(context));
 
             RuleFor(x => x)
                 .NotNull();
@@ -56,8 +93,7 @@ namespace aiof.asset.data
                 .When(x => x.Name != null);
 
             RuleFor(x => x.TypeName)
-                .NotEmpty()
-                .MaximumLength(100)
+                .SetValidator(new AssetTypeValidator(_context))
                 .When(x => x.TypeName != null);
 
             RuleFor(x => x.Value)

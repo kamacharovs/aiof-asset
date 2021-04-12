@@ -74,8 +74,9 @@ namespace aiof.asset.core
 
         public static IServiceCollection AddAssetFluentValidators(this IServiceCollection services)
         {
-            services.AddSingleton<AbstractValidator<AssetDto>, AssetDtoValidator>()
-                .AddSingleton<AbstractValidator<AssetSnapshotDto>, AssetSnapshotDtoValidator>();
+            services.AddScoped<AbstractValidator<string>, AssetTypeValidator>()
+                .AddScoped<AbstractValidator<AssetDto>, AssetDtoValidator>()
+                .AddScoped<AbstractValidator<AssetSnapshotDto>, AssetSnapshotDtoValidator>();
 
             return services;
         }

@@ -44,8 +44,9 @@ namespace aiof.asset.tests
             
             services.AddDbContext<AssetContext>(o => o.UseInMemoryDatabase(Guid.NewGuid().ToString()));
 
-            services.AddSingleton<AbstractValidator<AssetDto>, AssetDtoValidator>()
-                .AddSingleton<AbstractValidator<AssetSnapshotDto>, AssetSnapshotDtoValidator>();
+            services.AddScoped<AbstractValidator<string>, AssetTypeValidator>()
+                .AddScoped<AbstractValidator<AssetDto>, AssetDtoValidator>()
+                .AddScoped<AbstractValidator<AssetSnapshotDto>, AssetSnapshotDtoValidator>();
 
             services.AddLogging();
             services.AddHttpContextAccessor();
@@ -98,6 +99,16 @@ namespace aiof.asset.tests
                 userId: true);
         }
 
+        public static IEnumerable<object[]> ValidNames()
+        {
+            var validNames = new List<object[]>();
+
+            validNames.Add(new object[] { "valid name" });
+            validNames.Add(new object[] { "Another Valid Name" });
+
+            return validNames;
+        }
+
         public static IEnumerable<object[]> InvalidNames()
         {
             var invalidNames = new List<object[]>();
@@ -108,16 +119,42 @@ namespace aiof.asset.tests
             return invalidNames;
         }
 
+        public static IEnumerable<object[]> ValidTypeNames()
+        {
+            var validTypeNames = new List<object[]>();
+
+            var validAssetTypeNames = _Fake.GetFakeAssetTypes()
+                .Select(x => x.Name)
+                .Distinct()
+                .ToList();
+
+            foreach (var assetTypeName in validAssetTypeNames)
+                validTypeNames.Add(new object[] { assetTypeName });
+
+            return validTypeNames;
+        }
         public static IEnumerable<object[]> InvalidTypeNames()
         {
             var invalidTypeNames = new List<object[]>();
 
             invalidTypeNames.Add(new object[] { "" });
+            invalidTypeNames.Add(new object[] { "test" });
             invalidTypeNames.Add(new object[] { Repeat("typenametoolong") });
 
             return invalidTypeNames;
         }
 
+        public static IEnumerable<object[]> ValidValues()
+        {
+            var validValues = new List<object[]>();
+
+            validValues.Add(new object[] { 1 });
+            validValues.Add(new object[] { 50 });
+            validValues.Add(new object[] { CommonValidator.MaximumValue - 1 });
+            validValues.Add(new object[] { CommonValidator.MaximumValue - 50 });
+
+            return validValues;
+        }
         public static IEnumerable<object[]> InvalidValues()
         {
             var invalidValues = new List<object[]>();
