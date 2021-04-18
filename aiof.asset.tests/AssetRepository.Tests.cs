@@ -354,6 +354,28 @@ namespace aiof.asset.tests
         #endregion
 
         #region GetLatestSnapshotAsync
+        [Theory]
+        [MemberData(nameof(Helper.AssetsIdUserId), MemberType = typeof(Helper))]
+        public async Task GetLatestSnapshotAsync_IsSuccessful(int id, int userId)
+        {
+            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
+
+            var snapshot = await repo.GetLatestSnapshotAsync(id);
+            
+            Assert.NotNull(snapshot);
+            Assert.True(snapshot.ValueChange == 0 || snapshot.ValueChange < 0 || snapshot.ValueChange > 0);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.AssetsIdUserId), MemberType = typeof(Helper))]
+        public async Task GetLatestSnapshotAsync_DoesntExist_IsNull(int id, int userId)
+        {
+            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
+
+            var snapshot = await repo.GetLatestSnapshotAsync(id * 1000);
+            
+            Assert.Null(snapshot);
+        }
         #endregion
 
         #region GetLatestSnapshotWithValueAsync
