@@ -112,6 +112,16 @@ namespace aiof.asset.services
                 .ToListAsync();
         }
 
+        public async Task<IAssetSnapshot> GetLatestSnapshotAsync(
+            int assetId,
+            bool asNoTracking = true)
+        {
+            return await GetSnapshotQuery(asNoTracking)
+                .Where(x => x.AssetId == assetId)
+                .OrderByDescending(x => x.Created)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<IAssetSnapshot> GetLatestSnapshotWithValueAsync(
             int assetId,
             bool asNoTracking = true)
