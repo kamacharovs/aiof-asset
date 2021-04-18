@@ -21,6 +21,9 @@ namespace aiof.asset.services
             DateTime? snapshotsStartDate = null,
             DateTime? snapshotsEndDate = null,
             bool asNoTracking = true);
+        Task<IAssetSnapshot> GetLatestSnapshotAsync(
+            int assetId,
+            bool asNoTracking = true);
         Task<IAssetSnapshot> GetLatestSnapshotWithValueAsync(
             int assetId,
             bool asNoTracking = true);

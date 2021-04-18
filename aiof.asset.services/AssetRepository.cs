@@ -73,10 +73,14 @@ namespace aiof.asset.services
             snapshotsStartDate = snapshotsStartDate ?? DateTime.UtcNow.AddMonths(-6);
             snapshotsEndDate = snapshotsEndDate ?? DateTime.UtcNow;
 
+            if (snapshotsEndDate < snapshotsStartDate)
+                throw new AssetFriendlyException(HttpStatusCode.BadRequest,
+                    $"Snapshots end date cannot be earlier than start date");
+
             var assetsQuery = _context.Assets
                 .Include(x => x.Type)
                 .Include(x => x.Snapshots
-                    .Where(x => x.Created > snapshotsStartDate && x.Created <= snapshotsEndDate)
+                    .Where(x => x.Created >= snapshotsStartDate && x.Created <= snapshotsEndDate)
                     .OrderByDescending(x => x.Created))
                 .AsQueryable();
 
@@ -98,9 +102,14 @@ namespace aiof.asset.services
             DateTime? snapshotsEndDate = null,
             bool asNoTracking = true)
         {
-            return await GetQuery(snapshotsStartDate, snapshotsEndDate, asNoTracking)
+            var asset = await GetQuery(snapshotsStartDate, snapshotsEndDate, asNoTracking)
                 .FirstOrDefaultAsync(x => x.Id == id)
                 ?? throw new AssetNotFoundException($"Asset with Id={id} was not found");
+
+            if (asset.Snapshots.Count() == 0)
+                asset.Snapshots.Add(await GetLatestSnapshotAsync(asset.Id) as AssetSnapshot);
+
+            return asset;
         }
 
         public async Task<IEnumerable<IAsset>> GetAsync(
@@ -110,6 +119,16 @@ namespace aiof.asset.services
         {
             return await GetQuery(snapshotsStartDate, snapshotsEndDate, asNoTracking)
                 .ToListAsync();
+        }
+
+        public async Task<IAssetSnapshot> GetLatestSnapshotAsync(
+            int assetId,
+            bool asNoTracking = true)
+        {
+            return await GetSnapshotQuery(asNoTracking)
+                .Where(x => x.AssetId == assetId)
+                .OrderByDescending(x => x.Created)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<IAssetSnapshot> GetLatestSnapshotWithValueAsync(

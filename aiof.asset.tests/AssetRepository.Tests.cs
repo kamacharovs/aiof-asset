@@ -140,6 +140,38 @@ namespace aiof.asset.tests
                 Assert.NotEqual(new DateTime(), snapshot.Created);
             }
         }
+
+        [Theory]
+        [MemberData(nameof(Helper.AssetsIdUserId), MemberType = typeof(Helper))]
+        public async Task GetAsync_WithLatestSnapshot_IsSuccessful(int id, int userId)
+        {
+            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
+            var snapshotsStartDate = DateTime.UtcNow.AddHours(12);
+            var snapshotsEndDate = snapshotsStartDate.AddHours(24);
+
+            var asset = await repo.GetAsync(id);
+
+            Assert.NotNull(asset);
+
+            var snapshots = asset.Snapshots;
+            
+            Assert.Single(snapshots);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.AssetsIdUserId), MemberType = typeof(Helper))]
+        public async Task GetAsync_Snapshots_EndDate_SmallerThan_StartDate_ThrowsBadRequest(int id, int userId)
+        {
+            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
+            var snapshotsStartDate = Helper.RandomStartDate();
+            var snapshotsEndDate = snapshotsStartDate.AddDays(-1);
+
+            var exception = await Assert.ThrowsAsync<AssetFriendlyException>(() => repo.GetAsync(id, snapshotsStartDate, snapshotsEndDate));
+
+            Assert.NotNull(exception);
+            Assert.Equal(400, exception.StatusCode);
+            Assert.Contains("end date cannot be earlier than start date", exception.Message, StringComparison.InvariantCultureIgnoreCase);
+        }
         #endregion
 
         #region AddAsync
@@ -350,6 +382,31 @@ namespace aiof.asset.tests
 
             Assert.NotNull(exception);
             Assert.Equal(nameof(AssetDto.Value), exception.Errors.First().PropertyName);
+        }
+        #endregion
+
+        #region GetLatestSnapshotAsync
+        [Theory]
+        [MemberData(nameof(Helper.AssetsIdUserId), MemberType = typeof(Helper))]
+        public async Task GetLatestSnapshotAsync_IsSuccessful(int id, int userId)
+        {
+            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
+
+            var snapshot = await repo.GetLatestSnapshotAsync(id);
+            
+            Assert.NotNull(snapshot);
+            Assert.True(snapshot.ValueChange == 0 || snapshot.ValueChange < 0 || snapshot.ValueChange > 0);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.AssetsIdUserId), MemberType = typeof(Helper))]
+        public async Task GetLatestSnapshotAsync_DoesntExist_IsNull(int id, int userId)
+        {
+            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
+
+            var snapshot = await repo.GetLatestSnapshotAsync(id * 1000);
+            
+            Assert.Null(snapshot);
         }
         #endregion
 
