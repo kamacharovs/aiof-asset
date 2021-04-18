@@ -353,6 +353,9 @@ namespace aiof.asset.tests
         }
         #endregion
 
+        #region GetLatestSnapshotAsync
+        #endregion
+
         #region GetLatestSnapshotWithValueAsync
         [Theory]
         [MemberData(nameof(Helper.AssetsIdUserId), MemberType = typeof(Helper))]
