@@ -73,10 +73,14 @@ namespace aiof.asset.services
             snapshotsStartDate = snapshotsStartDate ?? DateTime.UtcNow.AddMonths(-6);
             snapshotsEndDate = snapshotsEndDate ?? DateTime.UtcNow;
 
+            if (snapshotsEndDate < snapshotsStartDate)
+                throw new AssetFriendlyException(HttpStatusCode.BadRequest,
+                    $"Snapshots end date cannot be earlier than start date");
+
             var assetsQuery = _context.Assets
                 .Include(x => x.Type)
                 .Include(x => x.Snapshots
-                    .Where(x => x.Created > snapshotsStartDate && x.Created <= snapshotsEndDate)
+                    .Where(x => x.Created >= snapshotsStartDate && x.Created <= snapshotsEndDate)
                     .OrderByDescending(x => x.Created))
                 .AsQueryable();
 

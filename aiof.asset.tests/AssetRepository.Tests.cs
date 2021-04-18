@@ -140,6 +140,21 @@ namespace aiof.asset.tests
                 Assert.NotEqual(new DateTime(), snapshot.Created);
             }
         }
+
+        [Theory]
+        [MemberData(nameof(Helper.AssetsIdUserId), MemberType = typeof(Helper))]
+        public async Task GetAsync_Snapshots_EndDate_SmallerThan_StartDate_ThrowsBadRequest(int id, int userId)
+        {
+            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
+            var snapshotsStartDate = Helper.RandomStartDate();
+            var snapshotsEndDate = snapshotsStartDate.AddDays(-1);
+
+            var exception = await Assert.ThrowsAsync<AssetFriendlyException>(() => repo.GetAsync(id, snapshotsStartDate, snapshotsEndDate));
+
+            Assert.NotNull(exception);
+            Assert.Equal(400, exception.StatusCode);
+            Assert.Contains("end date cannot be earlier than start date", exception.Message, StringComparison.InvariantCultureIgnoreCase);
+        }
         #endregion
 
         #region AddAsync
