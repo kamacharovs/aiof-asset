@@ -102,9 +102,14 @@ namespace aiof.asset.services
             DateTime? snapshotsEndDate = null,
             bool asNoTracking = true)
         {
-            return await GetQuery(snapshotsStartDate, snapshotsEndDate, asNoTracking)
+            var asset = await GetQuery(snapshotsStartDate, snapshotsEndDate, asNoTracking)
                 .FirstOrDefaultAsync(x => x.Id == id)
                 ?? throw new AssetNotFoundException($"Asset with Id={id} was not found");
+
+            if (asset.Snapshots.Count() == 0)
+                asset.Snapshots.Add(await GetLatestSnapshotAsync(asset.Id) as AssetSnapshot);
+
+            return asset;
         }
 
         public async Task<IEnumerable<IAsset>> GetAsync(

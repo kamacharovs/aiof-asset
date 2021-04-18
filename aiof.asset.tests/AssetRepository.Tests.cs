@@ -143,6 +143,23 @@ namespace aiof.asset.tests
 
         [Theory]
         [MemberData(nameof(Helper.AssetsIdUserId), MemberType = typeof(Helper))]
+        public async Task GetAsync_WithLatestSnapshot_IsSuccessful(int id, int userId)
+        {
+            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
+            var snapshotsStartDate = DateTime.UtcNow.AddHours(12);
+            var snapshotsEndDate = snapshotsStartDate.AddHours(24);
+
+            var asset = await repo.GetAsync(id);
+
+            Assert.NotNull(asset);
+
+            var snapshots = asset.Snapshots;
+            
+            Assert.Single(snapshots);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.AssetsIdUserId), MemberType = typeof(Helper))]
         public async Task GetAsync_Snapshots_EndDate_SmallerThan_StartDate_ThrowsBadRequest(int id, int userId)
         {
             var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
