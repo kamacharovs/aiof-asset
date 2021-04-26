@@ -1,0 +1,15 @@
+using System;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
+using System.ComponentModel.DataAnnotations;
+
+namespace aiof.asset.data
+{
+    public class AssetStock : Asset
+    {
+        public string TickerSymbol { get; set; }
+        public double? Shares { get; set; }
+        public double? ExpenseRatio { get; set; }
+        public double? DividendYield { get; set; }
+    }
+}

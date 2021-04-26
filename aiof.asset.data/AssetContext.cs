@@ -13,6 +13,7 @@ namespace aiof.asset.data
         public readonly ITenant Tenant;
 
         public virtual DbSet<Asset> Assets { get; set; }
+        public virtual DbSet<AssetStock> AssetsStock { get; set; }
         public virtual DbSet<AssetType> AssetTypes { get; set; }
         public virtual DbSet<AssetSnapshot> AssetSnapshots { get; set; }
 
@@ -55,6 +56,16 @@ namespace aiof.asset.data
                     .HasForeignKey(x => x.AssetId)
                     .IsRequired()
                     .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<AssetStock>(e =>
+            {
+                e.ToTable(Keys.Entity.AssetStock);
+
+                e.Property(x => x.TickerSymbol).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.Shares).HasSnakeCaseColumnName();
+                e.Property(x => x.ExpenseRatio).HasSnakeCaseColumnName();
+                e.Property(x => x.DividendYield).HasSnakeCaseColumnName();
             });
 
             modelBuilder.Entity<AssetType>(e =>

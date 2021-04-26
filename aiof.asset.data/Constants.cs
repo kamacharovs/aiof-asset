@@ -77,6 +77,7 @@ namespace aiof.asset.data
         public static class Entity
         {
             public static string Asset = nameof(data.Asset).ToSnakeCase();
+            public static string AssetStock = nameof(data.AssetStock).ToSnakeCase();
             public static string AssetType = nameof(data.AssetType).ToSnakeCase();
             public static string AssetSnapshot = nameof(data.AssetSnapshot).ToSnakeCase();
         }
