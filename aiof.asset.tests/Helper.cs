@@ -193,6 +193,11 @@ namespace aiof.asset.tests
                 .RuleFor(x => x.Value, f => f.Random.Int(1000, 10000));
         }
 
+        //private static Faker<AssetStockDto> FakerAssetStockDto()
+        //{
+        //
+        //}
+
         public static AssetSnapshotDto RandomAssetSnapshotDto(int assetId)
         {
             return FakerAssetSnapshotDto(assetId).Generate();

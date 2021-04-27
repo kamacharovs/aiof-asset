@@ -25,11 +25,11 @@ namespace aiof.asset.data
             _context.Assets
                 .AddRange(GetFakeAssets());
 
-            _context.AssetSnapshots
-                .AddRange(GetFakeAssetSnapshots());
-
             _context.AssetsStock
                 .AddRange(GetFakeAssetsStock());
+
+            _context.AssetSnapshots
+                .AddRange(GetFakeAssetSnapshots());
 
             _context.SaveChanges();
         }
@@ -112,6 +112,26 @@ namespace aiof.asset.data
             };
         }
 
+        public IEnumerable<AssetStock> GetFakeAssetsStock()
+        {
+            return new List<AssetStock>
+            {
+                new AssetStock
+                {
+                    Id = 5,
+                    Name = "asset.stock",
+                    Value = 10500M,
+                    UserId = 1,
+                    Created = DateTime.UtcNow.AddYears(-1),
+                    IsDeleted = false,
+                    TickerSymbol = "VTSAX",
+                    Shares = 149.658,
+                    ExpenseRatio = 0.040,
+                    DividendYield = 1.36
+                }
+            };
+        }
+
         public IEnumerable<AssetSnapshot> GetFakeAssetSnapshots()
         {
             return new List<AssetSnapshot>
@@ -181,26 +201,6 @@ namespace aiof.asset.data
                     Value = 10500M,
                     ValueChange = 0,
                     Created = DateTime.UtcNow.AddYears(-1)
-                }
-            };
-        }
-
-        public IEnumerable<AssetStock> GetFakeAssetsStock()
-        {
-            return new List<AssetStock>
-            {
-                new AssetStock
-                {
-                    Id = 5,
-                    Name = "asset.stock",
-                    Value = 10500M,
-                    UserId = 1,
-                    Created = DateTime.UtcNow.AddYears(-1),
-                    IsDeleted = false,
-                    TickerSymbol = "VTSAX",
-                    Shares = 149.658,
-                    ExpenseRatio = 0.040,
-                    DividendYield = 1.36
                 }
             };
         }
