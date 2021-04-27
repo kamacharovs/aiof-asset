@@ -16,7 +16,6 @@ namespace aiof.asset.data
         public virtual DbSet<Asset> Assets { get; set; }
         public virtual DbSet<AssetSnapshot> AssetSnapshots { get; set; }
         public virtual DbSet<AssetStock> AssetsStock { get; set; }
-        public virtual DbSet<AssetStockSnapshot> AssetStockSnapshots { get; set; }
 
         public AssetContext(DbContextOptions<AssetContext> options, ITenant tenant)
             : base(options)
@@ -89,16 +88,6 @@ namespace aiof.asset.data
                 e.ToTable(Keys.Entity.AssetStock);
 
                 e.Property(x => x.TickerSymbol).HasSnakeCaseColumnName().HasMaxLength(50).IsRequired();
-                e.Property(x => x.Shares).HasSnakeCaseColumnName();
-                e.Property(x => x.ExpenseRatio).HasSnakeCaseColumnName();
-                e.Property(x => x.DividendYield).HasSnakeCaseColumnName();
-            });
-
-            modelBuilder.Entity<AssetStockSnapshot>(e =>
-            {
-                e.ToTable(Keys.Entity.AssetStockSnapshot);
-
-                e.Property(x => x.TickerSymbol).HasSnakeCaseColumnName();
                 e.Property(x => x.Shares).HasSnakeCaseColumnName();
                 e.Property(x => x.ExpenseRatio).HasSnakeCaseColumnName();
                 e.Property(x => x.DividendYield).HasSnakeCaseColumnName();

@@ -80,7 +80,6 @@ namespace aiof.asset.data
             public static string AssetStock = nameof(data.AssetStock).ToSnakeCase();
             public static string AssetType = nameof(data.AssetType).ToSnakeCase();
             public static string AssetSnapshot = nameof(data.AssetSnapshot).ToSnakeCase();
-            public static string AssetStockSnapshot = nameof(data.AssetStockSnapshot).ToSnakeCase();
         }
     }
 

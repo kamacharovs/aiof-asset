@@ -146,11 +146,45 @@ namespace aiof.asset.services
         {
             await _dtoValidator.ValidateAndThrowAsync(dto);
 
-            var asset = _mapper.Map<Asset>(dto);
+            return await AddAsync<Asset, AssetDto>(dto);
+
+            /*var asset = _mapper.Map<Asset>(dto);
 
             asset.UserId = _context.Tenant.UserId;
 
             await _context.Assets.AddAsync(asset);
+            await _context.SaveChangesAsync();
+
+            // Create snapshot entry
+            var snapshotDto = _mapper.Map<AssetSnapshotDto>(dto);
+
+            snapshotDto.AssetId = asset.Id;
+
+            await AddSnapshotAsync(snapshotDto);
+
+            _logger.LogInformation("{Tenant} | Created Asset with Id={AssetId}, PublicKey={AssetPublicKey} and UserId={AssetUserId}",
+                _context.Tenant.Log,
+                asset.Id,
+                asset.PublicKey,
+                asset.UserId);
+
+            return asset;*/
+        }
+
+        public async Task<IAsset> AddAsync(AssetStockDto dto)
+        {
+            return await AddAsync<AssetStock, AssetStockDto>(dto);
+        }
+
+        private async Task<TAsset> AddAsync<TAsset, TAssetDto>(TAssetDto dto)
+            where TAsset : Asset
+            where TAssetDto : AssetDto
+        {
+            var asset = _mapper.Map<TAsset>(dto);
+
+            asset.UserId = _context.Tenant.UserId;
+
+            await _context.Set<TAsset>().AddAsync(asset);
             await _context.SaveChangesAsync();
 
             // Create snapshot entry
