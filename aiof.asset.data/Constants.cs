@@ -80,6 +80,17 @@ namespace aiof.asset.data
             public static string AssetStock = nameof(data.AssetStock).ToSnakeCase();
             public static string AssetType = nameof(data.AssetType).ToSnakeCase();
             public static string AssetSnapshot = nameof(data.AssetSnapshot).ToSnakeCase();
+            public static string AssetStockSnapshot = nameof(data.AssetStockSnapshot).ToSnakeCase();
         }
+    }
+
+    public static class AssetTypes
+    {
+        public const string Car = "car";
+        public const string House = "house";
+        public const string Investment = "investment";
+        public const string Stock = "stock";
+        public const string Cash = "cash";
+        public const string Other = "other";
     }
 }

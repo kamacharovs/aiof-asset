@@ -28,6 +28,12 @@ namespace aiof.asset.data
             _context.AssetSnapshots
                 .AddRange(GetFakeAssetSnapshots());
 
+            _context.AssetsStock
+                .AddRange(GetFakeAssetsStock());
+
+            _context.AssetStockSnapshots
+                .AddRange(GetFakeAssetStockSnapshots());
+
             _context.SaveChanges();
         }
 
@@ -37,27 +43,27 @@ namespace aiof.asset.data
             {
                 new AssetType
                 {
-                    Name = "car"
+                    Name = AssetTypes.Car
                 },
                 new AssetType
                 {
-                    Name = "house"
+                    Name = AssetTypes.House
                 },
                 new AssetType
                 {
-                    Name = "investment"
+                    Name = AssetTypes.Investment
                 },
                 new AssetType
                 {
-                    Name = "stock"
+                    Name = AssetTypes.Stock
                 },
                 new AssetType
                 {
-                    Name = "cash"
+                    Name = AssetTypes.Cash
                 },
                 new AssetType
                 {
-                    Name = "other"
+                    Name = AssetTypes.Other
                 }
             };
         }
@@ -70,7 +76,7 @@ namespace aiof.asset.data
                 {
                     Id = 1,
                     Name = "car",
-                    TypeName = "car",
+                    TypeName = AssetTypes.Car,
                     Value = 14762.12M,
                     UserId = 1,
                     Created = DateTime.UtcNow.AddDays(-30),
@@ -80,7 +86,7 @@ namespace aiof.asset.data
                 {
                     Id = 2,
                     Name = "house",
-                    TypeName = "house",
+                    TypeName = AssetTypes.House,
                     Value = 300000M,
                     UserId = 1,
                     Created = DateTime.UtcNow.AddYears(-5),
@@ -90,7 +96,7 @@ namespace aiof.asset.data
                 {
                     Id = 3,
                     Name = "hardcoded guid",
-                    TypeName = "investment",
+                    TypeName = AssetTypes.Investment,
                     Value = 999999M,
                     UserId = 1,
                     Created = DateTime.UtcNow.AddDays(1),
@@ -100,7 +106,7 @@ namespace aiof.asset.data
                 {
                     Id = 4,
                     Name = "asset",
-                    TypeName = "cash",
+                    TypeName = AssetTypes.Cash,
                     Value = 99M,
                     UserId = 2,
                     Created = DateTime.UtcNow.AddDays(1),
@@ -168,6 +174,47 @@ namespace aiof.asset.data
                     Value = 99M,
                     ValueChange = 0,
                     Created = DateTime.UtcNow.AddDays(1)
+                }
+            };
+        }
+
+        public IEnumerable<AssetStock> GetFakeAssetsStock()
+        {
+            return new List<AssetStock>
+            {
+                new AssetStock
+                {
+                    Id = 5,
+                    Name = "asset.stock",
+                    Value = 10500M,
+                    UserId = 1,
+                    Created = DateTime.UtcNow.AddYears(-1),
+                    IsDeleted = false,
+                    TickerSymbol = "VTSAX",
+                    Shares = 149.658,
+                    ExpenseRatio = 0.040,
+                    DividendYield = 1.36
+                }
+            };
+        }
+
+        public IEnumerable<AssetStockSnapshot> GetFakeAssetStockSnapshots()
+        {
+            return new List<AssetStockSnapshot>
+            {
+                new AssetStockSnapshot
+                {
+                    Id = 7,
+                    AssetId = 5,
+                    Name = "asset.stock",
+                    TypeName = "stock",
+                    Value = 10500M,
+                    ValueChange = 0,
+                    Created = DateTime.UtcNow.AddYears(-1),
+                    TickerSymbol = "VTSAX",
+                    Shares = 149.658,
+                    ExpenseRatio = 0.040,
+                    DividendYield = 1.36
                 }
             };
         }

@@ -1,20 +1,16 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
-using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace aiof.asset.data
 {
-    public class AssetStock : Asset
+    public class AssetStockSnapshot : AssetSnapshot
     {
         public string TickerSymbol { get; set; }
         public double? Shares { get; set; }
         public double? ExpenseRatio { get; set; }
         public double? DividendYield { get; set; }
-
-        public AssetStock()
-        {
-            TypeName = AssetTypes.Stock;
-        }
     }
 }
