@@ -42,9 +42,6 @@ namespace aiof.asset.data
              */
             CreateMap<AssetStockDto, AssetStock>()
                 .ForAllMembers(x => x.Condition((source, destination, member) => member != null));
-
-            CreateMap<AssetStockSnapshotDto, AssetStockSnapshot>()
-                .ForAllMembers(x => x.Condition((source, destination, member) => member != null));
         }
     }
 }
