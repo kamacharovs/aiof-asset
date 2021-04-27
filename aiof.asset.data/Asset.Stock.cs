@@ -17,4 +17,14 @@ namespace aiof.asset.data
             TypeName = AssetTypes.Stock;
         }
     }
+
+    public class AssetStockDto : AssetDto
+    {
+        [MaxLength(50)]
+        public string TickerSymbol { get; set; }
+
+        public double? Shares { get; set; }
+        public double? ExpenseRatio { get; set; }
+        public double? DividendYield { get; set; }
+    }
 }
