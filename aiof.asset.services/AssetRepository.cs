@@ -21,6 +21,7 @@ namespace aiof.asset.services
         private readonly IMapper _mapper;
         private readonly AssetContext _context;
         private readonly AbstractValidator<AssetDto> _dtoValidator;
+        private readonly AbstractValidator<AssetStockDto> _stockDtoValidator;
         private readonly AbstractValidator<AssetSnapshotDto> _snapshotDtoValidator;
 
         public AssetRepository(
@@ -28,12 +29,14 @@ namespace aiof.asset.services
             IMapper mapper,
             AssetContext context,
             AbstractValidator<AssetDto> dtoValidator,
+            AbstractValidator<AssetStockDto> stockDtoValidator,
             AbstractValidator<AssetSnapshotDto> snapshotDtoValidator)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _dtoValidator = dtoValidator ?? throw new ArgumentNullException(nameof(dtoValidator));
+            _stockDtoValidator = stockDtoValidator ?? throw new ArgumentNullException(nameof(stockDtoValidator));
             _snapshotDtoValidator = snapshotDtoValidator ?? throw new ArgumentNullException(nameof(snapshotDtoValidator));
         }
 
@@ -151,6 +154,8 @@ namespace aiof.asset.services
 
         public async Task<IAsset> AddAsync(AssetStockDto dto)
         {
+            await _stockDtoValidator.ValidateAndThrowAsync(dto);
+
             return await AddAsync<AssetStock, AssetStockDto>(dto);
         }
 

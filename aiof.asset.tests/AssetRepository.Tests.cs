@@ -208,6 +208,39 @@ namespace aiof.asset.tests
 
         [Theory]
         [MemberData(nameof(Helper.AssetsUserId), MemberType = typeof(Helper))]
+        public async Task AddAsync_Stock_IsSuccessful(int userId)
+        {
+            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
+
+            var dto = Helper.RandomAssetStockDto();
+            var asset = await repo.AddAsync(dto) as AssetStock;
+
+            Assert.NotNull(asset);
+            Assert.NotEqual(0, asset.Id);
+            Assert.NotEqual(Guid.Empty, asset.PublicKey);
+            Assert.Equal(dto.Name, asset.Name);
+            Assert.Equal(AssetTypes.Stock, asset.TypeName);
+            Assert.NotNull(asset.Type);
+            Assert.NotEqual(0, asset.Value);
+            Assert.Equal(userId, asset.UserId);
+            Assert.False(asset.IsDeleted);
+            Assert.NotEmpty(asset.Snapshots);
+            Assert.Equal(dto.TickerSymbol, asset.TickerSymbol);
+            Assert.Equal(dto.Shares, asset.Shares);
+            Assert.Equal(dto.ExpenseRatio, asset.ExpenseRatio);
+            Assert.Equal(dto.DividendYield, asset.DividendYield);
+
+            var snapshots = asset.Snapshots;
+            var snapshot = snapshots?.FirstOrDefault();
+
+            Assert.Equal(dto.Name, snapshot.Name);
+            Assert.Equal(dto.TypeName, snapshot.TypeName);
+            Assert.Equal(dto.Value, snapshot.Value);
+            Assert.Equal(0, snapshot.ValueChange);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.AssetsUserId), MemberType = typeof(Helper))]
         public async Task AddAsync_UpdateAsync_IsSuccessful(int userId)
         {
             var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();

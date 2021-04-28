@@ -12,9 +12,21 @@ namespace aiof.asset.data
     {
         public const decimal MinimumValue = 0M;
         public const decimal MaximumValue = 99999999M;
+        public const decimal MinimumPercentValue = 0M;
+        public const decimal MaximumPercentValue = 100M;
 
         public static string ValueMessage = $"Value must be between {MinimumValue} and {MaximumValue}";
+        public static string PercentValueMessage = $"Percent must be between {MinimumPercentValue} and {MaximumPercentValue}";
         public static string TypeNameMessage = $"Invalid {nameof(AssetDto.TypeName)}";
+
+        public static bool BeValidPercent(double? value)
+        {
+            var valuePerc = Math.Round((double)(value * 100), 4);
+
+            return value.HasValue
+                ? valuePerc > 0 && valuePerc <= 100
+                : false;
+        }
     }
 
     public class AssetTypeValidator : AbstractValidator<string>
@@ -67,6 +79,44 @@ namespace aiof.asset.data
                 .LessThan(CommonValidator.MaximumValue)
                 .WithMessage(CommonValidator.ValueMessage)
                 .When(x => x.Value.HasValue);
+        }
+    }
+
+    public class AssetStockDtoValidator : AbstractValidator<AssetStockDto>
+    {
+        public AssetStockDtoValidator()
+        {
+            ValidatorOptions.Global.CascadeMode = CascadeMode.Stop;
+
+            RuleFor(x => x)
+                .NotNull();
+
+            RuleFor(x => x.TickerSymbol)
+                .NotEmpty()
+                .MaximumLength(50)
+                .When(x => x.TickerSymbol != null);
+
+            RuleFor(x => x.Shares)
+                .GreaterThan(0)
+                .When(x => x.Shares.HasValue);
+
+            RuleFor(x => x.ExpenseRatio)
+                .GreaterThan(0)
+                .Must(x =>
+                {
+                    return CommonValidator.BeValidPercent(x);
+                })
+                .WithMessage(CommonValidator.PercentValueMessage)
+                .When(x => x.ExpenseRatio.HasValue);
+
+            RuleFor(x => x.DividendYield)
+                .GreaterThan(0)
+                .Must(x =>
+                {
+                    return CommonValidator.BeValidPercent(x);
+                })
+                .WithMessage(CommonValidator.PercentValueMessage)
+                .When(x => x.DividendYield.HasValue);
         }
     }
 
