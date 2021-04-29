@@ -331,7 +331,14 @@ namespace aiof.asset.tests
             var endDate = new DateTime();
 
             if (startDate != null)
-                endDate = DateTime.UtcNow.AddDays(-startDate.Value.Day);
+            {
+                var nnStartDate = (DateTime)startDate;
+                var days = new Faker()
+                    .Random
+                    .Int(1, 730);
+
+                endDate = new DateTime(nnStartDate.Year, nnStartDate.Month, nnStartDate.Day).AddDays(days);
+            }
             else
             {
                 var randomDays = new Faker()
