@@ -1,4 +1,6 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Collections.Generic;
+using System.Text.Json;
 
 using Microsoft.AspNetCore.Http;
 
@@ -27,6 +29,12 @@ namespace aiof.asset.data
                 WriteIndented = true,
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                 IgnoreNullValues = true
+            };
+
+        public static Dictionary<string, string> ClassToTypeMap
+            => new Dictionary<string, string>
+            {
+                { typeof(AssetStock).Name, AssetTypes.Stock }
             };
     }
 

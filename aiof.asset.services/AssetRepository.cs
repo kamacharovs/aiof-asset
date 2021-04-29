@@ -241,7 +241,9 @@ namespace aiof.asset.services
             where TAsset : Asset
             where TAssetDto : AssetDto
         {
-            var asset = await GetAsync(id, asNoTracking: false) as TAsset;
+            var asset = await GetAsync(id, asNoTracking: false) as TAsset
+                ?? throw new AssetFriendlyException(HttpStatusCode.BadRequest, 
+                    $"Asset is not of type {Constants.ClassToTypeMap[typeof(AssetStock).Name]}");
 
             asset = _mapper.Map(dto, asset);
 
