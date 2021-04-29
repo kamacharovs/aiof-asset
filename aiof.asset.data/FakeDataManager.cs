@@ -274,5 +274,32 @@ namespace aiof.asset.data
 
             return toReturn;
         }
+
+        public IEnumerable<object[]> GetFakeAssetsStockData(
+            bool id = false,
+            bool userId = false,
+            bool isDeleted = false)
+        {
+            var fakeAssetsStock = GetFakeAssetsStock()
+                .Where(x => x.IsDeleted == isDeleted)
+                .ToArray();
+
+            var toReturn = new List<object[]>();
+
+            if (id
+                && userId)
+            {
+                foreach (var fakeAssetStok in fakeAssetsStock)
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakeAssetStok.Id,
+                        fakeAssetStok.UserId
+                    });
+                }
+            }
+
+            return toReturn;
+        }
     }
 }

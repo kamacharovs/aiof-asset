@@ -223,11 +223,29 @@ namespace aiof.asset.services
         {
             await _dtoValidator.ValidateAndThrowAsync(dto);
 
-            var asset = await GetAsync(id, asNoTracking: false) as Asset;
+            return await UpdateAsync<Asset, AssetDto>(id, dto);
+        }
+
+        public async Task<IAsset> UpdateAsync(
+            int id, 
+            AssetStockDto dto)
+        {
+            await _stockDtoValidator.ValidateAndThrowAsync(dto);
+
+            return await UpdateAsync<AssetStock, AssetStockDto>(id, dto);
+        }
+
+        public async Task<IAsset> UpdateAsync<TAsset, TAssetDto>(
+            int id,
+            TAssetDto dto)
+            where TAsset : Asset
+            where TAssetDto : AssetDto
+        {
+            var asset = await GetAsync(id, asNoTracking: false) as TAsset;
 
             asset = _mapper.Map(dto, asset);
 
-            _context.Assets.Update(asset);
+            _context.Set<TAsset>().Update(asset);
             await _context.SaveChangesAsync();
 
             // Create snapshot entry

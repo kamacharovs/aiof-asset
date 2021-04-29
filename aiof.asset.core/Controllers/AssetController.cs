@@ -119,6 +119,20 @@ namespace aiof.asset.core
         }
 
         /// <summary>
+        /// Update Asset.Stock
+        /// </summary>
+        [HttpPut]
+        [Route("stock/{id}")]
+        [ProducesResponseType(typeof(IAssetProblemDetail), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IAssetSnapshot), StatusCodes.Status200OK)]
+        public async Task<IActionResult> UpdateAsync(
+            [FromRoute, Required] int id,
+            [FromBody, Required] AssetStockDto dto)
+        {
+            return Ok(await _repo.UpdateAsync(id, dto));
+        }
+
+        /// <summary>
         /// Delete Asset
         /// </summary>
         [HttpDelete]
