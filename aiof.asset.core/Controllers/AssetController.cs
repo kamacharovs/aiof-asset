@@ -81,6 +81,18 @@ namespace aiof.asset.core
         }
 
         /// <summary>
+        /// Add Asset.Stock
+        /// </summary>
+        [HttpPost]
+        [Route("stock")]
+        [ProducesResponseType(typeof(IAssetProblemDetail), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IAsset), StatusCodes.Status201Created)]
+        public async Task<IActionResult> AddStockAsync([FromBody, Required] AssetStockDto dto)
+        {
+            return Created(nameof(AssetStock), await _repo.AddAsync(dto));
+        }
+
+        /// <summary>
         /// Add Asset snapshot
         /// </summary>
         [HttpPost]
