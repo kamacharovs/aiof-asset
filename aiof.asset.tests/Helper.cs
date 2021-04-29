@@ -47,7 +47,7 @@ namespace aiof.asset.tests
             services.AddScoped<AbstractValidator<string>, AssetTypeValidator>()
                 .AddScoped<AbstractValidator<AssetDto>, AssetDtoValidator>()
                 .AddScoped<AbstractValidator<AssetSnapshotDto>, AssetSnapshotDtoValidator>()
-                .AddSingleton<AbstractValidator<AssetStockDto>, AssetStockDtoValidator>();
+                .AddScoped<AbstractValidator<AssetStockDto>, AssetStockDtoValidator>();
 
             services.AddLogging();
             services.AddHttpContextAccessor();
@@ -136,36 +136,112 @@ namespace aiof.asset.tests
         }
         public static IEnumerable<object[]> InvalidTypeNames()
         {
-            var invalidTypeNames = new List<object[]>();
-
-            invalidTypeNames.Add(new object[] { "" });
-            invalidTypeNames.Add(new object[] { "test" });
-            invalidTypeNames.Add(new object[] { Repeat("typenametoolong") });
-
-            return invalidTypeNames;
+            return new List<object[]>
+            {
+                new object[] { "" },
+                new object[] { "test" },
+                new object[] { Repeat("typenametoolong") }
+            };
         }
 
         public static IEnumerable<object[]> ValidValues()
         {
-            var validValues = new List<object[]>();
-
-            validValues.Add(new object[] { 1 });
-            validValues.Add(new object[] { 50 });
-            validValues.Add(new object[] { CommonValidator.MaximumValue - 1 });
-            validValues.Add(new object[] { CommonValidator.MaximumValue - 50 });
-
-            return validValues;
+            return new List<object[]>
+            {
+                new object[] { 1 },
+                new object[] { 50 },
+                new object[] { CommonValidator.MaximumValue - 1 },
+                new object[] { CommonValidator.MaximumValue - 50 }
+            };
         }
         public static IEnumerable<object[]> InvalidValues()
         {
-            var invalidValues = new List<object[]>();
+            return new List<object[]>
+            {
+                new object[] { -1 },
+                new object[] { -50 },
+                new object[] { CommonValidator.MaximumValue + 1 },
+                new object[] { CommonValidator.MaximumValue + 50 }
+            };
+        }
 
-            invalidValues.Add(new object[] { -1 });
-            invalidValues.Add(new object[] { -50 });
-            invalidValues.Add(new object[] { CommonValidator.MaximumValue + 1 });
-            invalidValues.Add(new object[] { CommonValidator.MaximumValue + 50 });
+        public static IEnumerable<object[]> ValidTickerSymbols()
+        {
+            return new List<object[]>
+            {
+                new object[] { "VTSAX" },
+                new object[] { "TSLA" },
+                new object[] { "MAYBEASYMBOL" },
+                new object[] { "apple" }
+            };
+        }
+        public static IEnumerable<object[]> InvalidTickerSymbols()
+        {
+            return new List<object[]>
+            {
+                new object[] { "" },
+                new object[] { Repeat("VTSAX", 50) }
+            };
+        }
 
-            return invalidValues;
+        public static IEnumerable<object[]> ValidShares()
+        {
+            return new List<object[]>()
+            {
+                new object[] { 0.0875 },
+                new object[] { 1 },
+                new object[] { 105.69 }
+             };
+        }
+        public static IEnumerable<object[]> InvalidShares()
+        {
+            return new List<object[]>
+            {
+                new object[] { null },
+                new object[] { 0 },
+                new object[] { -1 },
+                new object[] { -230.234 }
+            };
+        }
+
+        public static IEnumerable<object[]> ValidExpenseRatios()
+        {
+            return new List<object[]>
+            {
+                new object[] { 0.025 },
+                new object[] { 0.0015 }
+            };
+        }
+        public static IEnumerable<object[]> InvalidExpenseRatios()
+        {
+            return new List<object[]>
+            {
+                new object[] { 0 },
+                new object[] { -0.025 },
+                new object[] { -101 },
+                new object[] { 101 },
+                new object[] { 123456 }
+            };
+        }
+
+        public static IEnumerable<object[]> ValidDividendYields()
+        {
+            return new List<object[]>
+            {
+                new object[] { 0.025 },
+                new object[] { 0.0015 }
+            };
+        }
+        public static IEnumerable<object[]> InvalidDividendYields()
+        {
+            return new List<object[]>
+            {
+                new object[] { 0 },
+                new object[] { -0.025 },
+                new object[] { -101 },
+                new object[] { 101 },
+                new object[] { 123456 }
+            };
         }
 
         public static string Repeat(string s, int n = 101)

@@ -84,12 +84,17 @@ namespace aiof.asset.data
 
     public class AssetStockDtoValidator : AbstractValidator<AssetStockDto>
     {
-        public AssetStockDtoValidator()
+        private readonly AssetContext _context;
+
+        public AssetStockDtoValidator(AssetContext context)
         {
             ValidatorOptions.Global.CascadeMode = CascadeMode.Stop;
 
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+
             RuleFor(x => x)
-                .NotNull();
+                .NotNull()
+                .SetValidator(new AssetDtoValidator(_context));
 
             RuleFor(x => x.TickerSymbol)
                 .NotEmpty()
