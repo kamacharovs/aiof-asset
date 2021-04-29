@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using System.Linq;
 
 using Xunit;
@@ -108,7 +107,7 @@ namespace aiof.asset.tests
         {
             var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
 
-            var exception = await Assert.ThrowsAsync< AssetNotFoundException>(() => repo.GetAsync(id * 1000));
+            var exception = await Assert.ThrowsAsync<AssetNotFoundException>(() => repo.GetAsync(id * 1000));
 
             Assert.NotNull(exception);
             Assert.Equal(404, exception.StatusCode);
@@ -154,7 +153,7 @@ namespace aiof.asset.tests
             Assert.NotNull(asset);
 
             var snapshots = asset.Snapshots;
-            
+
             Assert.Single(snapshots);
         }
 
@@ -258,7 +257,7 @@ namespace aiof.asset.tests
             Assert.NotEqual(0, asset.Id);
             Assert.NotEqual(Guid.Empty, asset.PublicKey);
 
-            var updatedAsset = await repo.UpdateAsync(asset.Id, 
+            var updatedAsset = await repo.UpdateAsync(asset.Id,
                 new AssetDto { Value = value + valueToChange });
 
             Assert.NotNull(updatedAsset);
@@ -448,7 +447,7 @@ namespace aiof.asset.tests
             var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
 
             var snapshot = await repo.GetLatestSnapshotAsync(id);
-            
+
             Assert.NotNull(snapshot);
             Assert.True(snapshot.ValueChange == 0 || snapshot.ValueChange < 0 || snapshot.ValueChange > 0);
         }
@@ -460,7 +459,7 @@ namespace aiof.asset.tests
             var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
 
             var snapshot = await repo.GetLatestSnapshotAsync(id * 1000);
-            
+
             Assert.Null(snapshot);
         }
         #endregion

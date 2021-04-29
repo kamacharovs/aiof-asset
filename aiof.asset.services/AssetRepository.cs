@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -227,7 +226,7 @@ namespace aiof.asset.services
         }
 
         public async Task<IAsset> UpdateAsync(
-            int id, 
+            int id,
             AssetStockDto dto)
         {
             await _stockDtoValidator.ValidateAndThrowAsync(dto);
@@ -242,7 +241,7 @@ namespace aiof.asset.services
             where TAssetDto : AssetDto
         {
             var asset = await GetAsync(id, asNoTracking: false) as TAsset
-                ?? throw new AssetFriendlyException(HttpStatusCode.BadRequest, 
+                ?? throw new AssetFriendlyException(HttpStatusCode.BadRequest,
                     $"Asset is not of type {Constants.ClassToTypeMap[typeof(AssetStock).Name]}");
 
             asset = _mapper.Map(dto, asset);

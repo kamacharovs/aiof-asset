@@ -41,7 +41,7 @@ namespace aiof.asset.tests
                 .AddScoped<FakeDataManager>();
             services.AddScoped(x => GetMockTenant());
             services.AddSingleton(new MapperConfiguration(x => { x.AddProfile(new AutoMappingProfile()); }).CreateMapper());
-            
+
             services.AddDbContext<AssetContext>(o => o.UseInMemoryDatabase(Guid.NewGuid().ToString()));
 
             services.AddScoped<AbstractValidator<string>, AssetTypeValidator>()
