@@ -234,7 +234,7 @@ namespace aiof.asset.services
             return await UpdateAsync<AssetStock, AssetStockDto>(id, dto);
         }
 
-        public async Task<IAsset> UpdateAsync<TAsset, TAssetDto>(
+        private async Task<IAsset> UpdateAsync<TAsset, TAssetDto>(
             int id,
             TAssetDto dto)
             where TAsset : Asset
