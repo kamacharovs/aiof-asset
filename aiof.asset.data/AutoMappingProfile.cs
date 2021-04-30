@@ -12,6 +12,9 @@ namespace aiof.asset.data
     {
         public AutoMappingProfile()
         {
+            /*
+             * Asset
+             */
             CreateMap<AssetDto, Asset>()
                 .ForMember(x => x.Name, o => o.Condition(s => s.Name != null))
                 .ForMember(x => x.TypeName, o => o.Condition(s => s.TypeName != null))
@@ -33,6 +36,15 @@ namespace aiof.asset.data
                 .ForMember(x => x.Name, o => o.MapFrom(s => s.Name))
                 .ForMember(x => x.TypeName, o => o.MapFrom(s => s.TypeName))
                 .ForMember(x => x.Value, o => o.MapFrom(s => s.Value));
+
+            /*
+             * Asset.Stock
+             */
+            CreateMap<AssetStockDto, AssetStock>()
+                .ForAllMembers(x => x.Condition((source, destination, member) => member != null));
+
+            CreateMap<AssetStockDto, AssetSnapshotDto>()
+                .ForAllMembers(x => x.Condition((source, destination, member) => member != null));
         }
     }
 }

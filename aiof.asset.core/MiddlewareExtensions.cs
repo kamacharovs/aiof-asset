@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Text.Json;
 using System.IO;
-using System.Collections.Generic;
 using System.Reflection;
 using System.Security.Cryptography;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
@@ -76,7 +73,8 @@ namespace aiof.asset.core
         {
             services.AddScoped<AbstractValidator<string>, AssetTypeValidator>()
                 .AddScoped<AbstractValidator<AssetDto>, AssetDtoValidator>()
-                .AddScoped<AbstractValidator<AssetSnapshotDto>, AssetSnapshotDtoValidator>();
+                .AddScoped<AbstractValidator<AssetSnapshotDto>, AssetSnapshotDtoValidator>()
+                .AddScoped<AbstractValidator<AssetStockDto>, AssetStockDtoValidator>();
 
             return services;
         }

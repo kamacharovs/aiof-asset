@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Collections.Generic;
+using System.Text.Json;
 
 using Microsoft.AspNetCore.Http;
 
@@ -27,6 +28,12 @@ namespace aiof.asset.data
                 WriteIndented = true,
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                 IgnoreNullValues = true
+            };
+
+        public static Dictionary<string, string> ClassToTypeMap
+            => new Dictionary<string, string>
+            {
+                { typeof(AssetStock).Name, AssetTypes.Stock }
             };
     }
 
@@ -77,8 +84,19 @@ namespace aiof.asset.data
         public static class Entity
         {
             public static string Asset = nameof(data.Asset).ToSnakeCase();
+            public static string AssetStock = nameof(data.AssetStock).ToSnakeCase();
             public static string AssetType = nameof(data.AssetType).ToSnakeCase();
             public static string AssetSnapshot = nameof(data.AssetSnapshot).ToSnakeCase();
         }
+    }
+
+    public static class AssetTypes
+    {
+        public const string Car = "car";
+        public const string House = "house";
+        public const string Investment = "investment";
+        public const string Stock = "stock";
+        public const string Cash = "cash";
+        public const string Other = "other";
     }
 }

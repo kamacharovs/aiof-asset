@@ -41,3 +41,13 @@ From the project root directory
 ```ps
 docker-compose up
 ```
+
+## EF migrations
+
+Migrations are currently managed in the `ef-migrations` branch
+
+```ps
+dotnet ef migrations add {migration name} -s .\aiof.asset.core -p .\aiof.asset.data
+dotnet ef migrations script -s .\aiof.asset.core\ -p .\aiof.asset.data\
+dotnet ef migrations remove -s .\aiof.asset.core -p .\aiof.asset.data
+```

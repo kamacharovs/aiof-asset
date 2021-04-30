@@ -20,6 +20,7 @@ namespace aiof.asset.services
         Task<IEnumerable<IAsset>> GetAsync(
             DateTime? snapshotsStartDate = null,
             DateTime? snapshotsEndDate = null,
+            string type = null,
             bool asNoTracking = true);
         Task<IAssetSnapshot> GetLatestSnapshotAsync(
             int assetId,
@@ -29,12 +30,16 @@ namespace aiof.asset.services
             bool asNoTracking = true);
 
         Task<IAsset> AddAsync(AssetDto dto);
+        Task<IAsset> AddAsync(AssetStockDto dto);
 
         Task<IAssetSnapshot> AddSnapshotAsync(AssetSnapshotDto dto);
 
         Task<IAsset> UpdateAsync(
             int id,
             AssetDto dto);
+        Task<IAsset> UpdateAsync(
+            int id,
+            AssetStockDto dto);
 
         Task DeleteAsync(int id);
     }

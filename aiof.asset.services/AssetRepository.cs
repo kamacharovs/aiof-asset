@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -21,6 +20,7 @@ namespace aiof.asset.services
         private readonly IMapper _mapper;
         private readonly AssetContext _context;
         private readonly AbstractValidator<AssetDto> _dtoValidator;
+        private readonly AbstractValidator<AssetStockDto> _stockDtoValidator;
         private readonly AbstractValidator<AssetSnapshotDto> _snapshotDtoValidator;
 
         public AssetRepository(
@@ -28,12 +28,14 @@ namespace aiof.asset.services
             IMapper mapper,
             AssetContext context,
             AbstractValidator<AssetDto> dtoValidator,
+            AbstractValidator<AssetStockDto> stockDtoValidator,
             AbstractValidator<AssetSnapshotDto> snapshotDtoValidator)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _dtoValidator = dtoValidator ?? throw new ArgumentNullException(nameof(dtoValidator));
+            _stockDtoValidator = stockDtoValidator ?? throw new ArgumentNullException(nameof(stockDtoValidator));
             _snapshotDtoValidator = snapshotDtoValidator ?? throw new ArgumentNullException(nameof(snapshotDtoValidator));
         }
 
@@ -68,6 +70,7 @@ namespace aiof.asset.services
         private IQueryable<Asset> GetQuery(
             DateTime? snapshotsStartDate = null,
             DateTime? snapshotsEndDate = null,
+            string type = null,
             bool asNoTracking = true)
         {
             snapshotsStartDate = snapshotsStartDate ?? DateTime.UtcNow.AddMonths(-6);
@@ -77,12 +80,15 @@ namespace aiof.asset.services
                 throw new AssetFriendlyException(HttpStatusCode.BadRequest,
                     $"Snapshots end date cannot be earlier than start date");
 
-            var assetsQuery = _context.Assets
+            var dbSet = type is null
+                ? _context.Assets.AsQueryable()
+                : _context.Assets.Where(x => x.TypeName == type);
+
+            var assetsQuery = dbSet
                 .Include(x => x.Type)
                 .Include(x => x.Snapshots
                     .Where(x => x.Created >= snapshotsStartDate && x.Created <= snapshotsEndDate)
-                    .OrderByDescending(x => x.Created))
-                .AsQueryable();
+                    .OrderByDescending(x => x.Created));
 
             return asNoTracking
                 ? assetsQuery.AsNoTracking()
@@ -102,7 +108,7 @@ namespace aiof.asset.services
             DateTime? snapshotsEndDate = null,
             bool asNoTracking = true)
         {
-            var asset = await GetQuery(snapshotsStartDate, snapshotsEndDate, asNoTracking)
+            var asset = await GetQuery(snapshotsStartDate, snapshotsEndDate, null, asNoTracking)
                 .FirstOrDefaultAsync(x => x.Id == id)
                 ?? throw new AssetNotFoundException($"Asset with Id={id} was not found");
 
@@ -115,9 +121,10 @@ namespace aiof.asset.services
         public async Task<IEnumerable<IAsset>> GetAsync(
             DateTime? snapshotsStartDate = null,
             DateTime? snapshotsEndDate = null,
+            string type = null,
             bool asNoTracking = true)
         {
-            return await GetQuery(snapshotsStartDate, snapshotsEndDate, asNoTracking)
+            return await GetQuery(snapshotsStartDate, snapshotsEndDate, type, asNoTracking)
                 .ToListAsync();
         }
 
@@ -146,11 +153,27 @@ namespace aiof.asset.services
         {
             await _dtoValidator.ValidateAndThrowAsync(dto);
 
-            var asset = _mapper.Map<Asset>(dto);
+            return await AddAsync<Asset, AssetDto>(dto);
+        }
+
+        public async Task<IAsset> AddAsync(AssetStockDto dto)
+        {
+            await _stockDtoValidator.ValidateAndThrowAsync(dto);
+
+            dto.TypeName = AssetTypes.Stock;
+
+            return await AddAsync<AssetStock, AssetStockDto>(dto);
+        }
+
+        private async Task<TAsset> AddAsync<TAsset, TAssetDto>(TAssetDto dto)
+            where TAsset : Asset
+            where TAssetDto : AssetDto
+        {
+            var asset = _mapper.Map<TAsset>(dto);
 
             asset.UserId = _context.Tenant.UserId;
 
-            await _context.Assets.AddAsync(asset);
+            await _context.Set<TAsset>().AddAsync(asset);
             await _context.SaveChangesAsync();
 
             // Create snapshot entry
@@ -204,11 +227,31 @@ namespace aiof.asset.services
         {
             await _dtoValidator.ValidateAndThrowAsync(dto);
 
-            var asset = await GetAsync(id, asNoTracking: false) as Asset;
+            return await UpdateAsync<Asset, AssetDto>(id, dto);
+        }
+
+        public async Task<IAsset> UpdateAsync(
+            int id,
+            AssetStockDto dto)
+        {
+            await _stockDtoValidator.ValidateAndThrowAsync(dto);
+
+            return await UpdateAsync<AssetStock, AssetStockDto>(id, dto);
+        }
+
+        private async Task<IAsset> UpdateAsync<TAsset, TAssetDto>(
+            int id,
+            TAssetDto dto)
+            where TAsset : Asset
+            where TAssetDto : AssetDto
+        {
+            var asset = await GetAsync(id, asNoTracking: false) as TAsset
+                ?? throw new AssetFriendlyException(HttpStatusCode.BadRequest,
+                    $"Asset is not of type {Constants.ClassToTypeMap[typeof(AssetStock).Name]}");
 
             asset = _mapper.Map(dto, asset);
 
-            _context.Assets.Update(asset);
+            _context.Set<TAsset>().Update(asset);
             await _context.SaveChangesAsync();
 
             // Create snapshot entry

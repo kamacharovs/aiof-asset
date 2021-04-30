@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text.Json.Serialization;
 using System.ComponentModel.DataAnnotations;
 
 namespace aiof.asset.data

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 
@@ -53,9 +52,10 @@ namespace aiof.asset.core
         [ProducesResponseType(typeof(IEnumerable<IAsset>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAsync(
             [FromQuery] DateTime? snapshotsStartDate,
-            [FromQuery] DateTime? snapshotsEndDate)
+            [FromQuery] DateTime? snapshotsEndDate,
+            [FromQuery] string type)
         {
-            return Ok(await _repo.GetAsync(snapshotsStartDate, snapshotsEndDate));
+            return Ok(await _repo.GetAsync(snapshotsStartDate, snapshotsEndDate, type));
         }
 
         /// <summary>
@@ -81,6 +81,18 @@ namespace aiof.asset.core
         }
 
         /// <summary>
+        /// Add Asset.Stock
+        /// </summary>
+        [HttpPost]
+        [Route("stock")]
+        [ProducesResponseType(typeof(IAssetProblemDetail), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IAsset), StatusCodes.Status201Created)]
+        public async Task<IActionResult> AddStockAsync([FromBody, Required] AssetStockDto dto)
+        {
+            return Created(nameof(AssetStock), await _repo.AddAsync(dto));
+        }
+
+        /// <summary>
         /// Add Asset snapshot
         /// </summary>
         [HttpPost]
@@ -102,6 +114,20 @@ namespace aiof.asset.core
         public async Task<IActionResult> UpdateAsync(
             [FromRoute, Required] int id,
             [FromBody, Required] AssetDto dto)
+        {
+            return Ok(await _repo.UpdateAsync(id, dto));
+        }
+
+        /// <summary>
+        /// Update Asset.Stock
+        /// </summary>
+        [HttpPut]
+        [Route("stock/{id}")]
+        [ProducesResponseType(typeof(IAssetProblemDetail), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IAssetSnapshot), StatusCodes.Status200OK)]
+        public async Task<IActionResult> UpdateAsync(
+            [FromRoute, Required] int id,
+            [FromBody, Required] AssetStockDto dto)
         {
             return Ok(await _repo.UpdateAsync(id, dto));
         }

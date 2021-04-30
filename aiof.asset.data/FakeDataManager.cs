@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
-using Microsoft.EntityFrameworkCore;
-
 namespace aiof.asset.data
 {
     [ExcludeFromCodeCoverage]
@@ -25,6 +23,9 @@ namespace aiof.asset.data
             _context.Assets
                 .AddRange(GetFakeAssets());
 
+            _context.AssetsStock
+                .AddRange(GetFakeAssetsStock());
+
             _context.AssetSnapshots
                 .AddRange(GetFakeAssetSnapshots());
 
@@ -37,27 +38,27 @@ namespace aiof.asset.data
             {
                 new AssetType
                 {
-                    Name = "car"
+                    Name = AssetTypes.Car
                 },
                 new AssetType
                 {
-                    Name = "house"
+                    Name = AssetTypes.House
                 },
                 new AssetType
                 {
-                    Name = "investment"
+                    Name = AssetTypes.Investment
                 },
                 new AssetType
                 {
-                    Name = "stock"
+                    Name = AssetTypes.Stock
                 },
                 new AssetType
                 {
-                    Name = "cash"
+                    Name = AssetTypes.Cash
                 },
                 new AssetType
                 {
-                    Name = "other"
+                    Name = AssetTypes.Other
                 }
             };
         }
@@ -70,7 +71,7 @@ namespace aiof.asset.data
                 {
                     Id = 1,
                     Name = "car",
-                    TypeName = "car",
+                    TypeName = AssetTypes.Car,
                     Value = 14762.12M,
                     UserId = 1,
                     Created = DateTime.UtcNow.AddDays(-30),
@@ -80,7 +81,7 @@ namespace aiof.asset.data
                 {
                     Id = 2,
                     Name = "house",
-                    TypeName = "house",
+                    TypeName = AssetTypes.House,
                     Value = 300000M,
                     UserId = 1,
                     Created = DateTime.UtcNow.AddYears(-5),
@@ -90,7 +91,7 @@ namespace aiof.asset.data
                 {
                     Id = 3,
                     Name = "hardcoded guid",
-                    TypeName = "investment",
+                    TypeName = AssetTypes.Investment,
                     Value = 999999M,
                     UserId = 1,
                     Created = DateTime.UtcNow.AddDays(1),
@@ -100,11 +101,31 @@ namespace aiof.asset.data
                 {
                     Id = 4,
                     Name = "asset",
-                    TypeName = "cash",
+                    TypeName = AssetTypes.Cash,
                     Value = 99M,
                     UserId = 2,
                     Created = DateTime.UtcNow.AddDays(1),
                     IsDeleted = false,
+                }
+            };
+        }
+
+        public IEnumerable<AssetStock> GetFakeAssetsStock()
+        {
+            return new List<AssetStock>
+            {
+                new AssetStock
+                {
+                    Id = 5,
+                    Name = "asset.stock",
+                    Value = 10500M,
+                    UserId = 1,
+                    Created = DateTime.UtcNow.AddYears(-1),
+                    IsDeleted = false,
+                    TickerSymbol = "VTSAX",
+                    Shares = 149.658,
+                    ExpenseRatio = 0.040,
+                    DividendYield = 1.36
                 }
             };
         }
@@ -154,7 +175,7 @@ namespace aiof.asset.data
                     Id = 5,
                     AssetId = 3,
                     Name = "hardcoded guid",
-                    TypeName = "investment",
+                    TypeName = AssetTypes.Investment,
                     Value = 999999M,
                     ValueChange = 0,
                     Created = DateTime.UtcNow.AddDays(1)
@@ -164,10 +185,20 @@ namespace aiof.asset.data
                     Id = 6,
                     AssetId = 4,
                     Name = "asset",
-                    TypeName = "cash",
+                    TypeName = AssetTypes.Cash,
                     Value = 99M,
                     ValueChange = 0,
                     Created = DateTime.UtcNow.AddDays(1)
+                },
+                new AssetSnapshot
+                {
+                    Id = 7,
+                    AssetId = 5,
+                    Name = "asset.stock",
+                    TypeName = AssetTypes.Stock,
+                    Value = 10500M,
+                    ValueChange = 0,
+                    Created = DateTime.UtcNow.AddYears(-1)
                 }
             };
         }
@@ -235,6 +266,33 @@ namespace aiof.asset.data
                     toReturn.Add(new object[]
                     {
                         fakeAssetUserId
+                    });
+                }
+            }
+
+            return toReturn;
+        }
+
+        public IEnumerable<object[]> GetFakeAssetsStockData(
+            bool id = false,
+            bool userId = false,
+            bool isDeleted = false)
+        {
+            var fakeAssetsStock = GetFakeAssetsStock()
+                .Where(x => x.IsDeleted == isDeleted)
+                .ToArray();
+
+            var toReturn = new List<object[]>();
+
+            if (id
+                && userId)
+            {
+                foreach (var fakeAssetStok in fakeAssetsStock)
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakeAssetStok.Id,
+                        fakeAssetStok.UserId
                     });
                 }
             }

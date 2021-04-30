@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="10.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\aiof.asset.data\aiof.asset.data.csproj" />
   </ItemGroup>
 
