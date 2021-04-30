@@ -4,8 +4,10 @@ using System.Reflection;
 using System.Security.Cryptography;
 
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
 
@@ -46,10 +48,10 @@ namespace aiof.asset.core
         {
             services.AddSwaggerGen(x =>
             {
-                x.SwaggerDoc(Startup._config[Keys.OpenApiVersion], new OpenApiInfo
+                x.SwaggerDoc(Constants.ApiV1, new OpenApiInfo
                 {
                     Title = Startup._config[Keys.OpenApiTitle],
-                    Version = Startup._config[Keys.OpenApiVersion],
+                    Version = Constants.ApiV1,
                     Description = Startup._config[Keys.OpenApiDescription],
                     Contact = new OpenApiContact
                     {
@@ -75,6 +77,19 @@ namespace aiof.asset.core
                 .AddScoped<AbstractValidator<AssetDto>, AssetDtoValidator>()
                 .AddScoped<AbstractValidator<AssetSnapshotDto>, AssetSnapshotDtoValidator>()
                 .AddScoped<AbstractValidator<AssetStockDto>, AssetStockDtoValidator>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddAssetApiVersioning(this IServiceCollection services)
+        {
+            services.AddApiVersioning(x =>
+            {
+                x.DefaultApiVersion = ApiVersion.Parse(Constants.ApiV1);
+                x.AssumeDefaultVersionWhenUnspecified = true;
+                x.ReportApiVersions = true;
+                x.ApiVersionReader = new UrlSegmentApiVersionReader();
+            });
 
             return services;
         }
