@@ -514,6 +514,20 @@ namespace aiof.asset.tests
         }
 
         [Theory]
+        [MemberData(nameof(Helper.AssetsStockIdUserId), MemberType = typeof(Helper))]
+        public async Task DeleteAsync_Stock_IsSuccessful(int id, int userId)
+        {
+            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
+
+            await repo.DeleteAsync(id);
+
+            var exception = await Assert.ThrowsAsync<AssetNotFoundException>(() => repo.GetAsync(id));
+
+            Assert.NotNull(exception);
+            Assert.Equal(404, exception.StatusCode);
+        }
+
+        [Theory]
         [MemberData(nameof(Helper.AssetsIdUserId), MemberType = typeof(Helper))]
         public async Task DeleteAsync_NotFound_ThrowsAssetNotFoundException(int id, int userId)
         {
