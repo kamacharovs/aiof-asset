@@ -70,6 +70,7 @@ namespace aiof.asset.services
         private IQueryable<Asset> GetQuery(
             DateTime? snapshotsStartDate = null,
             DateTime? snapshotsEndDate = null,
+            string type = null,
             bool asNoTracking = true)
         {
             snapshotsStartDate = snapshotsStartDate ?? DateTime.UtcNow.AddMonths(-6);
@@ -79,12 +80,15 @@ namespace aiof.asset.services
                 throw new AssetFriendlyException(HttpStatusCode.BadRequest,
                     $"Snapshots end date cannot be earlier than start date");
 
-            var assetsQuery = _context.Assets
+            var dbSet = type is null
+                ? _context.Assets.AsQueryable()
+                : _context.Assets.Where(x => x.TypeName == type);
+
+            var assetsQuery = dbSet
                 .Include(x => x.Type)
                 .Include(x => x.Snapshots
                     .Where(x => x.Created >= snapshotsStartDate && x.Created <= snapshotsEndDate)
-                    .OrderByDescending(x => x.Created))
-                .AsQueryable();
+                    .OrderByDescending(x => x.Created));
 
             return asNoTracking
                 ? assetsQuery.AsNoTracking()
@@ -104,7 +108,7 @@ namespace aiof.asset.services
             DateTime? snapshotsEndDate = null,
             bool asNoTracking = true)
         {
-            var asset = await GetQuery(snapshotsStartDate, snapshotsEndDate, asNoTracking)
+            var asset = await GetQuery(snapshotsStartDate, snapshotsEndDate, null, asNoTracking)
                 .FirstOrDefaultAsync(x => x.Id == id)
                 ?? throw new AssetNotFoundException($"Asset with Id={id} was not found");
 
@@ -117,9 +121,10 @@ namespace aiof.asset.services
         public async Task<IEnumerable<IAsset>> GetAsync(
             DateTime? snapshotsStartDate = null,
             DateTime? snapshotsEndDate = null,
+            string type = null,
             bool asNoTracking = true)
         {
-            return await GetQuery(snapshotsStartDate, snapshotsEndDate, asNoTracking)
+            return await GetQuery(snapshotsStartDate, snapshotsEndDate, type, asNoTracking)
                 .ToListAsync();
         }
 

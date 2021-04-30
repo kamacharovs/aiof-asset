@@ -52,9 +52,10 @@ namespace aiof.asset.core
         [ProducesResponseType(typeof(IEnumerable<IAsset>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAsync(
             [FromQuery] DateTime? snapshotsStartDate,
-            [FromQuery] DateTime? snapshotsEndDate)
+            [FromQuery] DateTime? snapshotsEndDate,
+            [FromQuery] string type)
         {
-            return Ok(await _repo.GetAsync(snapshotsStartDate, snapshotsEndDate));
+            return Ok(await _repo.GetAsync(snapshotsStartDate, snapshotsEndDate, type));
         }
 
         /// <summary>

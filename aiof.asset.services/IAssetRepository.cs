@@ -20,6 +20,7 @@ namespace aiof.asset.services
         Task<IEnumerable<IAsset>> GetAsync(
             DateTime? snapshotsStartDate = null,
             DateTime? snapshotsEndDate = null,
+            string type = null,
             bool asNoTracking = true);
         Task<IAssetSnapshot> GetLatestSnapshotAsync(
             int assetId,
