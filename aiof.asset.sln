@@ -5,11 +5,11 @@ VisualStudioVersion = 16.0.31025.194
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "aiof.asset.core", "aiof.asset.core\aiof.asset.core.csproj", "{37A13D5B-A5A8-40C0-A7DE-CC946647726B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aiof.asset.data", "aiof.asset.data\aiof.asset.data.csproj", "{D8C68F9C-A921-495D-A051-D20FDAD52558}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "aiof.asset.data", "aiof.asset.data\aiof.asset.data.csproj", "{D8C68F9C-A921-495D-A051-D20FDAD52558}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aiof.asset.services", "aiof.asset.services\aiof.asset.services.csproj", "{3A6850F2-E1DE-449D-AA94-07E7916C7911}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "aiof.asset.services", "aiof.asset.services\aiof.asset.services.csproj", "{3A6850F2-E1DE-449D-AA94-07E7916C7911}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aiof.asset.tests", "aiof.asset.tests\aiof.asset.tests.csproj", "{AC3615A7-5370-4665-B4AF-A831F7DFFB45}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "aiof.asset.tests", "aiof.asset.tests\aiof.asset.tests.csproj", "{AC3615A7-5370-4665-B4AF-A831F7DFFB45}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{231A63D8-2965-4761-B234-C31157E66B2F}"
 	ProjectSection(SolutionItems) = preProject
@@ -17,6 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		docker-compose.yml = docker-compose.yml
 		Dockerfile = Dockerfile
 		Dockerfile.local = Dockerfile.local
+		README.md = README.md
 	EndProjectSection
 EndProject
 Global
