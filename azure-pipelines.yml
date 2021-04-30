@@ -11,7 +11,7 @@ variables:
   projectFile: aiof.asset.core/aiof.asset.core.csproj
   projectDataFile: aiof.asset.data/aiof.asset.data.csproj
   projectFileTest: aiof.asset.tests/aiof.asset.tests.csproj
-  tag: $(Build.BuildId)
+  outputPath: app/publish
 
 stages:
 - stage: Build
@@ -60,28 +60,26 @@ stages:
       inputs:
         command: test
         projects: $(projectFileTest)
-        arguments: -c $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/coverage.cobertura.xml
+        arguments: -c $(buildConfiguration) 
         publishTestResults: true
 
-    - task: PublishCodeCoverageResults@1
-      displayName: publish test code coverage
+    - task: CopyFiles@2
+      displayName: copy dockerfile
       inputs:
-        codeCoverageTool: Cobertura
-        summaryFileLocation: $(Build.SourcesDirectory)/TestResults/Coverage/coverage.cobertura.xml
+        sourceFolder: $(System.DefaultWorkingDirectory)
+        contents: Dockerfile
+        targetFolder: $(outputPath)
 
     - task: DotNetCoreCLI@2
       displayName: publish
       inputs:
         command: publish
-        arguments: -c $(configuration) -o app/publish -f $(targetFramework)
-        zipAfterPublish: false
+        arguments: -c $(configuration) -o $(outputPath) -f $(targetFramework)
+        zipAfterPublish: true
 
-    - task: Docker@2
-      displayName: docker build and push
+    - task: PublishBuildArtifacts@1
+      displayName: publish artifacts
       inputs:
-        containerRegistry: gkama-docker-cr
-        repository: gkama/aiof-asset
-        command: buildAndPush
-        Dockerfile: $(Build.SourcesDirectory)/Dockerfile
-        tags: |
-          latest
+        pathtoPublish: $(outputPath)
+        artifactName: aiof-asset
+        publishLocation: Container

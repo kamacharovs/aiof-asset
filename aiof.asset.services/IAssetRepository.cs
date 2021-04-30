@@ -17,14 +17,28 @@ namespace aiof.asset.services
             DateTime? snapshotsStartDate = null,
             DateTime? snapshotsEndDate = null,
             bool asNoTracking = true);
+        Task<IEnumerable<IAsset>> GetAsync(
+            DateTime? snapshotsStartDate = null,
+            DateTime? snapshotsEndDate = null,
+            bool asNoTracking = true);
+        Task<IAssetSnapshot> GetLatestSnapshotAsync(
+            int assetId,
+            bool asNoTracking = true);
+        Task<IAssetSnapshot> GetLatestSnapshotWithValueAsync(
+            int assetId,
+            bool asNoTracking = true);
 
         Task<IAsset> AddAsync(AssetDto dto);
+        Task<IAsset> AddAsync(AssetStockDto dto);
 
         Task<IAssetSnapshot> AddSnapshotAsync(AssetSnapshotDto dto);
 
         Task<IAsset> UpdateAsync(
             int id,
             AssetDto dto);
+        Task<IAsset> UpdateAsync(
+            int id,
+            AssetStockDto dto);
 
         Task DeleteAsync(int id);
     }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 
@@ -15,7 +14,7 @@ namespace aiof.asset.core
 {
     [Authorize]
     [ApiController]
-    [Route("api")]
+    [Route("assets")]
     [Produces(Constants.ApplicationJson)]
     [Consumes(Constants.ApplicationJson)]
     [ProducesResponseType(typeof(IAssetProblemDetail), StatusCodes.Status500InternalServerError)]
@@ -46,6 +45,19 @@ namespace aiof.asset.core
         }
 
         /// <summary>
+        /// Get Assets
+        /// </summary>
+        [HttpGet]
+        [ProducesResponseType(typeof(IAssetProblemDetail), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(IEnumerable<IAsset>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAsync(
+            [FromQuery] DateTime? snapshotsStartDate,
+            [FromQuery] DateTime? snapshotsEndDate)
+        {
+            return Ok(await _repo.GetAsync(snapshotsStartDate, snapshotsEndDate));
+        }
+
+        /// <summary>
         /// Get Asset types
         /// </summary>
         [HttpGet]
@@ -65,6 +77,18 @@ namespace aiof.asset.core
         public async Task<IActionResult> AddAsync([FromBody, Required] AssetDto dto)
         {
             return Created(nameof(Asset), await _repo.AddAsync(dto));
+        }
+
+        /// <summary>
+        /// Add Asset.Stock
+        /// </summary>
+        [HttpPost]
+        [Route("stock")]
+        [ProducesResponseType(typeof(IAssetProblemDetail), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IAsset), StatusCodes.Status201Created)]
+        public async Task<IActionResult> AddStockAsync([FromBody, Required] AssetStockDto dto)
+        {
+            return Created(nameof(AssetStock), await _repo.AddAsync(dto));
         }
 
         /// <summary>
@@ -89,6 +113,20 @@ namespace aiof.asset.core
         public async Task<IActionResult> UpdateAsync(
             [FromRoute, Required] int id,
             [FromBody, Required] AssetDto dto)
+        {
+            return Ok(await _repo.UpdateAsync(id, dto));
+        }
+
+        /// <summary>
+        /// Update Asset.Stock
+        /// </summary>
+        [HttpPut]
+        [Route("stock/{id}")]
+        [ProducesResponseType(typeof(IAssetProblemDetail), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IAssetSnapshot), StatusCodes.Status200OK)]
+        public async Task<IActionResult> UpdateAsync(
+            [FromRoute, Required] int id,
+            [FromBody, Required] AssetStockDto dto)
         {
             return Ok(await _repo.UpdateAsync(id, dto));
         }

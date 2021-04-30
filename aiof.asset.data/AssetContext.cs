@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -12,8 +8,9 @@ namespace aiof.asset.data
     {
         public readonly ITenant Tenant;
 
-        public virtual DbSet<Asset> Assets { get; set; }
         public virtual DbSet<AssetType> AssetTypes { get; set; }
+        public virtual DbSet<Asset> Assets { get; set; }
+        public virtual DbSet<AssetStock> AssetsStock { get; set; }
         public virtual DbSet<AssetSnapshot> AssetSnapshots { get; set; }
 
         public AssetContext(DbContextOptions<AssetContext> options)
@@ -29,6 +26,16 @@ namespace aiof.asset.data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasDefaultSchema("asset");
+
+            modelBuilder.Entity<AssetType>(e =>
+            {
+                e.ToTable(Keys.Entity.AssetType);
+
+                e.HasKey(x => x.Name);
+
+                e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
+                e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
+            });
 
             modelBuilder.Entity<Asset>(e =>
             {
@@ -60,14 +67,14 @@ namespace aiof.asset.data
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
-            modelBuilder.Entity<AssetType>(e =>
+            modelBuilder.Entity<AssetStock>(e =>
             {
-                e.ToTable(Keys.Entity.AssetType);
+                e.ToTable(Keys.Entity.AssetStock);
 
-                e.HasKey(x => x.Name);
-
-                e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
-                e.Property(x => x.PublicKey).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.TickerSymbol).HasSnakeCaseColumnName().HasMaxLength(50).IsRequired();
+                e.Property(x => x.Shares).HasSnakeCaseColumnName();
+                e.Property(x => x.ExpenseRatio).HasSnakeCaseColumnName();
+                e.Property(x => x.DividendYield).HasSnakeCaseColumnName();
             });
 
             modelBuilder.Entity<AssetSnapshot>(e =>
@@ -82,6 +89,7 @@ namespace aiof.asset.data
                 e.Property(x => x.Name).HasSnakeCaseColumnName().HasMaxLength(100);
                 e.Property(x => x.TypeName).HasSnakeCaseColumnName().HasMaxLength(100);
                 e.Property(x => x.Value).HasSnakeCaseColumnName();
+                e.Property(x => x.ValueChange).HasSnakeCaseColumnName();
                 e.Property(x => x.Created).HasColumnType("timestamp").HasSnakeCaseColumnName().IsRequired();
             });
         }

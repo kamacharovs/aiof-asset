@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -74,7 +73,10 @@ namespace aiof.asset.core
             };
 
             if (e is AssetException ae)
+            {
                 problem.Code = ae.StatusCode;
+                problem.Message = ae.Message;
+            }
             else if (e is ValidationException ve)
             {
                 problem.Code = StatusCodes.Status400BadRequest;
@@ -83,7 +85,7 @@ namespace aiof.asset.core
             }
 
             var problemjson = JsonSerializer
-                .Serialize(problem, new JsonSerializerOptions { IgnoreNullValues = true });
+                .Serialize(problem, Constants.JsonSerializerSettings);
 
             httpContext.Response.StatusCode = problem.Code ?? StatusCodes.Status500InternalServerError;
             httpContext.Response.ContentType = "application/problem+json";

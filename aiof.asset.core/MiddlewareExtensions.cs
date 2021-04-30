@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Text.Json;
 using System.IO;
-using System.Collections.Generic;
 using System.Reflection;
 using System.Security.Cryptography;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
@@ -30,7 +27,7 @@ namespace aiof.asset.core
                     var rsa = RSA.Create();
                     rsa.FromXmlString(Startup._config[Keys.JwtPublicKey]);
 
-                    x.TokenValidationParameters = new TokenValidationParameters()
+                    x.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,
                         ValidIssuer = Startup._config[Keys.JwtIssuer],
@@ -74,8 +71,10 @@ namespace aiof.asset.core
 
         public static IServiceCollection AddAssetFluentValidators(this IServiceCollection services)
         {
-            services.AddSingleton<AbstractValidator<AssetDto>, AssetDtoValidator>()
-                .AddSingleton<AbstractValidator<AssetSnapshotDto>, AssetSnapshotDtoValidator>();
+            services.AddScoped<AbstractValidator<string>, AssetTypeValidator>()
+                .AddScoped<AbstractValidator<AssetDto>, AssetDtoValidator>()
+                .AddScoped<AbstractValidator<AssetSnapshotDto>, AssetSnapshotDtoValidator>()
+                .AddScoped<AbstractValidator<AssetStockDto>, AssetStockDtoValidator>();
 
             return services;
         }
