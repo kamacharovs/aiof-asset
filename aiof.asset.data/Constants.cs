@@ -7,9 +7,6 @@ namespace aiof.asset.data
 {
     public static class Constants
     {
-        public const string ApiRoute = "v{version:apiVersion}/assets";
-        public const string ApiV1 = "1.0";
-
         public const string Accept = nameof(Accept);
         public const string ApplicationJson = "application/json";
         public const string ApplicationProblemJson = "application/problem+json";
@@ -18,12 +15,24 @@ namespace aiof.asset.data
         public const string DefaultValidationMessage = "One or more validation errors have occurred. Please see errors for details";
         public const string DefaultUnauthorizedMessage = "Unauthorized. Missing, invalid or expired credentials provided";
         public const string DefaultForbiddenMessage = "Forbidden. You don't have enough permissions to access this API";
+        
+        public const string ApiRoute = "v{apiVersion}/assets";
+        public const string ApiV1 = "1.0";
+        public static string ApiV1Full = $"v{ApiV1}";
+        public static string[] ApiSupportedVersions
+            => new string[]
+            {
+                ApiV1Full
+            };
+        public static string DefaultUnsupportedApiVersionMessage = $"Unsupported API version specified. The supported versions are {string.Join(", ", ApiSupportedVersions)}";
 
-        public static int[] AllowedUnauthorizedStatusCodes = new int[]
-        {
-            StatusCodes.Status401Unauthorized,
-            StatusCodes.Status403Forbidden
-        };
+
+        public static int[] AllowedUnauthorizedStatusCodes 
+            => new int[]
+            {
+                StatusCodes.Status401Unauthorized,
+                StatusCodes.Status403Forbidden
+            };
 
         public static JsonSerializerOptions JsonSerializerSettings
             => new JsonSerializerOptions

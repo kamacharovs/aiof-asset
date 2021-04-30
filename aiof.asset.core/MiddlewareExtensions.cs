@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.DependencyInjection;
@@ -86,9 +87,9 @@ namespace aiof.asset.core
             services.AddApiVersioning(x =>
             {
                 x.DefaultApiVersion = ApiVersion.Parse(Constants.ApiV1);
-                x.AssumeDefaultVersionWhenUnspecified = true;
                 x.ReportApiVersions = true;
                 x.ApiVersionReader = new UrlSegmentApiVersionReader();
+                x.ErrorResponses = new ApiVersioningErrorResponseProvider();
             });
 
             return services;
@@ -102,6 +103,23 @@ namespace aiof.asset.core
         public static IApplicationBuilder UseAssetUnauthorizedMiddleware(this IApplicationBuilder builder)
         {
             return builder.UseMiddleware<AssetUnauthorizedMiddleware>();
+        }
+    }
+
+    public class ApiVersioningErrorResponseProvider : DefaultErrorResponseProvider
+    {
+        public override IActionResult CreateResponse(ErrorResponseContext context)
+        {
+            var problem = new AssetProblemDetailBase
+            {
+                Code = StatusCodes.Status400BadRequest,
+                Message = Constants.DefaultUnsupportedApiVersionMessage
+            };
+
+            return new ObjectResult(problem)
+            {
+                StatusCode = StatusCodes.Status400BadRequest
+            };
         }
     }
 }
