@@ -16,13 +16,12 @@ namespace aiof.asset.data
         public const string DefaultUnauthorizedMessage = "Unauthorized. Missing, invalid or expired credentials provided";
         public const string DefaultForbiddenMessage = "Forbidden. You don't have enough permissions to access this API";
         
-        public const string ApiRoute = "v{apiVersion}/assets";
+        public const string ApiRoute = "v{version:apiVersion}/assets";
         public const string ApiV1 = "1.0";
-        public static string ApiV1Full = $"v{ApiV1}";
         public static string[] ApiSupportedVersions
             => new string[]
             {
-                ApiV1Full
+                $"v{ApiV1}"
             };
         public static string DefaultUnsupportedApiVersionMessage = $"Unsupported API version specified. The supported versions are {string.Join(", ", ApiSupportedVersions)}";
 
