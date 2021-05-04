@@ -42,7 +42,8 @@ namespace aiof.asset.core
                 .AddApplicationInsightsTelemetry()
                 .AddAssetAuthentication()
                 .AddAssetSwaggerGen()
-                .AddAssetFluentValidators();
+                .AddAssetFluentValidators()
+                .AddAssetApiVersioning();
 
             services.AddControllers()
                 .AddJsonOptions(o =>

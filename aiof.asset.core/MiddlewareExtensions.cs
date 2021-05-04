@@ -4,8 +4,11 @@ using System.Reflection;
 using System.Security.Cryptography;
 
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
 
@@ -46,10 +49,10 @@ namespace aiof.asset.core
         {
             services.AddSwaggerGen(x =>
             {
-                x.SwaggerDoc(Startup._config[Keys.OpenApiVersion], new OpenApiInfo
+                x.SwaggerDoc(Constants.ApiV1, new OpenApiInfo
                 {
                     Title = Startup._config[Keys.OpenApiTitle],
-                    Version = Startup._config[Keys.OpenApiVersion],
+                    Version = Constants.ApiV1,
                     Description = Startup._config[Keys.OpenApiDescription],
                     Contact = new OpenApiContact
                     {
@@ -79,6 +82,19 @@ namespace aiof.asset.core
             return services;
         }
 
+        public static IServiceCollection AddAssetApiVersioning(this IServiceCollection services)
+        {
+            services.AddApiVersioning(x =>
+            {
+                x.DefaultApiVersion = ApiVersion.Parse(Constants.ApiV1);
+                x.ReportApiVersions = true;
+                x.ApiVersionReader = new UrlSegmentApiVersionReader();
+                x.ErrorResponses = new ApiVersioningErrorResponseProvider();
+            });
+
+            return services;
+        }
+
         public static IApplicationBuilder UseAssetExceptionMiddleware(this IApplicationBuilder builder)
         {
             return builder.UseMiddleware<AssetExceptionMiddleware>();
@@ -87,6 +103,23 @@ namespace aiof.asset.core
         public static IApplicationBuilder UseAssetUnauthorizedMiddleware(this IApplicationBuilder builder)
         {
             return builder.UseMiddleware<AssetUnauthorizedMiddleware>();
+        }
+    }
+
+    public class ApiVersioningErrorResponseProvider : DefaultErrorResponseProvider
+    {
+        public override IActionResult CreateResponse(ErrorResponseContext context)
+        {
+            var problem = new AssetProblemDetailBase
+            {
+                Code = StatusCodes.Status400BadRequest,
+                Message = Constants.DefaultUnsupportedApiVersionMessage
+            };
+
+            return new ObjectResult(problem)
+            {
+                StatusCode = StatusCodes.Status400BadRequest
+            };
         }
     }
 }

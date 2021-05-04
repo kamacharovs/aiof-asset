@@ -14,7 +14,8 @@ namespace aiof.asset.core
 {
     [Authorize]
     [ApiController]
-    [Route("assets")]
+    [ApiVersion(Constants.ApiV1)]
+    [Route(Constants.ApiRoute)]
     [Produces(Constants.ApplicationJson)]
     [Consumes(Constants.ApplicationJson)]
     [ProducesResponseType(typeof(IAssetProblemDetail), StatusCodes.Status500InternalServerError)]

@@ -15,12 +15,23 @@ namespace aiof.asset.data
         public const string DefaultValidationMessage = "One or more validation errors have occurred. Please see errors for details";
         public const string DefaultUnauthorizedMessage = "Unauthorized. Missing, invalid or expired credentials provided";
         public const string DefaultForbiddenMessage = "Forbidden. You don't have enough permissions to access this API";
+        
+        public const string ApiRoute = "v{version:apiVersion}/assets";
+        public const string ApiV1 = "1.0";
+        public static string[] ApiSupportedVersions
+            => new string[]
+            {
+                $"v{ApiV1}"
+            };
+        public static string DefaultUnsupportedApiVersionMessage = $"Unsupported API version specified. The supported versions are {string.Join(", ", ApiSupportedVersions)}";
 
-        public static int[] AllowedUnauthorizedStatusCodes = new int[]
-        {
-            StatusCodes.Status401Unauthorized,
-            StatusCodes.Status403Forbidden
-        };
+
+        public static int[] AllowedUnauthorizedStatusCodes 
+            => new int[]
+            {
+                StatusCodes.Status401Unauthorized,
+                StatusCodes.Status403Forbidden
+            };
 
         public static JsonSerializerOptions JsonSerializerSettings
             => new JsonSerializerOptions
@@ -65,7 +76,6 @@ namespace aiof.asset.data
         public const string Email = nameof(Email);
         public const string Url = nameof(Url);
         public const string License = nameof(License);
-        public const string OpenApiVersion = nameof(OpenApi) + ":" + nameof(Version);
         public const string OpenApiTitle = nameof(OpenApi) + ":" + nameof(Title);
         public const string OpenApiDescription = nameof(Description) + ":" + nameof(Description);
         public const string OpenApiContactName = nameof(OpenApi) + ":" + nameof(Contact) + ":" + nameof(Name);
