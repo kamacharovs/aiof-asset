@@ -18,10 +18,11 @@ namespace aiof.asset.data
         
         public const string ApiRoute = "v{version:apiVersion}/assets";
         public const string ApiV1 = "1.0";
+        public static string ApiV1Full = $"v{ApiV1}";
         public static string[] ApiSupportedVersions
             => new string[]
             {
-                $"v{ApiV1}"
+                ApiV1Full
             };
         public static string DefaultUnsupportedApiVersionMessage = $"Unsupported API version specified. The supported versions are {string.Join(", ", ApiSupportedVersions)}";
 

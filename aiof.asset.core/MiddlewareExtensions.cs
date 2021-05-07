@@ -49,10 +49,10 @@ namespace aiof.asset.core
         {
             services.AddSwaggerGen(x =>
             {
-                x.SwaggerDoc(Constants.ApiV1, new OpenApiInfo
+                x.SwaggerDoc(Constants.ApiV1Full, new OpenApiInfo
                 {
                     Title = Startup._config[Keys.OpenApiTitle],
-                    Version = Constants.ApiV1,
+                    Version = Constants.ApiV1Full,
                     Description = Startup._config[Keys.OpenApiDescription],
                     Contact = new OpenApiContact
                     {
