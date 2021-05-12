@@ -171,19 +171,12 @@ namespace aiof.asset.services
                 }
                 catch (ValidationException ve)
                 {
-                    _logger.LogError("Error while validating Asset={SerializedAssetDto}. Error={ErrorMessage}",
+                    _logger.LogError("{Tenant} | Error while validating Asset={SerializedAssetDto}. Error={ErrorMessage}",
+                        _context.Tenant.Log,
                         JsonSerializer.Serialize(dto), 
                         ve.Message);
 
                     continue;
-                }
-                catch (Exception e)
-                {
-                    _logger.LogError("Error while adding Asset={SerializedAsset}. Error={ErrorMessage}",
-                        JsonSerializer.Serialize(dto),
-                        e.Message);
-
-                    throw;
                 }
             }
 
