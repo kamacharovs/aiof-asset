@@ -30,6 +30,7 @@ namespace aiof.asset.services
             bool asNoTracking = true);
 
         Task<IAsset> AddAsync(AssetDto dto);
+        Task<IEnumerable<IAsset>> AddAsync(IEnumerable<AssetDto> dtos);
         Task<IAsset> AddAsync(AssetStockDto dto);
 
         Task<IAssetSnapshot> AddSnapshotAsync(AssetSnapshotDto dto);

@@ -207,6 +207,30 @@ namespace aiof.asset.tests
 
         [Theory]
         [MemberData(nameof(Helper.AssetsUserId), MemberType = typeof(Helper))]
+        public async Task AddAsync_Multiple_IsSuccessful(int userId)
+        {
+            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
+
+            var dtos = Helper.RandomAssetDtos(3);
+            var assets = await repo.AddAsync(dtos);
+
+            Assert.NotNull(assets);
+            Assert.NotEmpty(assets);
+
+            var asset = assets.FirstOrDefault();
+
+            Assert.NotNull(asset);
+            Assert.NotEqual(0, asset.Id);
+            Assert.NotEqual(Guid.Empty, asset.PublicKey);
+            Assert.NotNull(asset.Name);
+            Assert.NotNull(asset.TypeName);
+            Assert.NotNull(asset.Type);
+            Assert.NotEqual(0, asset.Value);
+            Assert.NotEqual(new DateTime(), asset.Created);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.AssetsUserId), MemberType = typeof(Helper))]
         public async Task AddAsync_Stock_IsSuccessful(int userId)
         {
             var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
@@ -334,6 +358,23 @@ namespace aiof.asset.tests
 
             Assert.NotNull(exception);
             Assert.Equal(nameof(AssetDto.Value), exception.Errors.First().PropertyName);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.AssetsUserId), MemberType = typeof(Helper))]
+        public async Task AddAsync_Multiple_OneValidationError_IsSuccessful(int userId)
+        {
+            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
+
+            var dtos = Helper.RandomAssetDtos(2);
+
+            dtos.First().Name = Helper.Repeat(dtos.First().Name, 100);
+
+            var assets = await repo.AddAsync(dtos);
+
+            Assert.NotNull(assets);
+            Assert.NotEmpty(assets);
+            Assert.True(assets.Count() == 1);
         }
         #endregion
 

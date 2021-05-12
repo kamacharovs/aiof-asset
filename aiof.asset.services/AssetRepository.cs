@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using System.Text.Json;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -154,6 +155,44 @@ namespace aiof.asset.services
             await _dtoValidator.ValidateAndThrowAsync(dto);
 
             return await AddAsync<Asset, AssetDto>(dto);
+        }
+
+        public async Task<IEnumerable<IAsset>> AddAsync(IEnumerable<AssetDto> dtos)
+        {
+            var assetsAdded = new List<IAsset>();
+
+            foreach (var dto in dtos)
+            {
+                try
+                {
+                    await _dtoValidator.ValidateAndThrowAsync(dto);
+
+                    assetsAdded.Add(await AddAsync(dto));
+                }
+                catch (ValidationException ve)
+                {
+                    _logger.LogError("Error while validating Asset={SerializedAssetDto}. Error={ErrorMessage}",
+                        JsonSerializer.Serialize(dto), 
+                        ve.Message);
+
+                    continue;
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError("Error while adding Asset={SerializedAsset}. Error={ErrorMessage}",
+                        JsonSerializer.Serialize(dto),
+                        e.Message);
+
+                    throw;
+                }
+            }
+
+            _logger.LogInformation("{Tenant} | Added {TotalAssets} Assets from total of {TotalDtos} requested",
+                _context.Tenant.Log,
+                assetsAdded.Count(),
+                dtos.Count());
+
+            return assetsAdded.AsEnumerable();
         }
 
         public async Task<IAsset> AddAsync(AssetStockDto dto)
