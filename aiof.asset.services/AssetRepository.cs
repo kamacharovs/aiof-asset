@@ -159,23 +159,20 @@ namespace aiof.asset.services
 
         public async Task<IEnumerable<IAsset>> AddAsync(IEnumerable<AssetDto> dtos)
         {
+            if (dtos.Count() > 10)
+                throw new AssetFriendlyException(HttpStatusCode.BadRequest,
+                    $"Cannot add more than 10 Assets at a time");
+
             var assetsAdded = new List<IAsset>();
 
             foreach (var dto in dtos)
             {
                 try
                 {
-                    await _dtoValidator.ValidateAndThrowAsync(dto);
-
                     assetsAdded.Add(await AddAsync(dto));
                 }
-                catch (ValidationException ve)
+                catch (ValidationException)
                 {
-                    _logger.LogError("{Tenant} | Error while validating Asset={SerializedAssetDto}. Error={ErrorMessage}",
-                        _context.Tenant.Log,
-                        JsonSerializer.Serialize(dto), 
-                        ve.Message);
-
                     continue;
                 }
             }

@@ -376,6 +376,20 @@ namespace aiof.asset.tests
             Assert.NotEmpty(assets);
             Assert.True(assets.Count() == 1);
         }
+
+        [Theory]
+        [MemberData(nameof(Helper.AssetsUserId), MemberType = typeof(Helper))]
+        public async Task AddAsync_Multiple_TooMany_ThrowsBadRequest(int userId)
+        {
+            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
+
+            var dtos = Helper.RandomAssetDtos(11);
+            var exception = await Assert.ThrowsAsync<AssetFriendlyException>(() => repo.AddAsync(dtos));
+
+            Assert.NotNull(exception);
+            Assert.Equal(400, exception.StatusCode);
+            Assert.Contains("cannot add", exception.Message, StringComparison.InvariantCultureIgnoreCase);
+        }
         #endregion
 
         #region UpdateAsync
