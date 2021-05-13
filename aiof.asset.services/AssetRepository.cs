@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using System.Text.Json;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -154,6 +155,34 @@ namespace aiof.asset.services
             await _dtoValidator.ValidateAndThrowAsync(dto);
 
             return await AddAsync<Asset, AssetDto>(dto);
+        }
+
+        public async Task<IEnumerable<IAsset>> AddAsync(IEnumerable<AssetDto> dtos)
+        {
+            if (dtos.Count() > 10)
+                throw new AssetFriendlyException(HttpStatusCode.BadRequest,
+                    $"Cannot add more than 10 Assets at a time");
+
+            var assetsAdded = new List<IAsset>();
+
+            foreach (var dto in dtos)
+            {
+                try
+                {
+                    assetsAdded.Add(await AddAsync(dto));
+                }
+                catch (ValidationException)
+                {
+                    continue;
+                }
+            }
+
+            _logger.LogInformation("{Tenant} | Added {TotalAssets} Assets from total of {TotalDtos} requested",
+                _context.Tenant.Log,
+                assetsAdded.Count(),
+                dtos.Count());
+
+            return assetsAdded.AsEnumerable();
         }
 
         public async Task<IAsset> AddAsync(AssetStockDto dto)
