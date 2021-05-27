@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json;
 
 using AutoMapper;
 
@@ -45,6 +46,23 @@ namespace aiof.asset.data
 
             CreateMap<AssetStockDto, AssetSnapshotDto>()
                 .ForAllMembers(x => x.Condition((source, destination, member) => member != null));
+        }
+    }
+
+    public class AssetEventProfile : Profile
+    {
+        public AssetEventProfile()
+        {
+            /*
+             * AssetEvent
+             */
+            CreateMap<Tenant, EventUser>()
+                .ForMember(x => x.Id, o => o.MapFrom(s => s.UserId));
+
+            CreateMap<Asset, EventEntity>()
+                .ForMember(x => x.Id, o => o.MapFrom(s => s.Id))
+                .ForMember(x => x.Type, o => o.MapFrom(s => nameof(Asset)))
+                .ForMember(x => x.Payload, o => o.MapFrom(s => s));
         }
     }
 }
