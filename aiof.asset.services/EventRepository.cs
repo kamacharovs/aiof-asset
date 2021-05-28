@@ -17,20 +17,17 @@ namespace aiof.asset.services
     public class EventRepository : IEventRepository
     {
         private readonly ILogger<EventRepository> _logger;
-        private readonly IConfiguration _config;
         private readonly IMapper _mapper;
         private readonly ITenant _tenant;
         private readonly IRestClient _client;
 
         public EventRepository(
             ILogger<EventRepository> logger,
-            IConfiguration config,
             IMapper mapper,
             ITenant tenant,
             IRestClient client)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _config = config ?? throw new ArgumentNullException(nameof(config));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _tenant = tenant ?? throw new ArgumentNullException(nameof(tenant));
             _client = client ?? throw new ArgumentNullException(nameof(client));
