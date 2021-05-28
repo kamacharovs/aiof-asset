@@ -13,6 +13,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
 
 using FluentValidation;
+using RestSharp;
 
 using aiof.asset.data;
 
@@ -90,6 +91,20 @@ namespace aiof.asset.core
                 x.ReportApiVersions = true;
                 x.ApiVersionReader = new UrlSegmentApiVersionReader();
                 x.ErrorResponses = new ApiVersioningErrorResponseProvider();
+            });
+
+            return services;
+        }
+
+        public static IServiceCollection AddEventingRestClient(this IServiceCollection services)
+        {
+            services.AddSingleton<IRestClient>(x =>
+            {
+                var client = new RestClient(Startup._config[Keys.EventingBaseUrl]);
+
+                client.AddDefaultHeader(Startup._config[Keys.EventingFunctionKeyHeaderName], Startup._config[Keys.EventingFunctionKey]);
+
+                return client;
             });
 
             return services;

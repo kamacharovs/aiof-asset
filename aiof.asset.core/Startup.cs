@@ -44,7 +44,8 @@ namespace aiof.asset.core
                 .AddAssetAuthentication()
                 .AddAssetSwaggerGen()
                 .AddAssetFluentValidators()
-                .AddAssetApiVersioning();
+                .AddAssetApiVersioning()
+                .AddEventingRestClient();
 
             services.AddControllers()
                 .AddJsonOptions(o =>
