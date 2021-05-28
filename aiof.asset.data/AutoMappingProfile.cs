@@ -62,7 +62,7 @@ namespace aiof.asset.data
 
             CreateMap<Asset, EventEntity>()
                 .ForMember(x => x.Id, o => o.MapFrom(s => s.Id))
-                .ForMember(x => x.Type, o => o.MapFrom(s => nameof(Asset)))
+                .ForMember(x => x.Type, o => o.MapFrom(s => s.GetType().Name))
                 .ForMember(x => x.Payload, o => o.MapFrom(s => s));
         }
     }
