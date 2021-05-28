@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 
 using AutoMapper;
 using RestSharp;
+using Polly;
 
 using aiof.asset.data;
 
@@ -36,7 +37,7 @@ namespace aiof.asset.services
             _client = client ?? throw new ArgumentNullException(nameof(client));
         }
 
-        public void Emit<T>(Asset asset)
+        public async Task EmitAsync<T>(Asset asset)
             where T : AssetEvent, new()
         {
             var eventEntity = _mapper.Map<EventEntity>(asset);
@@ -51,7 +52,7 @@ namespace aiof.asset.services
             try
             {
                 var request = new RestRequest("/emit", Method.POST).AddJsonBody(assetEvent);
-                var result = _client.Execute<object>(request);
+                var result = await _client.ExecuteAsync<object>(request);
             }
             catch (Exception e)
             {

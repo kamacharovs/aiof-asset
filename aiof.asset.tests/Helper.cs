@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
+using System.Threading;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -109,8 +110,8 @@ namespace aiof.asset.tests
             var mockedRestClient = new Mock<IRestClient>();
             var mockedRestResponse = new Mock<IRestResponse<T>>();
 
-            mockedRestClient.Setup(x => x.Execute<T>(It.IsAny<IRestRequest>()))
-                .Returns(mockedRestResponse.Object);
+            mockedRestClient.Setup(x => x.ExecuteAsync<T>(It.IsAny<IRestRequest>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(mockedRestResponse.Object);
 
             return mockedRestClient.Object;
         }

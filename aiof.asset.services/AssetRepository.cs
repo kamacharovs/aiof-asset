@@ -222,7 +222,7 @@ namespace aiof.asset.services
                 asset.UserId);
 
             // Emit event
-            _eventRepo.Emit<AssetAddedEvent>(asset);
+            await _eventRepo.EmitAsync<AssetAddedEvent>(asset);
 
             return asset;
         }
@@ -303,7 +303,7 @@ namespace aiof.asset.services
                 asset.UserId);
 
             // Emit event
-            _eventRepo.Emit<AssetUpdatedEvent>(asset);
+            await _eventRepo.EmitAsync<AssetUpdatedEvent>(asset);
 
             return asset;
         }
@@ -324,7 +324,7 @@ namespace aiof.asset.services
                 id);
 
             // Emit event
-            _eventRepo.Emit<AssetDeletedEvent>(asset);
+            await _eventRepo.EmitAsync<AssetDeletedEvent>(asset);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace aiof.asset.services
 {
     public interface IEventRepository
     {
-        void Emit<T>(Asset asset)
+        Task EmitAsync<T>(Asset asset)
             where T : AssetEvent, new();
     }
 }
