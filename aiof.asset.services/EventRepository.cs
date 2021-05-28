@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 using Microsoft.Extensions.Logging;
@@ -12,6 +10,7 @@ using RestSharp;
 using Polly;
 
 using aiof.asset.data;
+using Microsoft.AspNetCore.Http;
 
 namespace aiof.asset.services
 {
@@ -51,8 +50,15 @@ namespace aiof.asset.services
 
             try
             {
-                var request = new RestRequest("/emit", Method.POST).AddJsonBody(assetEvent);
-                var result = await _client.ExecuteAsync<object>(request);
+                await Policy.Handle<HttpRequestException>()
+                    .OrResult<IRestResponse>(x => (int)x.StatusCode == StatusCodes.Status500InternalServerError)
+                    .RetryAsync(3)
+                    .ExecuteAsync(async () =>
+                    {
+                        var request = new RestRequest("/emit", Method.POST).AddJsonBody(assetEvent);
+
+                        return await _client.ExecuteAsync(request);
+                    });
             }
             catch (Exception e)
             {
