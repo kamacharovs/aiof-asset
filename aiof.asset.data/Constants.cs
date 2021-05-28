@@ -59,6 +59,14 @@ namespace aiof.asset.data
         public const string PostgreSQL = nameof(PostgreSQL);
         public const string DataPostgreSQL = Data + ":" + PostgreSQL;
 
+        public const string Eventing = nameof(Eventing);
+        public const string BaseUrl = nameof(BaseUrl);
+        public const string FunctionKeyHeaderName = nameof(FunctionKeyHeaderName);
+        public const string FunctionKey = nameof(FunctionKey);
+        public const string EventingBaseUrl = nameof(Eventing) + ":" + nameof(BaseUrl);
+        public const string EventingFunctionKeyHeaderName = nameof(Eventing) + ":" + nameof(FunctionKeyHeaderName);
+        public const string EventingFunctionKey = nameof(Eventing) + ":" + nameof(FunctionKey);
+
         public const string Cors = nameof(Cors);
         public const string Portal = nameof(Portal);
         public const string CorsPortal = Cors + ":" + Portal;

@@ -57,7 +57,8 @@ namespace aiof.asset.data
              * AssetEvent
              */
             CreateMap<Tenant, EventUser>()
-                .ForMember(x => x.Id, o => o.MapFrom(s => s.UserId));
+                .ForMember(x => x.Id, o => o.MapFrom(s => s.UserId))
+                .ForMember(x => x.PublicKey, o => o.MapFrom(s => s.PublicKey));
 
             CreateMap<Asset, EventEntity>()
                 .ForMember(x => x.Id, o => o.MapFrom(s => s.Id))

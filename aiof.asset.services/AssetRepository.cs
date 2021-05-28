@@ -19,6 +19,7 @@ namespace aiof.asset.services
     {
         private readonly ILogger<AssetRepository> _logger;
         private readonly IMapper _mapper;
+        private readonly IEventRepository _eventRepo;
         private readonly AssetContext _context;
         private readonly AbstractValidator<AssetDto> _dtoValidator;
         private readonly AbstractValidator<AssetStockDto> _stockDtoValidator;
@@ -27,6 +28,7 @@ namespace aiof.asset.services
         public AssetRepository(
             ILogger<AssetRepository> logger,
             IMapper mapper,
+            IEventRepository eventRepo,
             AssetContext context,
             AbstractValidator<AssetDto> dtoValidator,
             AbstractValidator<AssetStockDto> stockDtoValidator,
@@ -34,6 +36,7 @@ namespace aiof.asset.services
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _eventRepo = eventRepo ?? throw new ArgumentNullException(nameof(eventRepo));
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _dtoValidator = dtoValidator ?? throw new ArgumentNullException(nameof(dtoValidator));
             _stockDtoValidator = stockDtoValidator ?? throw new ArgumentNullException(nameof(stockDtoValidator));
@@ -217,6 +220,9 @@ namespace aiof.asset.services
                 asset.Id,
                 asset.PublicKey,
                 asset.UserId);
+
+            // Emit event
+            _eventRepo.Emit<AssetAddedEvent>(asset);
 
             return asset;
         }

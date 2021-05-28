@@ -4,9 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using aiof.asset.data;
+
 namespace aiof.asset.services
 {
     public interface IEventRepository
     {
+        void Emit<T>(Asset asset)
+            where T : AssetEvent, new();
     }
 }
