@@ -2,14 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics.CodeAnalysis;
+using System.Security.Claims;
 
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 using AutoMapper;
 using FluentValidation;
 using Moq;
 using Bogus;
+using RestSharp;
 
 using aiof.asset.data;
 using aiof.asset.services;
@@ -21,6 +25,15 @@ namespace aiof.asset.tests
     {
         public int? UserId { get; set; }
         public int? ClientId { get; set; }
+        public Guid? PublicKey { get; set; }
+
+        public Dictionary<string, string> ConfigurationDict
+            => new Dictionary<string, string>
+            {
+                { Keys.EventingBaseUrl, "http://test" },
+                { Keys.EventingFunctionKeyHeaderName, "x-functions-key" },
+                { Keys.EventingFunctionKey, "functionkey" }
+            };
 
         public T GetRequiredService<T>()
         {
@@ -37,10 +50,27 @@ namespace aiof.asset.tests
             var services = new ServiceCollection();
 
             services.AddScoped<IAssetRepository, AssetRepository>()
+                .AddScoped<IEventRepository, EventRepository>()
                 .AddScoped<ITenant, Tenant>()
                 .AddScoped<FakeDataManager>();
+
             services.AddScoped(x => GetMockTenant());
-            services.AddSingleton(new MapperConfiguration(x => { x.AddProfile(new AutoMappingProfile()); }).CreateMapper());
+            services.AddSingleton(x => GetMockRestClient<object>());
+            services.AddSingleton(new MapperConfiguration(x =>
+                {
+                    x.AddProfile(new AutoMappingProfile());
+                    x.AddProfile(new AssetEventProfile());
+                })
+                .CreateMapper());
+
+            services.AddScoped<IConfiguration>(x =>
+            {
+                var configurationBuilder = new ConfigurationBuilder();
+
+                configurationBuilder.AddInMemoryCollection(ConfigurationDict);
+
+                return configurationBuilder.Build();
+            });
 
             services.AddDbContext<AssetContext>(o => o.UseInMemoryDatabase(Guid.NewGuid().ToString()));
 
@@ -57,14 +87,32 @@ namespace aiof.asset.tests
 
         public ITenant GetMockTenant()
         {
-            var mockedTenant = new Mock<ITenant>();
             var userId = UserId ?? 1;
             var clientId = ClientId ?? 1;
+            var publicKey = PublicKey ?? Guid.NewGuid();
 
-            mockedTenant.Setup(x => x.UserId).Returns(userId);
-            mockedTenant.Setup(x => x.ClientId).Returns(clientId);
+            var ci = new ClaimsIdentity();
+            ci.AddClaim(new Claim(Keys.Claim.UserId, userId.ToString()));
+            ci.AddClaim(new Claim(Keys.Claim.ClientId, clientId.ToString()));
+            ci.AddClaim(new Claim(Keys.Claim.PublicKey, publicKey.ToString()));
+            var user = new ClaimsPrincipal(ci);
 
-            return mockedTenant.Object;
+            var mockedHttpContext = new Mock<HttpContext>();
+            mockedHttpContext.Setup(x => x.User).Returns(user);
+
+            return new Tenant(mockedHttpContext.Object);
+        }
+
+        public IRestClient GetMockRestClient<T>()
+            where T : new()
+        {
+            var mockedRestClient = new Mock<IRestClient>();
+            var mockedRestResponse = new Mock<IRestResponse<T>>();
+
+            mockedRestClient.Setup(x => x.Execute<T>(It.IsAny<IRestRequest>()))
+                .Returns(mockedRestResponse.Object);
+
+            return mockedRestClient.Object;
         }
     }
 

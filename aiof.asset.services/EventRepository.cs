@@ -51,7 +51,7 @@ namespace aiof.asset.services
             try
             {
                 var request = new RestRequest("/emit", Method.POST).AddJsonBody(assetEvent);
-                var result = _client.Post<object>(request);
+                var result = _client.Execute<object>(request);
             }
             catch (Exception e)
             {

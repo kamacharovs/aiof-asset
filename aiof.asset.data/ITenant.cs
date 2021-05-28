@@ -15,6 +15,9 @@ namespace aiof.asset.data
         [JsonPropertyName("client_id")]
         int ClientId { get; set; }
 
+        [JsonPropertyName("public_key")]
+        Guid PublicKey { get; set; }
+
         [JsonIgnore]
         int TenantId { get; }
 

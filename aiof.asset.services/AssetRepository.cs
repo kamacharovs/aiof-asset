@@ -302,6 +302,9 @@ namespace aiof.asset.services
                 asset.PublicKey,
                 asset.UserId);
 
+            // Emit event
+            _eventRepo.Emit<AssetUpdatedEvent>(asset);
+
             return asset;
         }
 
@@ -319,6 +322,9 @@ namespace aiof.asset.services
             _logger.LogInformation("{Tenant} | Soft Deleted Asset with Id={AssetId}",
                 _context.Tenant.Log,
                 id);
+
+            // Emit event
+            _eventRepo.Emit<AssetDeletedEvent>(asset);
         }
     }
 }
