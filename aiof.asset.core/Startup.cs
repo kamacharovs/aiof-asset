@@ -30,6 +30,7 @@ namespace aiof.asset.core
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IAssetRepository, AssetRepository>()
+                .AddScoped<IEventRepository, EventRepository>()
                 .AddScoped<ITenant, Tenant>()
                 .AddAutoMapper(typeof(AutoMappingProfile).Assembly);
 
@@ -43,7 +44,8 @@ namespace aiof.asset.core
                 .AddAssetAuthentication()
                 .AddAssetSwaggerGen()
                 .AddAssetFluentValidators()
-                .AddAssetApiVersioning();
+                .AddAssetApiVersioning()
+                .AddEventingRestClient();
 
             services.AddControllers()
                 .AddJsonOptions(o =>
