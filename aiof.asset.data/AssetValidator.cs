@@ -53,7 +53,6 @@ namespace aiof.asset.data
         public void SetTypeRules()
         {
             RuleFor(assetType => assetType)
-                .NotNull()
                 .NotEmpty()
                 .MaximumLength(100)
                 .MustAsync(async (type, cancellation) =>
@@ -85,12 +84,10 @@ namespace aiof.asset.data
         public void SetAddRules()
         {
             RuleFor(x => x.Name)
-                .NotNull()
                 .NotEmpty()
                 .MaximumLength(100);
 
             RuleFor(x => x.TypeName)
-                .NotNull()
                 .NotEmpty()
                 .SetValidator(new AssetTypeValidator(_context));
 
@@ -151,7 +148,6 @@ namespace aiof.asset.data
                     .SetValidator(new AssetDtoValidator(_context));
 
                 RuleFor(x => x.TickerSymbol)
-                    .NotNull()
                     .NotEmpty()
                     .MaximumLength(50);
 
