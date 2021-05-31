@@ -8,6 +8,7 @@ namespace aiof.asset.data
 {
     public static class ExtensionMethods
     {
+        #region Validate adAsset
         public static async Task<ValidationResult> ValidateAddAssetAsync<T>(
             this IValidator<T> validator, 
             T dto)
@@ -32,7 +33,9 @@ namespace aiof.asset.data
         {
             await validator.ValidateAndThrowUpdateAsync(dto, Constants.UpdateRuleSet);
         }
+        #endregion
 
+        #region Validate Stock
         public static async Task<ValidationResult> ValidateAddStockAsync<T>(
             this IValidator<T> validator, 
             T dto)
@@ -57,7 +60,9 @@ namespace aiof.asset.data
         {
             await validator.ValidateAndThrowUpdateAsync(dto, Constants.UpdateStockRuleSet);
         }
+        #endregion
 
+        #region Validate Snapshot
         public static async Task<ValidationResult> ValidateAddSnapshotAsync<T>(
             this IValidator<T> validator, 
             T dto)
@@ -82,7 +87,7 @@ namespace aiof.asset.data
         {
             await validator.ValidateAndThrowUpdateAsync(dto, Constants.UpdateSnapshotRuleSet);
         }
-
+        #endregion
 
         private static async Task ValidateAndThrowAddAsync<T>(
             this IValidator<T> validator, 
