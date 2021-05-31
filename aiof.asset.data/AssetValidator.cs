@@ -37,6 +37,16 @@ namespace aiof.asset.data
 
             _context = context ?? throw new ArgumentNullException(nameof(context));
 
+            RuleSet(Constants.AddRuleSet, () => { SetTypeRules(); });
+            RuleSet(Constants.UpdateRuleSet, () => { SetTypeRules(); });
+            RuleSet(Constants.AddStockRuleSet, () => { SetTypeRules(); });
+            RuleSet(Constants.UpdateStockRuleSet, () => { SetTypeRules(); });
+            RuleSet(Constants.AddSnapshotRuleSet, () => { SetTypeRules(); });
+            RuleSet(Constants.UpdateSnapshotRuleSet, () => { SetTypeRules(); });
+        }
+
+        public void SetTypeRules()
+        {
             RuleFor(assetType => assetType)
                 .NotNull()
                 .NotEmpty()
@@ -71,10 +81,10 @@ namespace aiof.asset.data
                     .MaximumLength(100);
 
                 RuleFor(x => x.TypeName)
-                    .SetValidator(new AssetTypeValidator(_context))
-                    .When(x => x.TypeName != null);
+                    .SetValidator(new AssetTypeValidator(_context));
 
                 RuleFor(x => x.Value)
+                    .NotNull()
                     .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
                     .LessThan(CommonValidator.MaximumValue)
                     .WithMessage(CommonValidator.ValueMessage);

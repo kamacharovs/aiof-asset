@@ -2,11 +2,18 @@ using System;
 using System.Threading.Tasks;
 
 using FluentValidation;
+using FluentValidation.Results;
 
 namespace aiof.asset.data
 {
     public static class ExtensionMethods
     {
+        public static async Task<ValidationResult> ValidateAddAssetAsync<T>(
+            this IValidator<T> validator, 
+            T dto)
+        {
+            return await validator.ValidateAsync(dto, o => o.IncludeRuleSets(Constants.AddRuleSet));
+        }
         public static async Task ValidateAndThrowAddAssetAsync<T>(
             this IValidator<T> validator, 
             T dto)
@@ -20,6 +27,12 @@ namespace aiof.asset.data
             await validator.ValidateAndThrowUpdateAsync(dto, Constants.UpdateRuleSet);
         }
 
+        public static async Task<ValidationResult> ValidateAddStockAsync<T>(
+            this IValidator<T> validator, 
+            T dto)
+        {
+            return await validator.ValidateAsync(dto, o => o.IncludeRuleSets(Constants.AddStockRuleSet));
+        }
         public static async Task ValidateAndThrowAddStockAsync<T>(
             this IValidator<T> validator, 
             T dto)
@@ -33,6 +46,12 @@ namespace aiof.asset.data
             await validator.ValidateAndThrowUpdateAsync(dto, Constants.UpdateStockRuleSet);
         }
 
+        public static async Task<ValidationResult> ValidateAddSnapshotAsync<T>(
+            this IValidator<T> validator, 
+            T dto)
+        {
+            return await validator.ValidateAsync(dto, o => o.IncludeRuleSets(Constants.AddSnapshotRuleSet));
+        }
         public static async Task ValidateAndThrowAddSnapshotAsync<T>(
             this IValidator<T> validator, 
             T dto)
