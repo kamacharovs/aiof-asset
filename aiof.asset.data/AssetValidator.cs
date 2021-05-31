@@ -106,11 +106,12 @@ namespace aiof.asset.data
             RuleFor(x => x)
                 .Must(x =>
                 {
+                    var type = x.GetType().Name;
                     var areAllNull =
                         x.Name is null
                         && x.TypeName is null
                         && !x.Value.HasValue
-                        && x.GetType().Name != nameof(AssetStockDto);
+                        && type != nameof(AssetStockDto);
 
                     return !areAllNull;
                 })
