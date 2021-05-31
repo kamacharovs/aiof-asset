@@ -122,6 +122,15 @@ namespace aiof.asset.tests
 
             Assert.False((await _dtoValidator.ValidateUpdateAssetAsync(dto)).IsValid);
         }
+
+        [Fact]
+        public async Task AssetDto_Add_Update_Validation_AllNull_IsInvalid()
+        {
+            var dto = new AssetDto { };
+
+            Assert.False((await _dtoValidator.ValidateAddAssetAsync(dto)).IsValid);
+            Assert.False((await _dtoValidator.ValidateUpdateAssetAsync(dto)).IsValid);
+        }
         #endregion
 
         #region AssetStockDto
@@ -249,6 +258,14 @@ namespace aiof.asset.tests
             dto.DividendYield = dividendYield;
 
             Assert.False((await _stockDtoValidator.ValidateAddStockAsync(dto)).IsValid);
+        }
+
+        [Fact]
+        public async Task AssetStockDto_Add_Validation_AllNull_IsInvalid()
+        {
+            var dto = new AssetStockDto { };
+
+            Assert.False((await _dtoValidator.ValidateAddAssetAsync(dto)).IsValid);
         }
 
         [Theory]
