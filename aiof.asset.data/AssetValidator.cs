@@ -98,9 +98,9 @@ namespace aiof.asset.data
 
         public void SetUpdateRules()
         {
-            //RuleFor(x => x.Name)
-            //    .MaximumLength(100)
-            //    .When(x => x.Name != null);
+            RuleFor(x => x.Name)
+                .MaximumLength(100)
+                .When(x => x.Name != null);
 
             RuleFor(x => x.TypeName)
                 .SetValidator(new AssetTypeValidator(_context))
