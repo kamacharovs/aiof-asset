@@ -87,6 +87,8 @@ namespace aiof.asset.data
                 .MaximumLength(100);
 
             RuleFor(x => x.TypeName)
+                .NotNull()
+                .NotEmpty()
                 .SetValidator(new AssetTypeValidator(_context));
 
             RuleFor(x => x.Value)
@@ -103,6 +105,7 @@ namespace aiof.asset.data
                 .When(x => x.Name != null);
 
             RuleFor(x => x.TypeName)
+                .NotEmpty()
                 .SetValidator(new AssetTypeValidator(_context))
                 .When(x => x.TypeName != null);
 
@@ -223,6 +226,7 @@ namespace aiof.asset.data
                 .When(x => x.Name != null);
 
             RuleFor(x => x.TypeName)
+                .NotEmpty()
                 .SetValidator(new AssetTypeValidator(_context))
                 .When(x => x.TypeName != null);
 
