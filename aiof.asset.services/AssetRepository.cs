@@ -152,7 +152,7 @@ namespace aiof.asset.services
 
         public async Task<IAsset> AddAsync(AssetDto dto)
         {
-            await _dtoValidator.ValidateAndThrowAsync(dto);
+            await _dtoValidator.ValidateAndThrowAddAssetAsync(dto);
 
             return await AddAsync<Asset, AssetDto>(dto);
         }
@@ -187,7 +187,7 @@ namespace aiof.asset.services
 
         public async Task<IAsset> AddAsync(AssetStockDto dto)
         {
-            await _stockDtoValidator.ValidateAndThrowAsync(dto);
+            await _stockDtoValidator.ValidateAndThrowAddStockAsync(dto);
 
             dto.TypeName = AssetTypes.Stock;
 
@@ -223,7 +223,7 @@ namespace aiof.asset.services
 
         public async Task<IAssetSnapshot> AddSnapshotAsync(AssetSnapshotDto dto)
         {
-            await _snapshotDtoValidator.ValidateAndThrowAsync(dto);
+            await _snapshotDtoValidator.ValidateAndThrowAddSnapshotAsync(dto);
 
             var snapshot = _mapper.Map<AssetSnapshot>(dto);
 
@@ -254,7 +254,7 @@ namespace aiof.asset.services
             int id,
             AssetDto dto)
         {
-            await _dtoValidator.ValidateAndThrowAsync(dto);
+            await _dtoValidator.ValidateAndThrowUpdateAssetAsync(dto);
 
             return await UpdateAsync<Asset, AssetDto>(id, dto);
         }
@@ -263,7 +263,7 @@ namespace aiof.asset.services
             int id,
             AssetStockDto dto)
         {
-            await _stockDtoValidator.ValidateAndThrowAsync(dto);
+            await _stockDtoValidator.ValidateAndThrowUpdateStockAsync(dto);
 
             return await UpdateAsync<AssetStock, AssetStockDto>(id, dto);
         }

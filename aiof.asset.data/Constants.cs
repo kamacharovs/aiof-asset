@@ -7,6 +7,13 @@ namespace aiof.asset.data
 {
     public static class Constants
     {
+        public const string AddRuleSet = nameof(AddRuleSet);
+        public const string AddStockRuleSet = nameof(AddStockRuleSet);
+        public const string AddSnapshotRuleSet = nameof(AddSnapshotRuleSet);
+        public const string UpdateRuleSet = nameof(UpdateRuleSet);
+        public const string UpdateStockRuleSet = nameof(UpdateStockRuleSet);
+        public const string UpdateSnapshotRuleSet = nameof(UpdateSnapshotRuleSet);
+
         public const string Accept = nameof(Accept);
         public const string ApplicationJson = "application/json";
         public const string ApplicationProblemJson = "application/problem+json";
@@ -25,7 +32,6 @@ namespace aiof.asset.data
                 ApiV1Full
             };
         public static string DefaultUnsupportedApiVersionMessage = $"Unsupported API version specified. The supported versions are {string.Join(", ", ApiSupportedVersions)}";
-
 
         public static int[] AllowedUnauthorizedStatusCodes 
             => new int[]

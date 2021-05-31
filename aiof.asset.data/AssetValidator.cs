@@ -60,23 +60,47 @@ namespace aiof.asset.data
 
             _context = context ?? throw new ArgumentNullException(nameof(context));
 
-            RuleFor(x => x)
-                .NotNull();
+            RuleSet(Constants.AddRuleSet, () =>
+            {
+                RuleFor(x => x)
+                    .NotNull();
 
-            RuleFor(x => x.Name)
-                .NotEmpty()
-                .MaximumLength(100)
-                .When(x => x.Name != null);
+                RuleFor(x => x.Name)
+                    .NotNull()
+                    .NotEmpty()
+                    .MaximumLength(100);
 
-            RuleFor(x => x.TypeName)
-                .SetValidator(new AssetTypeValidator(_context))
-                .When(x => x.TypeName != null);
+                RuleFor(x => x.TypeName)
+                    .SetValidator(new AssetTypeValidator(_context))
+                    .When(x => x.TypeName != null);
 
-            RuleFor(x => x.Value)
-                .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
-                .LessThan(CommonValidator.MaximumValue)
-                .WithMessage(CommonValidator.ValueMessage)
-                .When(x => x.Value.HasValue);
+                RuleFor(x => x.Value)
+                    .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
+                    .LessThan(CommonValidator.MaximumValue)
+                    .WithMessage(CommonValidator.ValueMessage);
+            });
+
+            RuleSet(Constants.UpdateRuleSet, () =>
+            {
+                RuleFor(x => x)
+                    .NotNull();
+
+                RuleFor(x => x.Name)
+                    .NotEmpty()
+                    .MaximumLength(100)
+                    .When(x => x.Name != null);
+
+                RuleFor(x => x.TypeName)
+                    .SetValidator(new AssetTypeValidator(_context))
+                    .When(x => x.TypeName != null);
+
+                RuleFor(x => x.Value)
+                    .NotNull()
+                    .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
+                    .LessThan(CommonValidator.MaximumValue)
+                    .WithMessage(CommonValidator.ValueMessage)
+                    .When(x => x.Value.HasValue);
+            });
         }
     }
 
@@ -90,36 +114,73 @@ namespace aiof.asset.data
 
             _context = context ?? throw new ArgumentNullException(nameof(context));
 
-            RuleFor(x => x)
-                .NotNull()
-                .SetValidator(new AssetDtoValidator(_context));
+            RuleSet(Constants.AddStockRuleSet, () =>
+            {
+                RuleFor(x => x)
+                    .NotNull()
+                    .SetValidator(new AssetDtoValidator(_context));
 
-            RuleFor(x => x.TickerSymbol)
-                .NotEmpty()
-                .MaximumLength(50)
-                .When(x => x.TickerSymbol != null);
+                RuleFor(x => x.TickerSymbol)
+                    .NotNull()
+                    .NotEmpty()
+                    .MaximumLength(50);
 
-            RuleFor(x => x.Shares)
-                .GreaterThan(0)
-                .When(x => x.Shares.HasValue);
+                RuleFor(x => x.Shares)
+                    .GreaterThan(0)
+                    .When(x => x.Shares.HasValue);
 
-            RuleFor(x => x.ExpenseRatio)
-                .GreaterThan(0)
-                .Must(x =>
-                {
-                    return CommonValidator.BeValidPercent(x);
-                })
-                .WithMessage(CommonValidator.PercentValueMessage)
-                .When(x => x.ExpenseRatio.HasValue);
+                RuleFor(x => x.ExpenseRatio)
+                    .GreaterThan(0)
+                    .Must(x =>
+                    {
+                        return CommonValidator.BeValidPercent(x);
+                    })
+                    .WithMessage(CommonValidator.PercentValueMessage)
+                    .When(x => x.ExpenseRatio.HasValue);
 
-            RuleFor(x => x.DividendYield)
-                .GreaterThan(0)
-                .Must(x =>
-                {
-                    return CommonValidator.BeValidPercent(x);
-                })
-                .WithMessage(CommonValidator.PercentValueMessage)
-                .When(x => x.DividendYield.HasValue);
+                RuleFor(x => x.DividendYield)
+                    .GreaterThan(0)
+                    .Must(x =>
+                    {
+                        return CommonValidator.BeValidPercent(x);
+                    })
+                    .WithMessage(CommonValidator.PercentValueMessage)
+                    .When(x => x.DividendYield.HasValue);
+            });
+
+            RuleSet(Constants.UpdateStockRuleSet, () =>
+            {
+                RuleFor(x => x)
+                    .NotNull()
+                    .SetValidator(new AssetDtoValidator(_context));
+
+                RuleFor(x => x.TickerSymbol)
+                    .NotEmpty()
+                    .MaximumLength(50)
+                    .When(x => x.TickerSymbol != null);
+
+                RuleFor(x => x.Shares)
+                    .GreaterThan(0)
+                    .When(x => x.Shares.HasValue);
+
+                RuleFor(x => x.ExpenseRatio)
+                    .GreaterThan(0)
+                    .Must(x =>
+                    {
+                        return CommonValidator.BeValidPercent(x);
+                    })
+                    .WithMessage(CommonValidator.PercentValueMessage)
+                    .When(x => x.ExpenseRatio.HasValue);
+
+                RuleFor(x => x.DividendYield)
+                    .GreaterThan(0)
+                    .Must(x =>
+                    {
+                        return CommonValidator.BeValidPercent(x);
+                    })
+                    .WithMessage(CommonValidator.PercentValueMessage)
+                    .When(x => x.DividendYield.HasValue);
+            });
         }
     }
 
@@ -133,27 +194,55 @@ namespace aiof.asset.data
 
             _context = context ?? throw new ArgumentNullException(nameof(context));
 
-            RuleFor(x => x)
-                .NotNull();
+            RuleSet(Constants.AddSnapshotRuleSet, () =>
+            {
+                RuleFor(x => x)
+                    .NotNull();
 
-            RuleFor(x => x.AssetId)
-                .NotNull()
-                .NotEqual(0);
+                RuleFor(x => x.AssetId)
+                    .NotNull()
+                    .NotEmpty()
+                    .NotEqual(0);
 
-            RuleFor(x => x.Name)
-                .NotEmpty()
-                .MaximumLength(100)
-                .When(x => x.Name != null);
+                RuleFor(x => x.Name)
+                    .NotNull()
+                    .NotEmpty()
+                    .MaximumLength(100);
 
-            RuleFor(x => x.TypeName)
-                .SetValidator(new AssetTypeValidator(_context))
-                .When(x => x.TypeName != null);
+                RuleFor(x => x.TypeName)
+                    .SetValidator(new AssetTypeValidator(_context));
 
-            RuleFor(x => x.Value)
-                .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
-                .LessThan(CommonValidator.MaximumValue)
-                .WithMessage(CommonValidator.ValueMessage)
-                .When(x => x.Value.HasValue);
+                RuleFor(x => x.Value)
+                    .NotNull()
+                    .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
+                    .LessThan(CommonValidator.MaximumValue)
+                    .WithMessage(CommonValidator.ValueMessage);
+            });
+
+            RuleSet(Constants.UpdateSnapshotRuleSet, () =>
+            {
+                RuleFor(x => x)
+                    .NotNull();
+
+                RuleFor(x => x.AssetId)
+                    .NotNull()
+                    .NotEqual(0);
+
+                RuleFor(x => x.Name)
+                    .NotEmpty()
+                    .MaximumLength(100)
+                    .When(x => x.Name != null);
+
+                RuleFor(x => x.TypeName)
+                    .SetValidator(new AssetTypeValidator(_context))
+                    .When(x => x.TypeName != null);
+
+                RuleFor(x => x.Value)
+                    .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
+                    .LessThan(CommonValidator.MaximumValue)
+                    .WithMessage(CommonValidator.ValueMessage)
+                    .When(x => x.Value.HasValue);
+            });
         }
     }
 }

@@ -1,0 +1,75 @@
+using System;
+using System.Threading.Tasks;
+
+using FluentValidation;
+
+namespace aiof.asset.data
+{
+    public static class ExtensionMethods
+    {
+        public static async Task ValidateAndThrowAddAssetAsync<T>(
+            this IValidator<T> validator, 
+            T dto)
+        {
+            await validator.ValidateAndThrowAddAsync(dto, Constants.AddRuleSet);
+        }
+        public static async Task ValidateAndThrowUpdateAssetAsync<T>(
+            this IValidator<T> validator, 
+            T dto)
+        {
+            await validator.ValidateAndThrowUpdateAsync(dto, Constants.UpdateRuleSet);
+        }
+
+        public static async Task ValidateAndThrowAddStockAsync<T>(
+            this IValidator<T> validator, 
+            T dto)
+        {
+            await validator.ValidateAndThrowAddAsync(dto, Constants.AddStockRuleSet);
+        }
+        public static async Task ValidateAndThrowUpdateStockAsync<T>(
+            this IValidator<T> validator, 
+            T dto)
+        {
+            await validator.ValidateAndThrowUpdateAsync(dto, Constants.UpdateStockRuleSet);
+        }
+
+        public static async Task ValidateAndThrowAddSnapshotAsync<T>(
+            this IValidator<T> validator, 
+            T dto)
+        {
+            await validator.ValidateAndThrowAddAsync(dto, Constants.AddSnapshotRuleSet);
+        }
+        public static async Task ValidateAndThrowUpdateSnapshotAsync<T>(
+            this IValidator<T> validator, 
+            T dto)
+        {
+            await validator.ValidateAndThrowUpdateAsync(dto, Constants.UpdateSnapshotRuleSet);
+        }
+
+
+        private static async Task ValidateAndThrowAddAsync<T>(
+            this IValidator<T> validator, 
+            T dto,
+            string ruleSet)
+        {
+            var result = await validator.ValidateAsync(dto, o => o.IncludeRuleSets(ruleSet));
+
+            if (!result.IsValid)
+            {
+                throw new ValidationException(result.Errors);
+            }
+        }
+        private static async Task ValidateAndThrowUpdateAsync<T>(
+            this IValidator<T> validator, 
+            T dto,
+            string ruleSet)
+        {
+            var result = await validator.ValidateAsync(dto, o => o.IncludeRuleSets(ruleSet));
+
+            if (!result.IsValid)
+            {
+                throw new ValidationException(result.Errors);
+            }
+        }
+    }
+}
