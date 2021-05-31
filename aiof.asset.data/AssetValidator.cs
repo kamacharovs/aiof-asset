@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -16,6 +17,8 @@ namespace aiof.asset.data
         public static string ValueMessage = $"Value must be between {MinimumValue} and {MaximumValue}";
         public static string PercentValueMessage = $"Percent must be between {MinimumPercentValue} and {MaximumPercentValue}";
         public static string TypeNameMessage = $"Invalid {nameof(AssetDto.TypeName)}";
+
+        public static string AssetUpdateMessage = $"You must specify at least one field to update. '{nameof(AssetDto.Name)}', '{nameof(AssetDto.TypeName)}' or '{nameof(AssetDto.Value)}'";
 
         public static bool BeValidPercent(double? value)
         {
@@ -100,6 +103,19 @@ namespace aiof.asset.data
 
         public void SetUpdateRules()
         {
+            RuleFor(x => x)
+                .Must(x =>
+                {
+                    var areAllNull =
+                        x.Name is null
+                        && x.TypeName is null
+                        && !x.Value.HasValue
+                        && x.GetType().Name != nameof(AssetStockDto);
+
+                    return !areAllNull;
+                })
+                .WithMessage(CommonValidator.AssetUpdateMessage);
+
             RuleFor(x => x.Name)
                 .MaximumLength(100)
                 .When(x => x.Name != null);
