@@ -14,6 +14,12 @@ namespace aiof.asset.data
         {
             return await validator.ValidateAsync(dto, o => o.IncludeRuleSets(Constants.AddRuleSet));
         }
+        public static async Task<ValidationResult> ValidateUpdateAssetAsync<T>(
+            this IValidator<T> validator, 
+            T dto)
+        {
+            return await validator.ValidateAsync(dto, o => o.IncludeRuleSets(Constants.UpdateRuleSet));
+        }
         public static async Task ValidateAndThrowAddAssetAsync<T>(
             this IValidator<T> validator, 
             T dto)
@@ -33,6 +39,12 @@ namespace aiof.asset.data
         {
             return await validator.ValidateAsync(dto, o => o.IncludeRuleSets(Constants.AddStockRuleSet));
         }
+        public static async Task<ValidationResult> ValidateUpdateStockAsync<T>(
+            this IValidator<T> validator, 
+            T dto)
+        {
+            return await validator.ValidateAsync(dto, o => o.IncludeRuleSets(Constants.UpdateStockRuleSet));
+        }
         public static async Task ValidateAndThrowAddStockAsync<T>(
             this IValidator<T> validator, 
             T dto)
@@ -51,6 +63,12 @@ namespace aiof.asset.data
             T dto)
         {
             return await validator.ValidateAsync(dto, o => o.IncludeRuleSets(Constants.AddSnapshotRuleSet));
+        }
+        public static async Task<ValidationResult> ValidateUpdateSnapshotAsync<T>(
+            this IValidator<T> validator, 
+            T dto)
+        {
+            return await validator.ValidateAsync(dto, o => o.IncludeRuleSets(Constants.UpdateSnapshotRuleSet));
         }
         public static async Task ValidateAndThrowAddSnapshotAsync<T>(
             this IValidator<T> validator, 

@@ -110,6 +110,18 @@ namespace aiof.asset.tests
 
             Assert.False((await _dtoValidator.ValidateAddAssetAsync(dto)).IsValid);
         }
+
+        [Theory]
+        [MemberData(nameof(Helper.InvalidTypeNames), MemberType = typeof(Helper))]
+        public async Task AssetDto_Update_Validation_TypeName_IsInvalid(string typeName)
+        {
+            var dto = new AssetDto 
+            {
+                TypeName = typeName
+            };
+
+            Assert.False((await _dtoValidator.ValidateUpdateAssetAsync(dto)).IsValid);
+        }
         #endregion
 
         #region AssetStockDto
@@ -238,12 +250,24 @@ namespace aiof.asset.tests
 
             Assert.False((await _stockDtoValidator.ValidateAddStockAsync(dto)).IsValid);
         }
+
+        [Theory]
+        [MemberData(nameof(Helper.InvalidTypeNames), MemberType = typeof(Helper))]
+        public async Task AssetStockDto_Update_Validation_TypeName_IsInvalid(string typeName)
+        {
+            var dto = new AssetStockDto
+            {
+                TypeName = typeName
+            };
+
+            Assert.False((await _stockDtoValidator.ValidateUpdateStockAsync(dto)).IsValid);
+        }
         #endregion
 
         #region AssetSnapshotDto
         [Theory]
         [MemberData(nameof(Helper.ValidNames), MemberType = typeof(Helper))]
-        public async Task AssetSnapshotDto_Validation_Name_IsValid(string name)
+        public async Task AssetSnapshotDto_Add_Validation_Name_IsValid(string name)
         {
             var dto = Helper.RandomAssetSnapshotDto(_defaultAssetId);
 
@@ -253,7 +277,7 @@ namespace aiof.asset.tests
         }
         [Theory]
         [MemberData(nameof(Helper.InvalidNames), MemberType = typeof(Helper))]
-        public async Task AssetSnapshotDto_Validation_Name_IsInvalid(string name)
+        public async Task AssetSnapshotDto_Add_Validation_Name_IsInvalid(string name)
         {
             var dto = Helper.RandomAssetSnapshotDto(_defaultAssetId);
 
@@ -264,7 +288,7 @@ namespace aiof.asset.tests
 
         [Theory]
         [MemberData(nameof(Helper.ValidTypeNames), MemberType = typeof(Helper))]
-        public async Task AssetSnapshotDto_Validation_TypeName_IsValid(string typeName)
+        public async Task AssetSnapshotDto_Add_Validation_TypeName_IsValid(string typeName)
         {
             var dto = Helper.RandomAssetSnapshotDto(_defaultAssetId);
 
@@ -274,7 +298,7 @@ namespace aiof.asset.tests
         }
         [Theory]
         [MemberData(nameof(Helper.InvalidTypeNames), MemberType = typeof(Helper))]
-        public async Task AssetSnapshotDto_Validation_TypeName_IsInvalid(string typeName)
+        public async Task AssetSnapshotDto_Add_Validation_TypeName_IsInvalid(string typeName)
         {
             var dto = Helper.RandomAssetSnapshotDto(_defaultAssetId);
 
@@ -285,13 +309,26 @@ namespace aiof.asset.tests
 
         [Theory]
         [MemberData(nameof(Helper.InvalidValues), MemberType = typeof(Helper))]
-        public async Task AssetSnapshotDto_Validation_Value_IsInvalid(decimal value)
+        public async Task AssetSnapshotDto_Add_Validation_Value_IsInvalid(decimal value)
         {
             var dto = Helper.RandomAssetSnapshotDto(_defaultAssetId);
 
             dto.Value = value;
 
             Assert.False((await _snapshotValidator.ValidateAddSnapshotAsync(dto)).IsValid);
+        }
+        
+        [Theory]
+        [MemberData(nameof(Helper.InvalidTypeNames), MemberType = typeof(Helper))]
+        public async Task AssetSnapshotDto_Update_Validation_TypeName_IsInvalid(string typeName)
+        {
+            var dto = new AssetSnapshotDto
+            {
+                AssetId = _defaultAssetId,
+                TypeName = typeName
+            };
+
+            Assert.False((await _snapshotValidator.ValidateUpdateSnapshotAsync(dto)).IsValid);
         }
         #endregion
     }
