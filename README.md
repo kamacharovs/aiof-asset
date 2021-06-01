@@ -34,6 +34,14 @@ http://localhost:8000/
 docker rmi $(docker images -f “dangling=true” -q)
 ```
 
+### Docker local
+
+Build the image from `Dockerfile.local`
+
+```ps
+docker build -t aiof-api:latest -f Dockerfile.local .
+```
+
 ### Docker compose
 
 From the project root directory
