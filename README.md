@@ -2,6 +2,7 @@
 
 All in one finance asset microservice
 
+[![build](https://github.com/kamacharovs/aiof-asset/actions/workflows/build.yml/badge.svg)](https://github.com/kamacharovs/aiof-asset/actions/workflows/build.yml)
 [![Build Status](https://gkamacharov.visualstudio.com/gkama-cicd/_apis/build/status/kamacharovs.aiof-asset?branchName=main)](https://gkamacharov.visualstudio.com/gkama-cicd/_build/latest?definitionId=31&branchName=main)
 
 ## How to run it
