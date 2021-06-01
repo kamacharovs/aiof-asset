@@ -39,6 +39,19 @@ namespace aiof.asset.tests
         }
 
         [Fact]
+        public void AssetDto_To_AssetSnapshotDto_IsSuccessful()
+        {
+            var dto = Helper.RandomAssetDto();
+            var snapshotDto = _mapper.Map<AssetSnapshotDto>(dto);
+
+            Assert.NotNull(snapshotDto);
+            Assert.Equal(0, snapshotDto.AssetId);
+            Assert.Equal(dto.Name, snapshotDto.Name);
+            Assert.Equal(dto.TypeName, snapshotDto.TypeName);
+            Assert.Equal(dto.Value, snapshotDto.Value);
+        }
+
+        [Fact]
         public void AssetSnapshotDto_To_AssetSnapshot_IsSuccessful()
         {
             var dto = Helper.RandomAssetSnapshotDto(_defaultAssetId);
@@ -51,19 +64,6 @@ namespace aiof.asset.tests
             Assert.Equal(dto.Name, snapshot.Name);
             Assert.Equal(dto.TypeName, snapshot.TypeName);
             Assert.Equal(dto.Value, snapshot.Value);
-        }
-
-        [Fact]
-        public void AssetDto_To_AssetSnapshotDto_IsSuccessful()
-        {
-            var dto = Helper.RandomAssetDto();
-            var snapshotDto = _mapper.Map<AssetSnapshotDto>(dto);
-
-            Assert.NotNull(snapshotDto);
-            Assert.Equal(0, snapshotDto.AssetId);
-            Assert.Equal(dto.Name, snapshotDto.Name);
-            Assert.Equal(dto.TypeName, snapshotDto.TypeName);
-            Assert.Equal(dto.Value, snapshotDto.Value);
         }
 
         [Theory]
@@ -80,6 +80,34 @@ namespace aiof.asset.tests
             Assert.Equal(asset.Name, snapshotDto.Name);
             Assert.Equal(asset.TypeName, snapshotDto.TypeName);
             Assert.Equal(asset.Value, snapshotDto.Value);
+        }
+
+        [Fact]
+        public void AssetStockDto_To_AssetStock_IsSuccessful()
+        {
+            var assetStockDto = Helper.RandomAssetStockDto();
+            var assetStock = _mapper.Map<AssetStock>(assetStockDto);
+
+            Assert.NotNull(assetStock);
+            Assert.NotNull(assetStock.Name);
+            Assert.NotNull(assetStock.TypeName);
+            Assert.True(assetStock.Value > 0);
+            Assert.NotNull(assetStock.TickerSymbol);
+            Assert.NotNull(assetStock.Shares);
+            Assert.NotNull(assetStock.ExpenseRatio);
+            Assert.NotNull(assetStock.DividendYield);
+        }
+
+        [Fact]
+        public void AssetStockDto_To_AssetSnapshotDto_IsSuccessful()
+        {
+            var assetStockDto = Helper.RandomAssetStockDto();
+            var assetSnapshotDto = _mapper.Map<AssetSnapshotDto>(assetStockDto);
+
+            Assert.NotNull(assetSnapshotDto);
+            Assert.NotNull(assetSnapshotDto.Name);
+            Assert.NotNull(assetSnapshotDto.TypeName);
+            Assert.NotNull(assetSnapshotDto.Value);
         }
     }
 }

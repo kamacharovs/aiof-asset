@@ -268,6 +268,14 @@ namespace aiof.asset.tests
             Assert.False((await _dtoValidator.ValidateAddAssetAsync(dto)).IsValid);
         }
 
+        [Fact]
+        public async Task AssetStockDto_Update_Validation_AllNull_IsValid()
+        {
+            var dto = new AssetStockDto { };
+
+            Assert.True((await _stockDtoValidator.ValidateUpdateStockAsync(dto)).IsValid);
+        }
+
         [Theory]
         [MemberData(nameof(Helper.InvalidTypeNames), MemberType = typeof(Helper))]
         public async Task AssetStockDto_Update_Validation_TypeName_IsInvalid(string typeName)
