@@ -22,7 +22,8 @@ namespace aiof.asset.data
         public const string DefaultValidationMessage = "One or more validation errors have occurred. Please see errors for details";
         public const string DefaultUnauthorizedMessage = "Unauthorized. Missing, invalid or expired credentials provided";
         public const string DefaultForbiddenMessage = "Forbidden. You don't have enough permissions to access this API";
-        
+
+        public const string ApiName = "aiof-asset";
         public const string ApiRoute = "v{version:apiVersion}/assets";
         public const string ApiV1 = "1.0";
         public static string ApiV1Full = $"v{ApiV1}";
@@ -32,6 +33,10 @@ namespace aiof.asset.data
                 ApiV1Full
             };
         public static string DefaultUnsupportedApiVersionMessage = $"Unsupported API version specified. The supported versions are {string.Join(", ", ApiSupportedVersions)}";
+
+        public const string AssetAddedEvent = "AssetAdded";
+        public const string AssetUpdatedEvent = "AssetUpdated";
+        public const string AssetDeletedEvent = "AssetDeleted";
 
         public static int[] AllowedUnauthorizedStatusCodes 
             => new int[]
@@ -60,6 +65,14 @@ namespace aiof.asset.data
         public const string Data = nameof(Data);
         public const string PostgreSQL = nameof(PostgreSQL);
         public const string DataPostgreSQL = Data + ":" + PostgreSQL;
+
+        public const string Eventing = nameof(Eventing);
+        public const string BaseUrl = nameof(BaseUrl);
+        public const string FunctionKeyHeaderName = nameof(FunctionKeyHeaderName);
+        public const string FunctionKey = nameof(FunctionKey);
+        public const string EventingBaseUrl = nameof(Eventing) + ":" + nameof(BaseUrl);
+        public const string EventingFunctionKeyHeaderName = nameof(Eventing) + ":" + nameof(FunctionKeyHeaderName);
+        public const string EventingFunctionKey = nameof(Eventing) + ":" + nameof(FunctionKey);
 
         public const string Cors = nameof(Cors);
         public const string Portal = nameof(Portal);
