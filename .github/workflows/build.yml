@@ -39,7 +39,7 @@ jobs:
       uses: docker/setup-buildx-action@v1
 
     - name: bash ls
-      run: ls ${{env.outputPath}}
+      run: ls ${{ env.GITHUB_WORKSPACE }}/${{env.outputPath}}
 
     - name: docker build
       uses: docker/build-push-action@v2
