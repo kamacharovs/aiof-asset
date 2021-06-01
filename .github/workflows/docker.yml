@@ -16,6 +16,9 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: docker buildx
+        uses: docker/setup-buildx-action@v1
+
       - name: docker build
         id: docker_build
         uses: docker/build-push-action@v2
