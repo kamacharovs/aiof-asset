@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -16,6 +17,8 @@ namespace aiof.asset.data
         public static string ValueMessage = $"Value must be between {MinimumValue} and {MaximumValue}";
         public static string PercentValueMessage = $"Percent must be between {MinimumPercentValue} and {MaximumPercentValue}";
         public static string TypeNameMessage = $"Invalid {nameof(AssetDto.TypeName)}";
+
+        public static string AssetUpdateMessage = $"You must specify at least one field to update. '{nameof(AssetDto.Name)}', '{nameof(AssetDto.TypeName)}' or '{nameof(AssetDto.Value)}'";
 
         public static bool BeValidPercent(double? value)
         {
@@ -37,8 +40,19 @@ namespace aiof.asset.data
 
             _context = context ?? throw new ArgumentNullException(nameof(context));
 
+            RuleSet(Constants.AddRuleSet, () => { SetTypeRules(); });
+            RuleSet(Constants.UpdateRuleSet, () => { SetTypeRules(); });
+            RuleSet(Constants.AddStockRuleSet, () => { SetTypeRules(); });
+            RuleSet(Constants.UpdateStockRuleSet, () => { SetTypeRules(); });
+            RuleSet(Constants.AddSnapshotRuleSet, () => { SetTypeRules(); });
+            RuleSet(Constants.UpdateSnapshotRuleSet, () => { SetTypeRules(); });
+
+            SetTypeRules();
+        }
+
+        public void SetTypeRules()
+        {
             RuleFor(assetType => assetType)
-                .NotNull()
                 .NotEmpty()
                 .MaximumLength(100)
                 .MustAsync(async (type, cancellation) =>
@@ -60,15 +74,52 @@ namespace aiof.asset.data
 
             _context = context ?? throw new ArgumentNullException(nameof(context));
 
-            RuleFor(x => x)
-                .NotNull();
+            RuleSet(Constants.AddRuleSet, () => { SetAddRules(); });
+            RuleSet(Constants.AddStockRuleSet, () => { SetAddRules(); });
 
+            RuleSet(Constants.UpdateRuleSet, () => { SetUpdateRules(); });
+            RuleSet(Constants.UpdateStockRuleSet, () => { SetUpdateRules(); });
+        }
+
+        public void SetAddRules()
+        {
             RuleFor(x => x.Name)
                 .NotEmpty()
+                .MaximumLength(100);
+
+            RuleFor(x => x.TypeName)
+                .NotEmpty()
+                .SetValidator(new AssetTypeValidator(_context));
+
+            RuleFor(x => x.Value)
+                .NotNull()
+                .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
+                .LessThan(CommonValidator.MaximumValue)
+                .WithMessage(CommonValidator.ValueMessage);
+        }
+
+        public void SetUpdateRules()
+        {
+            RuleFor(x => x)
+                .Must(x =>
+                {
+                    var type = x.GetType().Name;
+                    var areAllNull =
+                        x.Name is null
+                        && x.TypeName is null
+                        && !x.Value.HasValue
+                        && type != nameof(AssetStockDto);
+
+                    return !areAllNull;
+                })
+                .WithMessage(CommonValidator.AssetUpdateMessage);
+
+            RuleFor(x => x.Name)
                 .MaximumLength(100)
                 .When(x => x.Name != null);
 
             RuleFor(x => x.TypeName)
+                .NotEmpty()
                 .SetValidator(new AssetTypeValidator(_context))
                 .When(x => x.TypeName != null);
 
@@ -90,36 +141,72 @@ namespace aiof.asset.data
 
             _context = context ?? throw new ArgumentNullException(nameof(context));
 
-            RuleFor(x => x)
-                .NotNull()
-                .SetValidator(new AssetDtoValidator(_context));
+            RuleSet(Constants.AddStockRuleSet, () =>
+            {
+                RuleFor(x => x)
+                    .NotNull()
+                    .SetValidator(new AssetDtoValidator(_context));
 
-            RuleFor(x => x.TickerSymbol)
-                .NotEmpty()
-                .MaximumLength(50)
-                .When(x => x.TickerSymbol != null);
+                RuleFor(x => x.TickerSymbol)
+                    .NotEmpty()
+                    .MaximumLength(50);
 
-            RuleFor(x => x.Shares)
-                .GreaterThan(0)
-                .When(x => x.Shares.HasValue);
+                RuleFor(x => x.Shares)
+                    .GreaterThan(0)
+                    .When(x => x.Shares.HasValue);
 
-            RuleFor(x => x.ExpenseRatio)
-                .GreaterThan(0)
-                .Must(x =>
-                {
-                    return CommonValidator.BeValidPercent(x);
-                })
-                .WithMessage(CommonValidator.PercentValueMessage)
-                .When(x => x.ExpenseRatio.HasValue);
+                RuleFor(x => x.ExpenseRatio)
+                    .GreaterThan(0)
+                    .Must(x =>
+                    {
+                        return CommonValidator.BeValidPercent(x);
+                    })
+                    .WithMessage(CommonValidator.PercentValueMessage)
+                    .When(x => x.ExpenseRatio.HasValue);
 
-            RuleFor(x => x.DividendYield)
-                .GreaterThan(0)
-                .Must(x =>
-                {
-                    return CommonValidator.BeValidPercent(x);
-                })
-                .WithMessage(CommonValidator.PercentValueMessage)
-                .When(x => x.DividendYield.HasValue);
+                RuleFor(x => x.DividendYield)
+                    .GreaterThan(0)
+                    .Must(x =>
+                    {
+                        return CommonValidator.BeValidPercent(x);
+                    })
+                    .WithMessage(CommonValidator.PercentValueMessage)
+                    .When(x => x.DividendYield.HasValue);
+            });
+
+            RuleSet(Constants.UpdateStockRuleSet, () =>
+            {
+                RuleFor(x => x)
+                    .NotNull()
+                    .SetValidator(new AssetDtoValidator(_context));
+
+                RuleFor(x => x.TickerSymbol)
+                    .NotEmpty()
+                    .MaximumLength(50)
+                    .When(x => x.TickerSymbol != null);
+
+                RuleFor(x => x.Shares)
+                    .GreaterThan(0)
+                    .When(x => x.Shares.HasValue);
+
+                RuleFor(x => x.ExpenseRatio)
+                    .GreaterThan(0)
+                    .Must(x =>
+                    {
+                        return CommonValidator.BeValidPercent(x);
+                    })
+                    .WithMessage(CommonValidator.PercentValueMessage)
+                    .When(x => x.ExpenseRatio.HasValue);
+
+                RuleFor(x => x.DividendYield)
+                    .GreaterThan(0)
+                    .Must(x =>
+                    {
+                        return CommonValidator.BeValidPercent(x);
+                    })
+                    .WithMessage(CommonValidator.PercentValueMessage)
+                    .When(x => x.DividendYield.HasValue);
+            });
         }
     }
 
@@ -133,6 +220,12 @@ namespace aiof.asset.data
 
             _context = context ?? throw new ArgumentNullException(nameof(context));
 
+            RuleSet(Constants.AddSnapshotRuleSet, () => { SetupSnapshotRules(); });
+            RuleSet(Constants.UpdateSnapshotRuleSet, () => { SetupSnapshotRules(); });
+        }
+
+        public void SetupSnapshotRules()
+        {
             RuleFor(x => x)
                 .NotNull();
 
@@ -146,6 +239,7 @@ namespace aiof.asset.data
                 .When(x => x.Name != null);
 
             RuleFor(x => x.TypeName)
+                .NotEmpty()
                 .SetValidator(new AssetTypeValidator(_context))
                 .When(x => x.TypeName != null);
 
