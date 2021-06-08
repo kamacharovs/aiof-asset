@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.FeatureManagement;
 
 using AutoMapper;
 using FluentValidation;
@@ -33,7 +34,8 @@ namespace aiof.asset.tests
             {
                 { Keys.EventingBaseUrl, "http://test" },
                 { Keys.EventingFunctionKeyHeaderName, "x-functions-key" },
-                { Keys.EventingFunctionKey, "functionkey" }
+                { Keys.EventingFunctionKey, "functionkey" },
+                { "FeatureManagement:Eventing", "true" }
             };
 
         public T GetRequiredService<T>()
@@ -52,6 +54,7 @@ namespace aiof.asset.tests
 
             services.AddScoped<IAssetRepository, AssetRepository>()
                 .AddScoped<IEventRepository, EventRepository>()
+                .AddScoped<IEnvConfiguration, EnvConfiguration>()
                 .AddScoped<ITenant, Tenant>()
                 .AddScoped<FakeDataManager>();
 
@@ -81,6 +84,7 @@ namespace aiof.asset.tests
                 .AddScoped<AbstractValidator<AssetStockDto>, AssetStockDtoValidator>();
 
             services.AddLogging();
+            services.AddFeatureManagement();
             services.AddHttpContextAccessor();
 
             return services;
