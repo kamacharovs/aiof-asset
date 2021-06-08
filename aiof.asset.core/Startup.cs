@@ -31,6 +31,7 @@ namespace aiof.asset.core
         {
             services.AddScoped<IAssetRepository, AssetRepository>()
                 .AddScoped<IEventRepository, EventRepository>()
+                .AddScoped<IEnvConfiguration, EnvConfiguration>()
                 .AddScoped<ITenant, Tenant>()
                 .AddAutoMapper(typeof(AutoMappingProfile).Assembly);
 
