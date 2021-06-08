@@ -129,4 +129,9 @@ namespace aiof.asset.data
         public const string Cash = "cash";
         public const string Other = "other";
     }
+
+    public enum FeatureFlags
+    {
+        Eventing
+    }
 }
