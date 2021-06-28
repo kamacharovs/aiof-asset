@@ -1,4 +1,4 @@
-name: build
+name: release
 
 env:
   configuration: release
@@ -7,14 +7,23 @@ env:
   outputPath: app/publish
 
 on:
-  pull_request:
-    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      env:
+        description: Environment
+        required: true
+        default: dev
 
 jobs:
-  build:
+  release:
+    environment: ${{ github.event.inputs.env }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+
+    - name: env
+      run: |
+        echo "running environment ${{ github.event.inputs.env }}"
 
     - name: setup
       uses: actions/setup-dotnet@v1
@@ -47,5 +56,17 @@ jobs:
       with:
         context: .
         file: ./Dockerfile
-        push: false
+        push: true
         tags: gkama/aiof-asset:latest
+
+    - name: az login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: az webapp restart
+      uses: azure/CLI@v1
+      with:
+        azcliversion: 2.25.0
+        inlineScript: |
+          az webapp restart -n ${{ env.AZURE_APP_NAME }} -g ${{ env.AZURE_APP_RESOURCE_GROUP }}
