@@ -7,8 +7,6 @@ env:
   outputPath: app/publish
 
 on:
-  pull_request:
-    branches: [ main ]
   workflow_dispatch:
     inputs:
       env:
