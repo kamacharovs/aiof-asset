@@ -69,4 +69,4 @@ jobs:
       with:
         azcliversion: 2.25.0
         inlineScript: |
-          az webapp restart -n ${{ env.AZURE_APP_NAME }} -g ${{ env.AZURE_APP_RESOURCE_GROUP }}
+          az webapp restart -n ${{ secrets.AZURE_APP_NAME }} -g ${{ secrets.AZURE_APP_RESOURCE_GROUP }}
