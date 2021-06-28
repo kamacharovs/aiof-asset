@@ -5,6 +5,7 @@ env:
   project_file: aiof.asset.core/aiof.asset.core.csproj
   project_test_file: aiof.asset.tests/aiof.asset.tests.csproj
   outputPath: app/publish
+  az_cli_version: 2.25.0
 
 on:
   workflow_dispatch:
@@ -67,6 +68,6 @@ jobs:
     - name: az webapp restart
       uses: azure/CLI@v1
       with:
-        azcliversion: 2.25.0
+        azcliversion: ${{ env.az_cli_version }}
         inlineScript: |
           az webapp restart -n ${{ secrets.AZURE_APP_NAME }} -g ${{ secrets.AZURE_APP_RESOURCE_GROUP }}
