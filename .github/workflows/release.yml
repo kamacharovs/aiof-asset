@@ -1,7 +1,6 @@
 name: release
 
 env:
-  name: dev
   configuration: release
   project_file: aiof.asset.core/aiof.asset.core.csproj
   project_test_file: aiof.asset.tests/aiof.asset.tests.csproj
@@ -10,9 +9,16 @@ env:
 on:
   pull_request:
     branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      env:
+        description: Environment
+        required: true
+        default: dev
 
 jobs:
   release:
+    environment: ${{ github.event.inputs.env }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -61,4 +67,4 @@ jobs:
       with:
         azcliversion: 2.25.0
         inlineScript: |
-          az webapp restart -n ${{ secrets.AZURE_APP_NAME }} -g ${{ secrets.AZURE_APP_RESOURCE_GROUP }}
+          az webapp restart -n ${{ env.AZURE_APP_NAME }} -g ${{ env.AZURE_APP_RESOURCE_GROUP }}
