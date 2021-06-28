@@ -1,7 +1,7 @@
 name: release
-environment: dev
 
 env:
+  name: dev
   configuration: release
   project_file: aiof.asset.core/aiof.asset.core.csproj
   project_test_file: aiof.asset.tests/aiof.asset.tests.csproj
