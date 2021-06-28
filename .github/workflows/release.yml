@@ -21,6 +21,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: env
+      run: |
+        echo "running environment ${{ github.event.inputs.env }}"
+
     - name: setup
       uses: actions/setup-dotnet@v1
       with:
