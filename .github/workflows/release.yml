@@ -1,4 +1,5 @@
 name: release
+environment: dev
 
 env:
   configuration: release
