@@ -4,8 +4,7 @@ env:
   configuration: release
   project_file: aiof.asset.core/aiof.asset.core.csproj
   project_test_file: aiof.asset.tests/aiof.asset.tests.csproj
-  outputPath: app/publish
-  az_cli_version: 2.25.0
+  output_path: app/publish
 
 on:
   workflow_dispatch:
@@ -41,7 +40,7 @@ jobs:
       run: dotnet test -c ${{ env.configuration }} ${{ env.project_test_file }} -l trx -v normal --no-build
 
     - name: publish
-      run: dotnet publish -c ${{ env.configuration }} -o ${{ env.outputPath }}
+      run: dotnet publish -c ${{ env.configuration }} -o ${{ env.output_path }}
 
     - name: docker buildx
       uses: docker/setup-buildx-action@v1
@@ -68,6 +67,6 @@ jobs:
     - name: az webapp restart
       uses: azure/CLI@v1
       with:
-        azcliversion: ${{ env.az_cli_version }}
+        azcliversion: latest
         inlineScript: |
           az webapp restart -n ${{ secrets.AZURE_APP_NAME }} -g ${{ secrets.AZURE_APP_RESOURCE_GROUP }}
