@@ -33,10 +33,6 @@ jobs:
     - name: publish
       run: dotnet publish -c ${{ env.configuration }} -o ${{ env.output_path }}
 
-    - name: ls
-      run: |
-        ls
-
     - name: copy dockerfile
       run: |
         cp ./Dockerfile "./${{ env.output_path }}/Dockerfile"
