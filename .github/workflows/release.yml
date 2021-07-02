@@ -48,6 +48,8 @@ jobs:
       uses: docker/metadata-action@v3
       with:
         images: gkama/aiof-asset
+        tags: |
+          latest
 
     - name: docker login
       uses: docker/login-action@v1 
