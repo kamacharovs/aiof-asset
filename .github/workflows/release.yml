@@ -43,24 +43,16 @@ jobs:
     - name: publish
       run: dotnet publish -c ${{ env.configuration }} -o ${{ env.output_path }}
 
-    - name: copy dockerfile
-      run: |
-        cp ./Dockerfile "./${{ env.output_path }}/Dockerfile"
-
-    - name: copy dockerfile
-      run: |
-        cp ./Dockerfile ./${{ env.output_path }}
-
     - name: docker login
       uses: docker/login-action@v1 
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: docker build
+    - name: docker build and push
       uses: docker/build-push-action@v2
       with:
-        context: ${{ env.output_path }}
+        context: .
         file: ./Dockerfile
         push: true
         tags: gkama/aiof-asset:latest

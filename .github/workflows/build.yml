@@ -34,14 +34,10 @@ jobs:
     - name: publish
       run: dotnet publish -c ${{ env.configuration }} -o ${{ env.output_path }}
 
-    - name: copy dockerfile
-      run: |
-        cp ./Dockerfile "./${{ env.output_path }}/Dockerfile"
-
     - name: docker build
       uses: docker/build-push-action@v2
       with:
-        context: ${{ env.output_path }}
+        context: .
         file: ./Dockerfile
         push: false
         tags: gkama/aiof-asset:latest
