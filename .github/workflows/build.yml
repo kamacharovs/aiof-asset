@@ -14,7 +14,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - name: checkout
+      uses: actions/checkout@v2
 
     - name: setup
       uses: actions/setup-dotnet@v1
@@ -36,9 +37,6 @@ jobs:
     - name: copy dockerfile
       run: |
         cp ./Dockerfile "./${{ env.output_path }}/Dockerfile"
-
-    - name: docker buildx
-      uses: docker/setup-buildx-action@v1
 
     - name: docker build
       uses: docker/build-push-action@v2
