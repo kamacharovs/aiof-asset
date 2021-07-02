@@ -39,7 +39,7 @@ jobs:
 
     - name: copy dockerfile
       run: |
-        cp ./Dockerfile ${{ env.output_path }}
+        cp ./Dockerfile ./${{ env.output_path }}/Dockerfile
 
     - name: docker buildx
       uses: docker/setup-buildx-action@v1
