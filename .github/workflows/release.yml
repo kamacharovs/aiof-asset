@@ -44,6 +44,10 @@ jobs:
 
     - name: copy dockerfile
       run: |
+        cp ./Dockerfile "./${{ env.output_path }}/Dockerfile"
+
+    - name: copy dockerfile
+      run: |
         cp ./Dockerfile ./${{ env.output_path }}
 
     - name: docker buildx
@@ -58,7 +62,7 @@ jobs:
     - name: docker build
       uses: docker/build-push-action@v2
       with:
-        context: .
+        context: ${{ env.output_path }}
         file: ./Dockerfile
         push: true
         tags: gkama/aiof-asset:latest
