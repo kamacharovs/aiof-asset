@@ -4,7 +4,7 @@ env:
   configuration: release
   project_file: aiof.asset.core/aiof.asset.core.csproj
   project_test_file: aiof.asset.tests/aiof.asset.tests.csproj
-  outputPath: app/publish
+  output_path: app/publish
 
 on:
   pull_request:
@@ -31,7 +31,7 @@ jobs:
       run: dotnet test -c ${{ env.configuration }} ${{ env.project_test_file }} -l trx -v normal --no-build
 
     - name: publish
-      run: dotnet publish -c ${{ env.configuration }} -o ${{ env.outputPath }}
+      run: dotnet publish -c ${{ env.configuration }} -o ${{ env.output_path }}
 
     - name: ls
       run: |
@@ -39,7 +39,7 @@ jobs:
 
     - name: copy dockerfile
       run: |
-        cp ./Dockerfile ./${{ env.output_path }}/Dockerfile
+        cp ./Dockerfile "./${{ env.output_path }}/Dockerfile"
 
     - name: docker buildx
       uses: docker/setup-buildx-action@v1
@@ -53,7 +53,7 @@ jobs:
     - name: docker build
       uses: docker/build-push-action@v2
       with:
-        context: ${{ env.outputPath }}
+        context: ${{ env.output_path }}
         file: ./Dockerfile
         push: false
         tags: gkama/aiof-asset:latest
