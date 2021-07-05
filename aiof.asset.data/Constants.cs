@@ -97,7 +97,7 @@ namespace aiof.asset.data
         public const string Url = nameof(Url);
         public const string License = nameof(License);
         public const string OpenApiTitle = nameof(OpenApi) + ":" + nameof(Title);
-        public const string OpenApiDescription = nameof(Description) + ":" + nameof(Description);
+        public const string OpenApiDescription = nameof(OpenApi) + ":" + nameof(Description);
         public const string OpenApiContactName = nameof(OpenApi) + ":" + nameof(Contact) + ":" + nameof(Name);
         public const string OpenApiContactEmail = nameof(OpenApi) + ":" + nameof(Contact) + ":" + nameof(Email);
         public const string OpenApiContactUrl = nameof(OpenApi) + ":" + nameof(Contact) + ":" + nameof(Url);
