@@ -126,6 +126,7 @@ namespace aiof.asset.data
         public const string House = "house";
         public const string Investment = "investment";
         public const string Stock = "stock";
+        public const string Home = "home";
         public const string Cash = "cash";
         public const string Other = "other";
     }
