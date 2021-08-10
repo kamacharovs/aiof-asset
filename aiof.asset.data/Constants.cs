@@ -9,9 +9,11 @@ namespace aiof.asset.data
     {
         public const string AddRuleSet = nameof(AddRuleSet);
         public const string AddStockRuleSet = nameof(AddStockRuleSet);
+        public const string AddHomeRuleSet = nameof(AddHomeRuleSet);
         public const string AddSnapshotRuleSet = nameof(AddSnapshotRuleSet);
         public const string UpdateRuleSet = nameof(UpdateRuleSet);
         public const string UpdateStockRuleSet = nameof(UpdateStockRuleSet);
+        public const string UpdateHomeRuleSet = nameof(UpdateHomeRuleSet);
         public const string UpdateSnapshotRuleSet = nameof(UpdateSnapshotRuleSet);
 
         public const string Accept = nameof(Accept);
@@ -113,9 +115,10 @@ namespace aiof.asset.data
 
         public static class Entity
         {
+            public static string AssetType = nameof(data.AssetType).ToSnakeCase();
             public static string Asset = nameof(data.Asset).ToSnakeCase();
             public static string AssetStock = nameof(data.AssetStock).ToSnakeCase();
-            public static string AssetType = nameof(data.AssetType).ToSnakeCase();
+            public static string AssetHome = nameof(data.AssetHome).ToSnakeCase();
             public static string AssetSnapshot = nameof(data.AssetSnapshot).ToSnakeCase();
         }
     }

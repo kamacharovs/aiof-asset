@@ -6,13 +6,13 @@ namespace aiof.asset.data
     {
         public string HomeType { get; set; }
         public double LoanValue { get; set; }
-        public double Mortgage { get; set; }
+        public double MonthlyMortgage { get; set; }
         public double MortgageRate { get; set; }
         public double DownPayment { get; set; }
         public double? AnnualInsurance { get; set; }
         public double? AnnualPropertyTax { get; set; }
         public double? ClosingCosts { get; set; }
-        public bool Refinanced { get; set; } = false;
+        public bool? IsRefinanced { get; set; } = false;
 
         public AssetHome()
         {
@@ -30,6 +30,6 @@ namespace aiof.asset.data
         public double? AnnualInsurance { get; set; }
         public double? AnnualPropertyTax { get; set; }
         public double? ClosingCosts { get; set; }
-        public bool? Refinanced { get; set; };
+        public bool? Refinanced { get; set; }
     }
 }

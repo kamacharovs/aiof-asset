@@ -44,6 +44,8 @@ namespace aiof.asset.data
             RuleSet(Constants.UpdateRuleSet, () => { SetTypeRules(); });
             RuleSet(Constants.AddStockRuleSet, () => { SetTypeRules(); });
             RuleSet(Constants.UpdateStockRuleSet, () => { SetTypeRules(); });
+            RuleSet(Constants.AddHomeRuleSet, () => { SetTypeRules(); });
+            RuleSet(Constants.UpdateHomeRuleSet, () => { SetTypeRules(); });
             RuleSet(Constants.AddSnapshotRuleSet, () => { SetTypeRules(); });
             RuleSet(Constants.UpdateSnapshotRuleSet, () => { SetTypeRules(); });
 
@@ -76,9 +78,11 @@ namespace aiof.asset.data
 
             RuleSet(Constants.AddRuleSet, () => { SetAddRules(); });
             RuleSet(Constants.AddStockRuleSet, () => { SetAddRules(); });
+            RuleSet(Constants.AddHomeRuleSet, () => { SetAddRules(); });
 
             RuleSet(Constants.UpdateRuleSet, () => { SetUpdateRules(); });
             RuleSet(Constants.UpdateStockRuleSet, () => { SetUpdateRules(); });
+            RuleSet(Constants.UpdateHomeRuleSet, () => { SetUpdateRules(); });
         }
 
         public void SetAddRules()
@@ -206,6 +210,33 @@ namespace aiof.asset.data
                     })
                     .WithMessage(CommonValidator.PercentValueMessage)
                     .When(x => x.DividendYield.HasValue);
+            });
+        }
+    }
+
+    public class AssetHomeDtoValidator : AbstractValidator<AssetHomeDto>
+    {
+        private readonly AssetContext _context;
+
+        public AssetHomeDtoValidator(AssetContext context)
+        {
+            ValidatorOptions.Global.CascadeMode = CascadeMode.Stop;
+
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+
+            RuleSet(Constants.AddStockRuleSet, () =>
+            {
+                RuleFor(x => x)
+                    .NotNull()
+                    .SetValidator(new AssetDtoValidator(_context));
+ 
+            });
+
+            RuleSet(Constants.UpdateStockRuleSet, () =>
+            {
+                RuleFor(x => x)
+                    .NotNull()
+                    .SetValidator(new AssetDtoValidator(_context));
             });
         }
     }
