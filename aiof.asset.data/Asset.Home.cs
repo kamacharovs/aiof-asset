@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace aiof.asset.data
@@ -24,7 +25,7 @@ namespace aiof.asset.data
     {
         public string HomeType { get; set; }
         public double? LoanValue { get; set; }
-        public double? Mortgage { get; set; }
+        public double? MonthlyMortgage { get; set; }
         public double? MortgageRate { get; set; }
         public double? DownPayment { get; set; }
         public double? AnnualInsurance { get; set; }

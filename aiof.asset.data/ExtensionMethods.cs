@@ -1,14 +1,16 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 using FluentValidation;
 using FluentValidation.Results;
+using AutoMapper;
 
 namespace aiof.asset.data
 {
     public static class ExtensionMethods
     {
-        #region Validate adAsset
+        #region Validate AddAsset
         public static async Task<ValidationResult> ValidateAddAssetAsync<T>(
             this IValidator<T> validator, 
             T dto)
@@ -32,6 +34,30 @@ namespace aiof.asset.data
             T dto)
         {
             await validator.ValidateAndThrowUpdateAsync(dto, Constants.UpdateRuleSet);
+        }
+        private static async Task ValidateAndThrowAddAsync<T>(
+            this IValidator<T> validator,
+            T dto,
+            string ruleSet)
+        {
+            var result = await validator.ValidateAsync(dto, o => o.IncludeRuleSets(ruleSet));
+
+            if (!result.IsValid)
+            {
+                throw new ValidationException(result.Errors);
+            }
+        }
+        private static async Task ValidateAndThrowUpdateAsync<T>(
+            this IValidator<T> validator,
+            T dto,
+            string ruleSet)
+        {
+            var result = await validator.ValidateAsync(dto, o => o.IncludeRuleSets(ruleSet));
+
+            if (!result.IsValid)
+            {
+                throw new ValidationException(result.Errors);
+            }
         }
         #endregion
 
@@ -87,31 +113,17 @@ namespace aiof.asset.data
         {
             await validator.ValidateAndThrowUpdateAsync(dto, Constants.UpdateSnapshotRuleSet);
         }
+        #endregion     
+
+        #region Automapper
+        public static T MergeInto<T>(this IMapper mapper, params object[] objects)
+        {
+            var first = mapper.Map<T>(objects.First());
+
+            return objects
+                .Skip(1)
+                .Aggregate(first, (r, obj) => mapper.Map(obj, r));
+        }
         #endregion
-
-        private static async Task ValidateAndThrowAddAsync<T>(
-            this IValidator<T> validator, 
-            T dto,
-            string ruleSet)
-        {
-            var result = await validator.ValidateAsync(dto, o => o.IncludeRuleSets(ruleSet));
-
-            if (!result.IsValid)
-            {
-                throw new ValidationException(result.Errors);
-            }
-        }
-        private static async Task ValidateAndThrowUpdateAsync<T>(
-            this IValidator<T> validator, 
-            T dto,
-            string ruleSet)
-        {
-            var result = await validator.ValidateAsync(dto, o => o.IncludeRuleSets(ruleSet));
-
-            if (!result.IsValid)
-            {
-                throw new ValidationException(result.Errors);
-            }
-        }
     }
 }

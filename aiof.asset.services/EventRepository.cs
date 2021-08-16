@@ -64,7 +64,7 @@ namespace aiof.asset.services
             }
             catch (Exception e)
             {
-                _logger.LogError("{Tenant} | Error while emitting event={EventName}. Message={EventingErrorMessage}",
+                _logger.LogError("{Tenant} | Error while emitting event={EventName}. Message={EventErrorMessage}",
                     _tenant.Log,
                     nameof(T),
                     e.Message);
