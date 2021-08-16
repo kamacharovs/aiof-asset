@@ -32,5 +32,10 @@ namespace aiof.asset.data
         public double? AnnualPropertyTax { get; set; }
         public double? ClosingCosts { get; set; }
         public bool? Refinanced { get; set; }
+
+        public AssetHomeDto()
+        {
+            TypeName = AssetTypes.Home;
+        }
     }
 }

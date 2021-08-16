@@ -192,8 +192,6 @@ namespace aiof.asset.services
         {
             await _stockDtoValidator.ValidateAndThrowAddStockAsync(dto);
 
-            dto.TypeName = AssetTypes.Stock;
-
             return await AddAsync<AssetStock, AssetStockDto>(dto);
         }
 

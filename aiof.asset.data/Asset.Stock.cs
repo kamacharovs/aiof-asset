@@ -23,5 +23,10 @@ namespace aiof.asset.data
         public double? Shares { get; set; }
         public double? ExpenseRatio { get; set; }
         public double? DividendYield { get; set; }
+
+        public AssetStockDto()
+        {
+            TypeName = AssetTypes.Stock;
+        }
     }
 }
