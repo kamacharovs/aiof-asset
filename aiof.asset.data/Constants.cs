@@ -58,7 +58,8 @@ namespace aiof.asset.data
         public static Dictionary<string, string> ClassToTypeMap
             => new Dictionary<string, string>
             {
-                { typeof(AssetStock).Name, AssetTypes.Stock }
+                { typeof(AssetStock).Name, AssetTypes.Stock },
+                { typeof(AssetHome).Name, AssetTypes.Home }
             };
     }
 
@@ -126,7 +127,6 @@ namespace aiof.asset.data
     public static class AssetTypes
     {
         public const string Car = "car";
-        public const string House = "house";
         public const string Investment = "investment";
         public const string Stock = "stock";
         public const string Home = "home";

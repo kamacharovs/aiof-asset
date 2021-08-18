@@ -280,7 +280,7 @@ namespace aiof.asset.services
         {
             var asset = await GetAsync(id, asNoTracking: false) as TAsset
                 ?? throw new AssetFriendlyException(HttpStatusCode.BadRequest,
-                    $"Asset is not of type {Constants.ClassToTypeMap[typeof(AssetStock).Name]}");
+                    $"Asset is not of type {Constants.ClassToTypeMap[typeof(TAsset).Name]}");
 
             asset = _mapper.Map(dto, asset);
 

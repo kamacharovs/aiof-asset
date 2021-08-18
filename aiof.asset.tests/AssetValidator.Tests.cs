@@ -301,6 +301,26 @@ namespace aiof.asset.tests
             dto.Name = name;
 
             Assert.True((await _homeDtoValidator.ValidateAddHomeAsync(dto)).IsValid);
+            Assert.NotNull(dto.HomeType);
+            Assert.True(dto.LoanValue > CommonValidator.MinimumValue);
+            Assert.True(dto.MonthlyMortgage > CommonValidator.MinimumValue);
+            Assert.True(dto.MortgageRate > CommonValidator.MinimumPercentValue);
+            Assert.True(dto.DownPayment > CommonValidator.MinimumValue);
+            Assert.True(dto.AnnualInsurance > CommonValidator.MinimumValue);
+            Assert.True(dto.AnnualPropertyTax > CommonValidator.MinimumPercentValue);
+            Assert.True(dto.ClosingCosts > CommonValidator.MinimumValue);
+            Assert.False(dto.IsRefinanced);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.InvalidNames), MemberType = typeof(Helper))]
+        public async Task AssetHomeDto_Add_Validation_Name_IsInvalid(string name)
+        {
+            var dto = Helper.RandomAssetHomeDto();
+
+            dto.Name = name;
+
+            Assert.False((await _homeDtoValidator.ValidateAddHomeAsync(dto)).IsValid);
         }
         #endregion
 

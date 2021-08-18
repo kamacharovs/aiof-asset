@@ -361,12 +361,16 @@ namespace aiof.asset.tests
         private static Faker<AssetHomeDto> FakerAssetHomeDtos()
         {
             return new Faker<AssetHomeDto>()
+                .RuleFor(x => x.Name, f => f.Random.String2(10))
+                .RuleFor(x => x.TypeName, f => AssetTypes.Home)
+                .RuleFor(x => x.Value, f => f.Random.Int(1000, 10000))
                 .RuleFor(x => x.HomeType, f => f.Random.String2(10))
                 .RuleFor(x => x.LoanValue, f => Math.Round(f.Random.Decimal(150000, 1000000), 3))
                 .RuleFor(x => x.MonthlyMortgage, f => Math.Round(f.Random.Decimal(1500, 2500), 3))
+                .RuleFor(x => x.MortgageRate, f => Math.Round(f.Random.Decimal(1, 1), 3))
                 .RuleFor(x => x.DownPayment, f => Math.Round(f.Random.Decimal(20000, 50000), 3))
                 .RuleFor(x => x.AnnualInsurance, f => f.Random.Decimal(1000, 1500))
-                .RuleFor(x => x.AnnualInsurance, f => f.Random.Decimal(1, 3))
+                .RuleFor(x => x.AnnualPropertyTax, f => f.Random.Decimal(1, 3))
                 .RuleFor(x => x.ClosingCosts, f => f.Random.Decimal(10000, 20000))
                 .RuleFor(x => x.IsRefinanced, f => false);
         }

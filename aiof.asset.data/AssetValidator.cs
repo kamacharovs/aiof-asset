@@ -145,12 +145,10 @@ namespace aiof.asset.data
 
             _context = context ?? throw new ArgumentNullException(nameof(context));
 
+            Include(new AssetDtoValidator(_context));
+
             RuleSet(Constants.AddStockRuleSet, () =>
             {
-                RuleFor(x => x)
-                    .NotNull()
-                    .SetValidator(new AssetDtoValidator(_context));
-
                 RuleFor(x => x.TickerSymbol)
                     .NotEmpty()
                     .MaximumLength(50);
@@ -180,10 +178,6 @@ namespace aiof.asset.data
 
             RuleSet(Constants.UpdateStockRuleSet, () =>
             {
-                RuleFor(x => x)
-                    .NotNull()
-                    .SetValidator(new AssetDtoValidator(_context));
-
                 RuleFor(x => x.TickerSymbol)
                     .NotEmpty()
                     .MaximumLength(50)
@@ -224,12 +218,10 @@ namespace aiof.asset.data
 
             _context = context ?? throw new ArgumentNullException(nameof(context));
 
+            Include(new AssetDtoValidator(_context));
+
             RuleSet(Constants.AddStockRuleSet, () =>
             {
-                RuleFor(x => x)
-                    .NotNull()
-                    .SetValidator(new AssetDtoValidator(_context));
-
                 RuleFor(x => x.HomeType)
                     .NotEmpty()
                     .MaximumLength(100);
@@ -259,10 +251,6 @@ namespace aiof.asset.data
 
             RuleSet(Constants.UpdateStockRuleSet, () =>
             {
-                RuleFor(x => x)
-                    .NotNull()
-                    .SetValidator(new AssetDtoValidator(_context));
-
                 RuleFor(x => x.HomeType)
                     .NotEmpty()
                     .MaximumLength(100)

@@ -42,7 +42,7 @@ namespace aiof.asset.data
                 },
                 new AssetType
                 {
-                    Name = AssetTypes.House
+                    Name = AssetTypes.Home
                 },
                 new AssetType
                 {
@@ -81,7 +81,7 @@ namespace aiof.asset.data
                 {
                     Id = 2,
                     Name = "house",
-                    TypeName = AssetTypes.House,
+                    TypeName = AssetTypes.Home,
                     Value = 300000M,
                     UserId = 1,
                     Created = DateTime.UtcNow.AddYears(-5),
