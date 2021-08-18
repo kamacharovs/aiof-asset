@@ -10,33 +10,33 @@ namespace aiof.asset.data
 {
     public static class ExtensionMethods
     {
-        #region Validate AddAsset
-        public static async Task<ValidationResult> ValidateAddAssetAsync<T>(
-            this IValidator<T> validator, 
-            T dto)
+        #region Validate Asset
+        public static async Task<ValidationResult> ValidateAddAssetAsync<T>(this AbstractValidator<T> validator, T dto)
+            where T : AssetDto
         {
             return await validator.ValidateAsync(dto, o => o.IncludeRuleSets(Constants.AddRuleSet));
         }
-        public static async Task<ValidationResult> ValidateUpdateAssetAsync<T>(
-            this IValidator<T> validator, 
-            T dto)
+
+        public static async Task<ValidationResult> ValidateUpdateAssetAsync<T>(this AbstractValidator<T> validator, T dto)
+            where T : AssetDto
         {
             return await validator.ValidateAsync(dto, o => o.IncludeRuleSets(Constants.UpdateRuleSet));
         }
-        public static async Task ValidateAndThrowAddAssetAsync<T>(
-            this IValidator<T> validator, 
-            T dto)
+
+        public static async Task ValidateAndThrowAddAssetAsync<T>(this AbstractValidator<T> validator, T dto)
+            where T : AssetDto
         {
             await validator.ValidateAndThrowAddAsync(dto, Constants.AddRuleSet);
         }
-        public static async Task ValidateAndThrowUpdateAssetAsync<T>(
-            this IValidator<T> validator, 
-            T dto)
+
+        public static async Task ValidateAndThrowUpdateAssetAsync<T>(this AbstractValidator<T> validator, T dto)
+            where T : AssetDto
         {
             await validator.ValidateAndThrowUpdateAsync(dto, Constants.UpdateRuleSet);
         }
+
         private static async Task ValidateAndThrowAddAsync<T>(
-            this IValidator<T> validator,
+            this AbstractValidator<T> validator,
             T dto,
             string ruleSet)
         {
@@ -47,8 +47,9 @@ namespace aiof.asset.data
                 throw new ValidationException(result.Errors);
             }
         }
+
         private static async Task ValidateAndThrowUpdateAsync<T>(
-            this IValidator<T> validator,
+            this AbstractValidator<T> validator,
             T dto,
             string ruleSet)
         {
@@ -62,81 +63,78 @@ namespace aiof.asset.data
         #endregion
 
         #region Validate Stock
-        public static async Task<ValidationResult> ValidateAddStockAsync<T>(
-            this IValidator<T> validator, 
-            T dto)
+        public static async Task<ValidationResult> ValidateAddStockAsync<T>(this AbstractValidator<T> validator, T dto)
+            where T : AssetStockDto
         {
             return await validator.ValidateAsync(dto, o => o.IncludeRuleSets(Constants.AddStockRuleSet));
         }
-        public static async Task<ValidationResult> ValidateUpdateStockAsync<T>(
-            this IValidator<T> validator, 
-            T dto)
+
+        public static async Task<ValidationResult> ValidateUpdateStockAsync<T>(this AbstractValidator<T> validator, T dto)
+            where T : AssetStockDto
         {
             return await validator.ValidateAsync(dto, o => o.IncludeRuleSets(Constants.UpdateStockRuleSet));
         }
-        public static async Task ValidateAndThrowAddStockAsync<T>(
-            this IValidator<T> validator, 
-            T dto)
+
+        public static async Task ValidateAndThrowAddStockAsync<T>(this AbstractValidator<T> validator, T dto)
+            where T : AssetStockDto
         {
             await validator.ValidateAndThrowAddAsync(dto, Constants.AddStockRuleSet);
         }
-        public static async Task ValidateAndThrowUpdateStockAsync<T>(
-            this IValidator<T> validator, 
-            T dto)
+
+        public static async Task ValidateAndThrowUpdateStockAsync<T>(this AbstractValidator<T> validator, T dto)
+            where T : AssetStockDto
         {
             await validator.ValidateAndThrowUpdateAsync(dto, Constants.UpdateStockRuleSet);
         }
         #endregion
 
         #region Validate Home
-        public static async Task<ValidationResult> ValidateAddHomeAsync<T>(
-            this IValidator<T> validator,
-            T dto)
+        public static async Task<ValidationResult> ValidateAddHomeAsync<T>(this AbstractValidator<T> validator, T dto)
+            where T : AssetHomeDto
         {
             return await validator.ValidateAsync(dto, o => o.IncludeRuleSets(Constants.AddHomeRuleSet));
         }
-        public static async Task<ValidationResult> ValidateUpdateHomeAsync<T>(
-            this IValidator<T> validator,
-            T dto)
+
+        public static async Task<ValidationResult> ValidateUpdateHomeAsync<T>(this AbstractValidator<T> validator, T dto)
+            where T : AssetHomeDto
         {
             return await validator.ValidateAsync(dto, o => o.IncludeRuleSets(Constants.UpdateHomeRuleSet));
         }
-        public static async Task ValidateAndThrowAddHomeAsync<T>(
-            this IValidator<T> validator,
-            T dto)
+
+        public static async Task ValidateAndThrowAddHomeAsync<T>(this AbstractValidator<T> validator, T dto)
+            where T : AssetHomeDto
         {
             await validator.ValidateAndThrowAddAsync(dto, Constants.AddHomeRuleSet);
         }
-        public static async Task ValidateAndThrowUpdateHomeAsync<T>(
-            this IValidator<T> validator,
-            T dto)
+
+        public static async Task ValidateAndThrowUpdateHomeAsync<T>(this AbstractValidator<T> validator, T dto)
+            where T : AssetHomeDto
         {
             await validator.ValidateAndThrowUpdateAsync(dto, Constants.UpdateHomeRuleSet);
         }
         #endregion
 
         #region Validate Snapshot
-        public static async Task<ValidationResult> ValidateAddSnapshotAsync<T>(
-            this IValidator<T> validator, 
-            T dto)
+        public static async Task<ValidationResult> ValidateAddSnapshotAsync<T>(this AbstractValidator<T> validator, T dto)
+            where T : AssetSnapshotDto
         {
             return await validator.ValidateAsync(dto, o => o.IncludeRuleSets(Constants.AddSnapshotRuleSet));
         }
-        public static async Task<ValidationResult> ValidateUpdateSnapshotAsync<T>(
-            this IValidator<T> validator, 
-            T dto)
+
+        public static async Task<ValidationResult> ValidateUpdateSnapshotAsync<T>(this AbstractValidator<T> validator, T dto)
+            where T : AssetSnapshotDto
         {
             return await validator.ValidateAsync(dto, o => o.IncludeRuleSets(Constants.UpdateSnapshotRuleSet));
         }
-        public static async Task ValidateAndThrowAddSnapshotAsync<T>(
-            this IValidator<T> validator, 
-            T dto)
+
+        public static async Task ValidateAndThrowAddSnapshotAsync<T>(this AbstractValidator<T> validator, T dto)
+            where T : AssetSnapshotDto
         {
             await validator.ValidateAndThrowAddAsync(dto, Constants.AddSnapshotRuleSet);
         }
-        public static async Task ValidateAndThrowUpdateSnapshotAsync<T>(
-            this IValidator<T> validator, 
-            T dto)
+
+        public static async Task ValidateAndThrowUpdateSnapshotAsync<T>(this AbstractValidator<T> validator, T dto)
+            where T : AssetSnapshotDto
         {
             await validator.ValidateAndThrowUpdateAsync(dto, Constants.UpdateSnapshotRuleSet);
         }
