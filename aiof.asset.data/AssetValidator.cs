@@ -229,7 +229,32 @@ namespace aiof.asset.data
                 RuleFor(x => x)
                     .NotNull()
                     .SetValidator(new AssetDtoValidator(_context));
- 
+
+                RuleFor(x => x.HomeType)
+                    .NotEmpty()
+                    .MaximumLength(100);
+
+                RuleFor(x => x.LoanValue)
+                    .NotEmpty()
+                    .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
+                    .LessThanOrEqualTo(CommonValidator.MaximumValue);
+
+                RuleFor(x => x.MonthlyMortgage)
+                    .NotEmpty()
+                    .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
+                    .LessThanOrEqualTo(CommonValidator.MaximumValue);
+
+                RuleFor(x => x.MortgageRate)
+                    .NotEmpty()
+                    .GreaterThanOrEqualTo(CommonValidator.MinimumPercentValue)
+                    .LessThanOrEqualTo(CommonValidator.MaximumPercentValue);
+
+                RuleFor(x => x.DownPayment)
+                    .NotEmpty()
+                    .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
+                    .LessThanOrEqualTo(CommonValidator.MaximumValue);
+
+                SetCommonRules();
             });
 
             RuleSet(Constants.UpdateStockRuleSet, () =>
@@ -237,7 +262,63 @@ namespace aiof.asset.data
                 RuleFor(x => x)
                     .NotNull()
                     .SetValidator(new AssetDtoValidator(_context));
+
+                RuleFor(x => x.HomeType)
+                    .NotEmpty()
+                    .MaximumLength(100)
+                    .When(x => x.HomeType != null);
+
+                RuleFor(x => x.LoanValue)
+                    .NotEmpty()
+                    .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
+                    .LessThanOrEqualTo(CommonValidator.MaximumValue)
+                    .When(x => x.LoanValue.HasValue);
+
+                RuleFor(x => x.MonthlyMortgage)
+                    .NotEmpty()
+                    .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
+                    .LessThanOrEqualTo(CommonValidator.MaximumValue)
+                    .When(x => x.MonthlyMortgage.HasValue);
+
+                RuleFor(x => x.MortgageRate)
+                    .NotEmpty()
+                    .GreaterThanOrEqualTo(CommonValidator.MinimumPercentValue)
+                    .LessThanOrEqualTo(CommonValidator.MaximumPercentValue)
+                    .When(x => x.MortgageRate.HasValue);
+
+                RuleFor(x => x.DownPayment)
+                    .NotEmpty()
+                    .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
+                    .LessThanOrEqualTo(CommonValidator.MaximumValue)
+                    .When(x => x.DownPayment.HasValue);
+
+                SetCommonRules();
             });
+        }
+
+        public void SetCommonRules()
+        {
+            RuleFor(x => x.AnnualInsurance)
+                .NotEmpty()
+                .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
+                .LessThanOrEqualTo(CommonValidator.MaximumValue)
+                .When(x => x.AnnualInsurance.HasValue);
+
+            RuleFor(x => x.AnnualPropertyTax)
+                .NotEmpty()
+                .GreaterThanOrEqualTo(CommonValidator.MinimumPercentValue)
+                .LessThanOrEqualTo(CommonValidator.MaximumPercentValue)
+                .When(x => x.AnnualPropertyTax.HasValue);
+
+            RuleFor(x => x.ClosingCosts)
+                .NotEmpty()
+                .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
+                .LessThanOrEqualTo(CommonValidator.MaximumValue)
+                .When(x => x.ClosingCosts.HasValue);
+
+            RuleFor(x => x.IsRefinanced)
+                .NotEmpty()
+                .When(x => x.IsRefinanced.HasValue);
         }
     }
 

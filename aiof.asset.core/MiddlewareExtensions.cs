@@ -78,7 +78,8 @@ namespace aiof.asset.core
             services.AddScoped<AbstractValidator<string>, AssetTypeValidator>()
                 .AddScoped<AbstractValidator<AssetDto>, AssetDtoValidator>()
                 .AddScoped<AbstractValidator<AssetSnapshotDto>, AssetSnapshotDtoValidator>()
-                .AddScoped<AbstractValidator<AssetStockDto>, AssetStockDtoValidator>();
+                .AddScoped<AbstractValidator<AssetStockDto>, AssetStockDtoValidator>()
+                .AddScoped<AbstractValidator<AssetHomeDto>, AssetHomeDtoValidator>();
 
             return services;
         }

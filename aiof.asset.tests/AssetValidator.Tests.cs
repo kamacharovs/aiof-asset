@@ -17,6 +17,7 @@ namespace aiof.asset.tests
         private readonly AbstractValidator<string> _typeValidator;
         private readonly AbstractValidator<AssetDto> _dtoValidator;
         private readonly AbstractValidator<AssetStockDto> _stockDtoValidator;
+        private readonly AbstractValidator<AssetHomeDto> _homeDtoValidator;
         private readonly AbstractValidator<AssetSnapshotDto> _snapshotValidator;
 
         private const int _defaultAssetId = 1;
@@ -28,6 +29,7 @@ namespace aiof.asset.tests
             _typeValidator = service.GetRequiredService<AbstractValidator<string>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<string>));
             _dtoValidator = service.GetRequiredService<AbstractValidator<AssetDto>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<AssetDto>));
             _stockDtoValidator = service.GetRequiredService<AbstractValidator<AssetStockDto>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<AssetStockDto>));
+            _homeDtoValidator = service.GetRequiredService<AbstractValidator<AssetHomeDto>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<AssetHomeDto>));
             _snapshotValidator = service.GetRequiredService<AbstractValidator<AssetSnapshotDto>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<AssetSnapshotDto>));
         }
 
@@ -286,6 +288,19 @@ namespace aiof.asset.tests
             };
 
             Assert.False((await _stockDtoValidator.ValidateUpdateStockAsync(dto)).IsValid);
+        }
+        #endregion
+
+        #region AssetHomeDto
+        [Theory]
+        [MemberData(nameof(Helper.ValidNames), MemberType = typeof(Helper))]
+        public async Task AssetHomeDto_Add_Validation_Name_IsValid(string name)
+        {
+            var dto = Helper.RandomAssetHomeDto();
+
+            dto.Name = name;
+
+            Assert.True((await _homeDtoValidator.ValidateAddHomeAsync(dto)).IsValid);
         }
         #endregion
 

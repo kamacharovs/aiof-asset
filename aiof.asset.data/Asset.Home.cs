@@ -6,13 +6,13 @@ namespace aiof.asset.data
     public class AssetHome : Asset
     {
         public string HomeType { get; set; }
-        public double LoanValue { get; set; }
-        public double MonthlyMortgage { get; set; }
-        public double MortgageRate { get; set; }
-        public double DownPayment { get; set; }
-        public double? AnnualInsurance { get; set; }
-        public double? AnnualPropertyTax { get; set; }
-        public double? ClosingCosts { get; set; }
+        public decimal LoanValue { get; set; }
+        public decimal MonthlyMortgage { get; set; }
+        public decimal MortgageRate { get; set; }
+        public decimal DownPayment { get; set; }
+        public decimal? AnnualInsurance { get; set; }
+        public decimal? AnnualPropertyTax { get; set; }
+        public decimal? ClosingCosts { get; set; }
         public bool? IsRefinanced { get; set; } = false;
 
         public AssetHome()
@@ -23,15 +23,17 @@ namespace aiof.asset.data
 
     public class AssetHomeDto : AssetDto
     {
+        [MaxLength(100)]
         public string HomeType { get; set; }
-        public double? LoanValue { get; set; }
-        public double? MonthlyMortgage { get; set; }
-        public double? MortgageRate { get; set; }
-        public double? DownPayment { get; set; }
-        public double? AnnualInsurance { get; set; }
-        public double? AnnualPropertyTax { get; set; }
-        public double? ClosingCosts { get; set; }
-        public bool? Refinanced { get; set; }
+
+        public decimal? LoanValue { get; set; }
+        public decimal? MonthlyMortgage { get; set; }
+        public decimal? MortgageRate { get; set; }
+        public decimal? DownPayment { get; set; }
+        public decimal? AnnualInsurance { get; set; }
+        public decimal? AnnualPropertyTax { get; set; }
+        public decimal? ClosingCosts { get; set; }
+        public bool? IsRefinanced { get; set; }
 
         public AssetHomeDto()
         {

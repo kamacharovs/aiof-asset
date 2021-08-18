@@ -88,6 +88,33 @@ namespace aiof.asset.data
         }
         #endregion
 
+        #region Validate Home
+        public static async Task<ValidationResult> ValidateAddHomeAsync<T>(
+            this IValidator<T> validator,
+            T dto)
+        {
+            return await validator.ValidateAsync(dto, o => o.IncludeRuleSets(Constants.AddHomeRuleSet));
+        }
+        public static async Task<ValidationResult> ValidateUpdateHomeAsync<T>(
+            this IValidator<T> validator,
+            T dto)
+        {
+            return await validator.ValidateAsync(dto, o => o.IncludeRuleSets(Constants.UpdateHomeRuleSet));
+        }
+        public static async Task ValidateAndThrowAddHomeAsync<T>(
+            this IValidator<T> validator,
+            T dto)
+        {
+            await validator.ValidateAndThrowAddAsync(dto, Constants.AddHomeRuleSet);
+        }
+        public static async Task ValidateAndThrowUpdateHomeAsync<T>(
+            this IValidator<T> validator,
+            T dto)
+        {
+            await validator.ValidateAndThrowUpdateAsync(dto, Constants.UpdateHomeRuleSet);
+        }
+        #endregion
+
         #region Validate Snapshot
         public static async Task<ValidationResult> ValidateAddSnapshotAsync<T>(
             this IValidator<T> validator, 
