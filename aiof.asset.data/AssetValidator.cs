@@ -20,9 +20,24 @@ namespace aiof.asset.data
 
         public static string AssetUpdateMessage = $"You must specify at least one field to update. '{nameof(AssetDto.Name)}', '{nameof(AssetDto.TypeName)}' or '{nameof(AssetDto.Value)}'";
 
+        public static bool BeValidValue(decimal? value)
+        {
+            return value.HasValue
+                ? value >= MinimumValue && value <= MaximumValue
+                : false;
+        }
+
         public static bool BeValidPercent(double? value)
         {
             var valuePerc = Math.Round((double)(value * 100), 4);
+
+            return value.HasValue
+                ? valuePerc > 0 && valuePerc <= 100
+                : false;
+        }
+        public static bool BeValidPercent(decimal? value)
+        {
+            var valuePerc = Math.Round((decimal)(value * 100), 4);
 
             return value.HasValue
                 ? valuePerc > 0 && valuePerc <= 100
@@ -97,8 +112,7 @@ namespace aiof.asset.data
 
             RuleFor(x => x.Value)
                 .NotNull()
-                .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
-                .LessThan(CommonValidator.MaximumValue)
+                .Must(CommonValidator.BeValidValue)
                 .WithMessage(CommonValidator.ValueMessage);
         }
 
@@ -128,8 +142,7 @@ namespace aiof.asset.data
                 .When(x => x.TypeName != null);
 
             RuleFor(x => x.Value)
-                .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
-                .LessThan(CommonValidator.MaximumValue)
+                .Must(CommonValidator.BeValidValue)
                 .WithMessage(CommonValidator.ValueMessage)
                 .When(x => x.Value.HasValue);
         }
@@ -159,19 +172,13 @@ namespace aiof.asset.data
 
                 RuleFor(x => x.ExpenseRatio)
                     .GreaterThan(0)
-                    .Must(x =>
-                    {
-                        return CommonValidator.BeValidPercent(x);
-                    })
+                    .Must(CommonValidator.BeValidPercent)
                     .WithMessage(CommonValidator.PercentValueMessage)
                     .When(x => x.ExpenseRatio.HasValue);
 
                 RuleFor(x => x.DividendYield)
                     .GreaterThan(0)
-                    .Must(x =>
-                    {
-                        return CommonValidator.BeValidPercent(x);
-                    })
+                    .Must(CommonValidator.BeValidPercent)
                     .WithMessage(CommonValidator.PercentValueMessage)
                     .When(x => x.DividendYield.HasValue);
             });
@@ -189,19 +196,13 @@ namespace aiof.asset.data
 
                 RuleFor(x => x.ExpenseRatio)
                     .GreaterThan(0)
-                    .Must(x =>
-                    {
-                        return CommonValidator.BeValidPercent(x);
-                    })
+                    .Must(CommonValidator.BeValidPercent)
                     .WithMessage(CommonValidator.PercentValueMessage)
                     .When(x => x.ExpenseRatio.HasValue);
 
                 RuleFor(x => x.DividendYield)
                     .GreaterThan(0)
-                    .Must(x =>
-                    {
-                        return CommonValidator.BeValidPercent(x);
-                    })
+                    .Must(CommonValidator.BeValidPercent)
                     .WithMessage(CommonValidator.PercentValueMessage)
                     .When(x => x.DividendYield.HasValue);
             });
@@ -228,23 +229,19 @@ namespace aiof.asset.data
 
                 RuleFor(x => x.LoanValue)
                     .NotEmpty()
-                    .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
-                    .LessThanOrEqualTo(CommonValidator.MaximumValue);
+                    .Must(CommonValidator.BeValidValue);
 
                 RuleFor(x => x.MonthlyMortgage)
                     .NotEmpty()
-                    .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
-                    .LessThanOrEqualTo(CommonValidator.MaximumValue);
+                    .Must(CommonValidator.BeValidValue);
 
                 RuleFor(x => x.MortgageRate)
                     .NotEmpty()
-                    .GreaterThanOrEqualTo(CommonValidator.MinimumPercentValue)
-                    .LessThanOrEqualTo(CommonValidator.MaximumPercentValue);
+                    .Must(CommonValidator.BeValidPercent);
 
                 RuleFor(x => x.DownPayment)
                     .NotEmpty()
-                    .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
-                    .LessThanOrEqualTo(CommonValidator.MaximumValue);
+                    .Must(CommonValidator.BeValidValue);
 
                 SetCommonRules();
             });
@@ -258,26 +255,22 @@ namespace aiof.asset.data
 
                 RuleFor(x => x.LoanValue)
                     .NotEmpty()
-                    .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
-                    .LessThanOrEqualTo(CommonValidator.MaximumValue)
+                    .Must(CommonValidator.BeValidValue)
                     .When(x => x.LoanValue.HasValue);
 
                 RuleFor(x => x.MonthlyMortgage)
                     .NotEmpty()
-                    .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
-                    .LessThanOrEqualTo(CommonValidator.MaximumValue)
+                    .Must(CommonValidator.BeValidValue)
                     .When(x => x.MonthlyMortgage.HasValue);
 
                 RuleFor(x => x.MortgageRate)
                     .NotEmpty()
-                    .GreaterThanOrEqualTo(CommonValidator.MinimumPercentValue)
-                    .LessThanOrEqualTo(CommonValidator.MaximumPercentValue)
+                    .Must(CommonValidator.BeValidPercent)
                     .When(x => x.MortgageRate.HasValue);
 
                 RuleFor(x => x.DownPayment)
                     .NotEmpty()
-                    .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
-                    .LessThanOrEqualTo(CommonValidator.MaximumValue)
+                    .Must(CommonValidator.BeValidValue)
                     .When(x => x.DownPayment.HasValue);
 
                 SetCommonRules();
@@ -288,20 +281,17 @@ namespace aiof.asset.data
         {
             RuleFor(x => x.AnnualInsurance)
                 .NotEmpty()
-                .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
-                .LessThanOrEqualTo(CommonValidator.MaximumValue)
+                .Must(CommonValidator.BeValidValue)
                 .When(x => x.AnnualInsurance.HasValue);
 
             RuleFor(x => x.AnnualPropertyTax)
                 .NotEmpty()
-                .GreaterThanOrEqualTo(CommonValidator.MinimumPercentValue)
-                .LessThanOrEqualTo(CommonValidator.MaximumPercentValue)
+                .Must(CommonValidator.BeValidValue)
                 .When(x => x.AnnualPropertyTax.HasValue);
 
             RuleFor(x => x.ClosingCosts)
                 .NotEmpty()
-                .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
-                .LessThanOrEqualTo(CommonValidator.MaximumValue)
+                .Must(CommonValidator.BeValidValue)
                 .When(x => x.ClosingCosts.HasValue);
 
             RuleFor(x => x.IsRefinanced)
@@ -344,8 +334,7 @@ namespace aiof.asset.data
                 .When(x => x.TypeName != null);
 
             RuleFor(x => x.Value)
-                .GreaterThanOrEqualTo(CommonValidator.MinimumValue)
-                .LessThan(CommonValidator.MaximumValue)
+                .Must(CommonValidator.BeValidValue)
                 .WithMessage(CommonValidator.ValueMessage)
                 .When(x => x.Value.HasValue);
         }
