@@ -123,9 +123,9 @@ namespace aiof.asset.data
                     Created = DateTime.UtcNow.AddYears(-1),
                     IsDeleted = false,
                     TickerSymbol = "VTSAX",
-                    Shares = 149.658,
-                    ExpenseRatio = 0.040,
-                    DividendYield = 1.36
+                    Shares = 149.658M,
+                    ExpenseRatio = 0.040M,
+                    DividendYield = 1.36M
                 }
             };
         }

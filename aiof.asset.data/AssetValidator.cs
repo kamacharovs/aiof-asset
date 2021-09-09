@@ -27,14 +27,6 @@ namespace aiof.asset.data
                 : false;
         }
 
-        public static bool BeValidPercent(double? value)
-        {
-            var valuePerc = Math.Round((double)(value * 100), 4);
-
-            return value.HasValue
-                ? valuePerc > 0 && valuePerc <= 100
-                : false;
-        }
         public static bool BeValidPercent(decimal? value)
         {
             var valuePerc = Math.Round((decimal)(value * 100), 4);

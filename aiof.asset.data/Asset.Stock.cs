@@ -5,9 +5,9 @@ namespace aiof.asset.data
     public class AssetStock : Asset
     {
         public string TickerSymbol { get; set; }
-        public double? Shares { get; set; }
-        public double? ExpenseRatio { get; set; }
-        public double? DividendYield { get; set; }
+        public decimal? Shares { get; set; }
+        public decimal? ExpenseRatio { get; set; }
+        public decimal? DividendYield { get; set; }
 
         public AssetStock()
         {
@@ -20,9 +20,9 @@ namespace aiof.asset.data
         [MaxLength(50)]
         public string TickerSymbol { get; set; }
 
-        public double? Shares { get; set; }
-        public double? ExpenseRatio { get; set; }
-        public double? DividendYield { get; set; }
+        public decimal? Shares { get; set; }
+        public decimal? ExpenseRatio { get; set; }
+        public decimal? DividendYield { get; set; }
 
         public AssetStockDto()
         {

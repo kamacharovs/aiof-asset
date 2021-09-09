@@ -201,7 +201,7 @@ namespace aiof.asset.tests
 
         [Theory]
         [MemberData(nameof(Helper.ValidShares), MemberType = typeof(Helper))]
-        public async Task AssetStockDto_Add_Validation_Shares_IsValid(double shares)
+        public async Task AssetStockDto_Add_Validation_Shares_IsValid(decimal shares)
         {
             var dto = Helper.RandomAssetStockDto();
 
@@ -211,7 +211,7 @@ namespace aiof.asset.tests
         }
         [Theory]
         [MemberData(nameof(Helper.InvalidShares), MemberType = typeof(Helper))]
-        public async Task AssetStockDto_Add_Validation_Shares_IsInvalid(double shares)
+        public async Task AssetStockDto_Add_Validation_Shares_IsInvalid(decimal shares)
         {
             var dto = Helper.RandomAssetStockDto();
 
@@ -222,7 +222,7 @@ namespace aiof.asset.tests
 
         [Theory]
         [MemberData(nameof(Helper.ValidExpenseRatios), MemberType = typeof(Helper))]
-        public async Task AssetStockDto_Add_Validation_ExpenseRatio_IsValid(double expenseRatio)
+        public async Task AssetStockDto_Add_Validation_ExpenseRatio_IsValid(decimal expenseRatio)
         {
             var dto = Helper.RandomAssetStockDto();
 
@@ -232,7 +232,7 @@ namespace aiof.asset.tests
         }
         [Theory]
         [MemberData(nameof(Helper.InvalidExpenseRatios), MemberType = typeof(Helper))]
-        public async Task AssetStockDto_Add_Validation_ExpenseRatio_IsInvalid(double expenseRatio)
+        public async Task AssetStockDto_Add_Validation_ExpenseRatio_IsInvalid(decimal expenseRatio)
         {
             var dto = Helper.RandomAssetStockDto();
 
@@ -243,7 +243,7 @@ namespace aiof.asset.tests
 
         [Theory]
         [MemberData(nameof(Helper.ValidExpenseRatios), MemberType = typeof(Helper))]
-        public async Task AssetStockDto_Add_Validation_DividendYield_IsValid(double dividendYield)
+        public async Task AssetStockDto_Add_Validation_DividendYield_IsValid(decimal dividendYield)
         {
             var dto = Helper.RandomAssetStockDto();
 
@@ -253,7 +253,7 @@ namespace aiof.asset.tests
         }
         [Theory]
         [MemberData(nameof(Helper.InvalidExpenseRatios), MemberType = typeof(Helper))]
-        public async Task AssetStockDto_Add_Validation_DividendYield_IsInvalid(double dividendYield)
+        public async Task AssetStockDto_Add_Validation_DividendYield_IsInvalid(decimal dividendYield)
         {
             var dto = Helper.RandomAssetStockDto();
 

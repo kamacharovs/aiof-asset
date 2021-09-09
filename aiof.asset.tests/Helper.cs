@@ -345,9 +345,9 @@ namespace aiof.asset.tests
                 .RuleFor(x => x.TypeName, f => AssetTypes.Stock)
                 .RuleFor(x => x.Value, f => f.Random.Int(1000, 10000))
                 .RuleFor(x => x.TickerSymbol, f => f.Random.String2(5))
-                .RuleFor(x => x.Shares, f => Math.Round(f.Random.Double(10, 150), 2))
-                .RuleFor(x => x.ExpenseRatio, f => Math.Round(f.Random.Double(0.001, 0.005), 5))
-                .RuleFor(x => x.DividendYield, f => Math.Round(f.Random.Double(0.001, 0.05), 5));
+                .RuleFor(x => x.Shares, f => Math.Round(f.Random.Decimal(10, 150), 2))
+                .RuleFor(x => x.ExpenseRatio, f => Math.Round(f.Random.Decimal(0.001M, 0.005M), 5))
+                .RuleFor(x => x.DividendYield, f => Math.Round(f.Random.Decimal(0.001M, 0.05M), 5));
         }
 
         public static AssetHomeDto RandomAssetHomeDto()
