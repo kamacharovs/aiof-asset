@@ -148,6 +148,13 @@ namespace aiof.asset.tests
                 userId: true);
         }
 
+        public static IEnumerable<object[]> AssetsHomeIdUserId()
+        {
+            return _Fake.GetFakeAssetsHomeData(
+                id: true,
+                userId: true);
+        }
+
         public static IEnumerable<object[]> AssetsId()
         {
             return _Fake.GetFakeAssetsData(

@@ -79,10 +79,10 @@ namespace aiof.asset.data
                 e.ToTable(Keys.Entity.AssetHome);
 
                 e.Property(x => x.HomeType).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
-                e.Property(x => x.LoanValue).HasSnakeCaseColumnName().IsRequired();
-                e.Property(x => x.MonthlyMortgage).HasSnakeCaseColumnName().IsRequired();
-                e.Property(x => x.MortgageRate).HasSnakeCaseColumnName().IsRequired();
-                e.Property(x => x.DownPayment).HasSnakeCaseColumnName().IsRequired();
+                e.Property(x => x.LoanValue).HasSnakeCaseColumnName();
+                e.Property(x => x.MonthlyMortgage).HasSnakeCaseColumnName();
+                e.Property(x => x.MortgageRate).HasSnakeCaseColumnName();
+                e.Property(x => x.DownPayment).HasSnakeCaseColumnName();
                 e.Property(x => x.AnnualInsurance).HasSnakeCaseColumnName();
                 e.Property(x => x.AnnualPropertyTax).HasSnakeCaseColumnName();
                 e.Property(x => x.ClosingCosts).HasSnakeCaseColumnName();

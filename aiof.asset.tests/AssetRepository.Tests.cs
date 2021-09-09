@@ -282,7 +282,7 @@ namespace aiof.asset.tests
             Assert.True(asset.Created > new DateTime());
             Assert.False(asset.IsDeleted);
             Assert.NotEmpty(asset.Snapshots);
-            Assert.NotEmpty(asset.HomeType);
+            Assert.Equal(dto.HomeType, asset.HomeType);
             Assert.Equal(dto.LoanValue, asset.LoanValue);
             Assert.Equal(dto.MonthlyMortgage, asset.MonthlyMortgage);
             Assert.Equal(dto.MortgageRate, asset.MortgageRate);
@@ -461,6 +461,33 @@ namespace aiof.asset.tests
             Assert.Equal(dto.Shares, asset.Shares);
             Assert.Equal(dto.ExpenseRatio, asset.ExpenseRatio);
             Assert.Equal(dto.DividendYield, asset.DividendYield);
+            Assert.NotNull(asset.Snapshots.First().ValueChange);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.AssetsHomeIdUserId), MemberType = typeof(Helper))]
+        public async Task UpdateAsync_Home_IsSuccessful(int id, int userId)
+        {
+            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
+
+            var dto = Helper.RandomAssetHomeDto();
+
+            var asset = await repo.UpdateAsync(id, dto) as AssetHome;
+
+            Assert.NotNull(asset);
+            Assert.Equal(id, asset.Id);
+            Assert.Equal(dto.Name, asset.Name);
+            Assert.Equal(dto.TypeName, asset.TypeName);
+            Assert.Equal(dto.Value, asset.Value);
+            Assert.Equal(dto.HomeType, asset.HomeType);
+            Assert.Equal(dto.LoanValue, asset.LoanValue);
+            Assert.Equal(dto.MonthlyMortgage, asset.MonthlyMortgage);
+            Assert.Equal(dto.MortgageRate, asset.MortgageRate);
+            Assert.Equal(dto.DownPayment, asset.DownPayment);
+            Assert.Equal(dto.AnnualInsurance, asset.AnnualInsurance);
+            Assert.Equal(dto.AnnualPropertyTax, asset.AnnualPropertyTax);
+            Assert.Equal(dto.ClosingCosts, asset.ClosingCosts);
+            Assert.False(asset.IsRefinanced);
             Assert.NotNull(asset.Snapshots.First().ValueChange);
         }
 
