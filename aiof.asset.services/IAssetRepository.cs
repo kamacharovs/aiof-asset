@@ -32,6 +32,7 @@ namespace aiof.asset.services
         Task<IAsset> AddAsync(AssetDto dto);
         Task<IEnumerable<IAsset>> AddAsync(IEnumerable<AssetDto> dtos);
         Task<IAsset> AddAsync(AssetStockDto dto);
+        Task<IAsset> AddAsync(AssetHomeDto dto);
 
         Task<IAssetSnapshot> AddSnapshotAsync(AssetSnapshotDto dto);
 

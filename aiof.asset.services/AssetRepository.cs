@@ -23,6 +23,7 @@ namespace aiof.asset.services
         private readonly AssetContext _context;
         private readonly AbstractValidator<AssetDto> _dtoValidator;
         private readonly AbstractValidator<AssetStockDto> _stockDtoValidator;
+        private readonly AbstractValidator<AssetHomeDto> _homeDtoValidator;
         private readonly AbstractValidator<AssetSnapshotDto> _snapshotDtoValidator;
 
         public AssetRepository(
@@ -32,6 +33,7 @@ namespace aiof.asset.services
             AssetContext context,
             AbstractValidator<AssetDto> dtoValidator,
             AbstractValidator<AssetStockDto> stockDtoValidator,
+            AbstractValidator<AssetHomeDto> homeDtoValidator,
             AbstractValidator<AssetSnapshotDto> snapshotDtoValidator)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -40,6 +42,7 @@ namespace aiof.asset.services
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _dtoValidator = dtoValidator ?? throw new ArgumentNullException(nameof(dtoValidator));
             _stockDtoValidator = stockDtoValidator ?? throw new ArgumentNullException(nameof(stockDtoValidator));
+            _homeDtoValidator = homeDtoValidator ?? throw new ArgumentNullException(nameof(homeDtoValidator));
             _snapshotDtoValidator = snapshotDtoValidator ?? throw new ArgumentNullException(nameof(snapshotDtoValidator));
         }
 
@@ -193,6 +196,13 @@ namespace aiof.asset.services
             await _stockDtoValidator.ValidateAndThrowAddStockAsync(dto);
 
             return await AddAsync<AssetStock, AssetStockDto>(dto);
+        }
+
+        public async Task<IAsset> AddAsync(AssetHomeDto dto)
+        {
+            await _homeDtoValidator.ValidateAndThrowAddHomeAsync(dto);
+
+            return await AddAsync<AssetHome, AssetHomeDto>(dto);
         }
 
         private async Task<TAsset> AddAsync<TAsset, TAssetDto>(TAssetDto dto)

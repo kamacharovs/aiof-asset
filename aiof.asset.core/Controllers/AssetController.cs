@@ -106,6 +106,18 @@ namespace aiof.asset.core
         }
 
         /// <summary>
+        /// Add Asset.Home
+        /// </summary>
+        [HttpPost]
+        [Route("home")]
+        [ProducesResponseType(typeof(IAssetProblemDetail), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IAsset), StatusCodes.Status201Created)]
+        public async Task<IActionResult> AddHomeAsync([FromBody, Required] AssetHomeDto dto)
+        {
+            return Created(nameof(AssetHome), await _repo.AddAsync(dto));
+        }
+
+        /// <summary>
         /// Add Asset snapshot
         /// </summary>
         [HttpPost]
