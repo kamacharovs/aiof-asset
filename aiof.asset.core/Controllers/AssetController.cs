@@ -100,7 +100,7 @@ namespace aiof.asset.core
         [Route("stock")]
         [ProducesResponseType(typeof(IAssetProblemDetail), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(IAsset), StatusCodes.Status201Created)]
-        public async Task<IActionResult> AddStockAsync([FromBody, Required] AssetStockDto dto)
+        public async Task<IActionResult> AddAsync([FromBody, Required] AssetStockDto dto)
         {
             return Created(nameof(AssetStock), await _repo.AddAsync(dto));
         }
@@ -112,7 +112,7 @@ namespace aiof.asset.core
         [Route("home")]
         [ProducesResponseType(typeof(IAssetProblemDetail), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(IAsset), StatusCodes.Status201Created)]
-        public async Task<IActionResult> AddHomeAsync([FromBody, Required] AssetHomeDto dto)
+        public async Task<IActionResult> AddAsync([FromBody, Required] AssetHomeDto dto)
         {
             return Created(nameof(AssetHome), await _repo.AddAsync(dto));
         }
@@ -153,6 +153,20 @@ namespace aiof.asset.core
         public async Task<IActionResult> UpdateAsync(
             [FromRoute, Required] int id,
             [FromBody, Required] AssetStockDto dto)
+        {
+            return Ok(await _repo.UpdateAsync(id, dto));
+        }
+
+        /// <summary>
+        /// Update Asset.Home
+        /// </summary>
+        [HttpPut]
+        [Route("home/{id}")]
+        [ProducesResponseType(typeof(IAssetProblemDetail), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(IAssetSnapshot), StatusCodes.Status200OK)]
+        public async Task<IActionResult> UpdateAsync(
+            [FromRoute, Required] int id,
+            [FromBody, Required] AssetHomeDto dto)
         {
             return Ok(await _repo.UpdateAsync(id, dto));
         }

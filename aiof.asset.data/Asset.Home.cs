@@ -34,10 +34,5 @@ namespace aiof.asset.data
         public decimal? AnnualPropertyTax { get; set; }
         public decimal? ClosingCosts { get; set; }
         public bool? IsRefinanced { get; set; }
-
-        public AssetHomeDto()
-        {
-            TypeName = AssetTypes.Home;
-        }
     }
 }

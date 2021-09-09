@@ -150,5 +150,14 @@ namespace aiof.asset.data
                 .Aggregate(first, (r, obj) => mapper.Map(obj, r));
         }
         #endregion
+
+        #region Generic
+        public static bool IsValid(this AssetSnapshotDto dto)
+        {
+            return dto.Name is not null
+                || dto.TypeName is not null
+                || dto.Value.HasValue;
+        }
+        #endregion
     }
 }

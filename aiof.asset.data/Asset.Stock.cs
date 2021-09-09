@@ -23,10 +23,5 @@ namespace aiof.asset.data
         public decimal? Shares { get; set; }
         public decimal? ExpenseRatio { get; set; }
         public decimal? DividendYield { get; set; }
-
-        public AssetStockDto()
-        {
-            TypeName = AssetTypes.Stock;
-        }
     }
 }

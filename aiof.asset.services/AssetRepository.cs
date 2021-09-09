@@ -193,6 +193,8 @@ namespace aiof.asset.services
 
         public async Task<IAsset> AddAsync(AssetStockDto dto)
         {
+            dto.TypeName = AssetTypes.Stock;
+
             await _stockDtoValidator.ValidateAndThrowAddStockAsync(dto);
 
             return await AddAsync<AssetStock, AssetStockDto>(dto);
@@ -200,6 +202,8 @@ namespace aiof.asset.services
 
         public async Task<IAsset> AddAsync(AssetHomeDto dto)
         {
+            dto.TypeName = AssetTypes.Home;
+
             await _homeDtoValidator.ValidateAndThrowAddHomeAsync(dto);
 
             return await AddAsync<AssetHome, AssetHomeDto>(dto);
@@ -219,12 +223,16 @@ namespace aiof.asset.services
             // Create snapshot entry
             var snapshotDto = _mapper.Map<AssetSnapshotDto>(dto);
 
-            snapshotDto.AssetId = asset.Id;
+            if (snapshotDto.IsValid())
+            {
+                snapshotDto.AssetId = asset.Id;
 
-            await AddSnapshotAsync(snapshotDto);
+                await AddSnapshotAsync(snapshotDto);
+            }
 
-            _logger.LogInformation("{Tenant} | Created Asset with Id={AssetId}, PublicKey={AssetPublicKey} and UserId={AssetUserId}",
+            _logger.LogInformation("{Tenant} | Created Asset={AssetType} with Id={AssetId}, PublicKey={AssetPublicKey} and UserId={AssetUserId}",
                 _context.Tenant.Log,
+                typeof(TAsset).Name,
                 asset.Id,
                 asset.PublicKey,
                 asset.UserId);
@@ -308,13 +316,17 @@ namespace aiof.asset.services
 
             // Create snapshot entry
             var snapshotDto = _mapper.Map<AssetSnapshotDto>(dto);
+       
+            if (snapshotDto.IsValid())
+            {
+                snapshotDto.AssetId = asset.Id;
 
-            snapshotDto.AssetId = asset.Id;
+                await AddSnapshotAsync(snapshotDto);
+            }
 
-            await AddSnapshotAsync(snapshotDto);
-
-            _logger.LogInformation("{Tenant} | Updated Asset with Id={AssetId}, PublicKey={AssetPublicKey} and UserId={AssetUserId}",
+            _logger.LogInformation("{Tenant} | Updated Asset={AssetType} with Id={AssetId}, PublicKey={AssetPublicKey} and UserId={AssetUserId}",
                 _context.Tenant.Log,
+                typeof(TAsset).Name,
                 asset.Id,
                 asset.PublicKey,
                 asset.UserId);

@@ -118,7 +118,8 @@ namespace aiof.asset.data
                         x.Name is null
                         && x.TypeName is null
                         && !x.Value.HasValue
-                        && type != nameof(AssetStockDto);
+                        && type != nameof(AssetStockDto)
+                        && type != nameof(AssetHomeDto);
 
                     return !areAllNull;
                 })

@@ -42,19 +42,40 @@ namespace aiof.asset.data
              * Asset.Stock
              */
             CreateMap<AssetStockDto, AssetStock>()
-                .ForAllMembers(x => x.Condition((source, destination, member) => member != null));
+                .ForMember(x => x.Name, o => o.Condition(s => !string.IsNullOrWhiteSpace(s.Name)))
+                .ForMember(x => x.TypeName, o => o.Condition(s => !string.IsNullOrWhiteSpace(s.TypeName)))
+                .ForMember(x => x.Value, o => o.Condition(s => s.Value.HasValue))
+                .ForMember(x => x.TickerSymbol, o => o.Condition(s => !string.IsNullOrWhiteSpace(s.TickerSymbol)))
+                .ForMember(x => x.Shares, o => o.Condition(s => s.Shares.HasValue))
+                .ForMember(x => x.ExpenseRatio, o => o.Condition(s => s.ExpenseRatio.HasValue))
+                .ForMember(x => x.DividendYield, o => o.Condition(s => s.DividendYield.HasValue));
 
             CreateMap<AssetStockDto, AssetSnapshotDto>()
-                .ForAllMembers(x => x.Condition((source, destination, member) => member != null));
+                .ForMember(x => x.Name, o => o.Condition(s => !string.IsNullOrWhiteSpace(s.Name)))
+                .ForMember(x => x.TypeName, o => o.Condition(s => !string.IsNullOrWhiteSpace(s.TypeName)))
+                .ForMember(x => x.Value, o => o.Condition(s => s.Value.HasValue));
 
             /*
              * Asset.Home
              */
             CreateMap<AssetHomeDto, AssetHome>()
-                .ForAllMembers(x => x.Condition((source, destination, member) => member != null));
+                .ForMember(x => x.Name, o => o.Condition(s => !string.IsNullOrWhiteSpace(s.Name)))
+                .ForMember(x => x.TypeName, o => o.Condition(s => !string.IsNullOrWhiteSpace(s.TypeName)))
+                .ForMember(x => x.Value, o => o.Condition(s => s.Value.HasValue))
+                .ForMember(x => x.HomeType, o => o.Condition(s => !string.IsNullOrWhiteSpace(s.HomeType)))
+                .ForMember(x => x.LoanValue, o => o.Condition(s => s.LoanValue.HasValue))
+                .ForMember(x => x.MonthlyMortgage, o => o.Condition(s => s.MonthlyMortgage.HasValue))
+                .ForMember(x => x.MortgageRate, o => o.Condition(s => s.MortgageRate.HasValue))
+                .ForMember(x => x.DownPayment, o => o.Condition(s => s.DownPayment.HasValue))
+                .ForMember(x => x.AnnualInsurance, o => o.Condition(s => s.AnnualInsurance.HasValue))
+                .ForMember(x => x.AnnualPropertyTax, o => o.Condition(s => s.AnnualPropertyTax.HasValue))
+                .ForMember(x => x.ClosingCosts, o => o.Condition(s => s.ClosingCosts.HasValue))
+                .ForMember(x => x.IsRefinanced, o => o.Condition(s => s.IsRefinanced.HasValue));
 
             CreateMap<AssetHomeDto, AssetSnapshotDto>()
-                .ForAllMembers(x => x.Condition((source, destination, member) => member != null));
+                .ForMember(x => x.Name, o => o.Condition(s => !string.IsNullOrWhiteSpace(s.Name)))
+                .ForMember(x => x.TypeName, o => o.Condition(s => !string.IsNullOrWhiteSpace(s.TypeName)))
+                .ForMember(x => x.Value, o => o.Condition(s => s.Value.HasValue));
 
         }
     }
