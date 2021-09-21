@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using System.Text.Json;
+using System.Diagnostics.CodeAnalysis;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -15,6 +15,7 @@ using aiof.asset.data;
 
 namespace aiof.asset.services
 {
+    [ExcludeFromCodeCoverage]
     public abstract class BaseRepository<T, TDto>
         where T : Asset
         where TDto : AssetDto
