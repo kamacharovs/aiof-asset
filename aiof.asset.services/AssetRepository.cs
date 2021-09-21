@@ -19,8 +19,6 @@ namespace aiof.asset.services
         BaseRepository<Asset, AssetDto>,
         IAssetRepository
     {
-        private readonly AssetContext _context;
-
         private readonly AbstractValidator<AssetDto> _dtoValidator;
 
         public AssetRepository(
@@ -32,7 +30,6 @@ namespace aiof.asset.services
             AbstractValidator<AssetSnapshotDto> snapshotDtoValidator)
             : base(logger, mapper, eventRepo, context, snapshotDtoValidator)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
             _dtoValidator = dtoValidator ?? throw new ArgumentNullException(nameof(dtoValidator));
         }
 
