@@ -27,6 +27,8 @@ namespace aiof.asset.data
 
         public const string ApiName = "aiof-asset";
         public const string ApiRoute = "v{version:apiVersion}/assets";
+        public const string ApiStockRoute = "v{version:apiVersion}/assets/stock";
+        public const string ApiHomeRoute = "v{version:apiVersion}/assets/home";
         public const string ApiV1 = "1.0";
         public static string ApiV1Full = $"v{ApiV1}";
         public static string[] ApiSupportedVersions

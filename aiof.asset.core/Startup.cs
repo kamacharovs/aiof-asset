@@ -30,6 +30,8 @@ namespace aiof.asset.core
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IAssetRepository, AssetRepository>()
+                .AddScoped<IAssetStockRepository, AssetStockRepository>()
+                .AddScoped<IAssetHomeRepository, AssetHomeRepository>()
                 .AddScoped<IEventRepository, EventRepository>()
                 .AddScoped<IEnvConfiguration, EnvConfiguration>()
                 .AddScoped<ITenant, Tenant>()

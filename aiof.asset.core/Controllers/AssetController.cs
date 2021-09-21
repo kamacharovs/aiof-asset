@@ -94,30 +94,6 @@ namespace aiof.asset.core
         }
 
         /// <summary>
-        /// Add Asset.Stock
-        /// </summary>
-        [HttpPost]
-        [Route("stock")]
-        [ProducesResponseType(typeof(IAssetProblemDetail), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(IAsset), StatusCodes.Status201Created)]
-        public async Task<IActionResult> AddAsync([FromBody, Required] AssetStockDto dto)
-        {
-            return Created(nameof(AssetStock), await _repo.AddAsync(dto));
-        }
-
-        /// <summary>
-        /// Add Asset.Home
-        /// </summary>
-        [HttpPost]
-        [Route("home")]
-        [ProducesResponseType(typeof(IAssetProblemDetail), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(IAsset), StatusCodes.Status201Created)]
-        public async Task<IActionResult> AddAsync([FromBody, Required] AssetHomeDto dto)
-        {
-            return Created(nameof(AssetHome), await _repo.AddAsync(dto));
-        }
-
-        /// <summary>
         /// Add Asset snapshot
         /// </summary>
         [HttpPost]
@@ -139,34 +115,6 @@ namespace aiof.asset.core
         public async Task<IActionResult> UpdateAsync(
             [FromRoute, Required] int id,
             [FromBody, Required] AssetDto dto)
-        {
-            return Ok(await _repo.UpdateAsync(id, dto));
-        }
-
-        /// <summary>
-        /// Update Asset.Stock
-        /// </summary>
-        [HttpPut]
-        [Route("stock/{id}")]
-        [ProducesResponseType(typeof(IAssetProblemDetail), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(IAssetSnapshot), StatusCodes.Status200OK)]
-        public async Task<IActionResult> UpdateAsync(
-            [FromRoute, Required] int id,
-            [FromBody, Required] AssetStockDto dto)
-        {
-            return Ok(await _repo.UpdateAsync(id, dto));
-        }
-
-        /// <summary>
-        /// Update Asset.Home
-        /// </summary>
-        [HttpPut]
-        [Route("home/{id}")]
-        [ProducesResponseType(typeof(IAssetProblemDetail), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(IAssetSnapshot), StatusCodes.Status200OK)]
-        public async Task<IActionResult> UpdateAsync(
-            [FromRoute, Required] int id,
-            [FromBody, Required] AssetHomeDto dto)
         {
             return Ok(await _repo.UpdateAsync(id, dto));
         }

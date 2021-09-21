@@ -231,70 +231,6 @@ namespace aiof.asset.tests
 
         [Theory]
         [MemberData(nameof(Helper.AssetsUserId), MemberType = typeof(Helper))]
-        public async Task AddAsync_Stock_IsSuccessful(int userId)
-        {
-            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
-
-            var dto = Helper.RandomAssetStockDto();
-            var asset = await repo.AddAsync(dto) as AssetStock;
-
-            Assert.NotNull(asset);
-            Assert.NotEqual(0, asset.Id);
-            Assert.NotEqual(Guid.Empty, asset.PublicKey);
-            Assert.Equal(dto.Name, asset.Name);
-            Assert.Equal(AssetTypes.Stock, asset.TypeName);
-            Assert.NotNull(asset.Type);
-            Assert.NotEqual(0, asset.Value);
-            Assert.Equal(userId, asset.UserId);
-            Assert.False(asset.IsDeleted);
-            Assert.NotEmpty(asset.Snapshots);
-            Assert.Equal(dto.TickerSymbol, asset.TickerSymbol);
-            Assert.Equal(dto.Shares, asset.Shares);
-            Assert.Equal(dto.ExpenseRatio, asset.ExpenseRatio);
-            Assert.Equal(dto.DividendYield, asset.DividendYield);
-
-            var snapshots = asset.Snapshots;
-            var snapshot = snapshots?.FirstOrDefault();
-
-            Assert.Equal(dto.Name, snapshot.Name);
-            Assert.Equal(dto.TypeName, snapshot.TypeName);
-            Assert.Equal(dto.Value, snapshot.Value);
-            Assert.Equal(0, snapshot.ValueChange);
-        }
-
-        [Theory]
-        [MemberData(nameof(Helper.AssetsUserId), MemberType = typeof(Helper))]
-        public async Task AddAsync_Home_IsSuccessful(int userId)
-        {
-            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
-
-            var dto = Helper.RandomAssetHomeDto();
-            var asset = await repo.AddAsync(dto) as AssetHome;
-
-            Assert.NotNull(asset);
-            Assert.NotEqual(0, asset.Id);
-            Assert.NotEqual(Guid.Empty, asset.PublicKey);
-            Assert.Equal(dto.Name, asset.Name);
-            Assert.Equal(AssetTypes.Home, asset.TypeName);
-            Assert.NotNull(asset.Type);
-            Assert.NotEqual(0, asset.Value);
-            Assert.Equal(userId, asset.UserId);
-            Assert.True(asset.Created > new DateTime());
-            Assert.False(asset.IsDeleted);
-            Assert.NotEmpty(asset.Snapshots);
-            Assert.Equal(dto.HomeType, asset.HomeType);
-            Assert.Equal(dto.LoanValue, asset.LoanValue);
-            Assert.Equal(dto.MonthlyMortgage, asset.MonthlyMortgage);
-            Assert.Equal(dto.MortgageRate, asset.MortgageRate);
-            Assert.Equal(dto.DownPayment, asset.DownPayment);
-            Assert.Equal(dto.AnnualInsurance, asset.AnnualInsurance);
-            Assert.Equal(dto.AnnualPropertyTax, asset.AnnualPropertyTax);
-            Assert.Equal(dto.ClosingCosts, asset.ClosingCosts);
-            Assert.False(asset.IsRefinanced);
-        }
-
-        [Theory]
-        [MemberData(nameof(Helper.AssetsUserId), MemberType = typeof(Helper))]
         public async Task AddAsync_UpdateAsync_IsSuccessful(int userId)
         {
             var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
@@ -443,55 +379,6 @@ namespace aiof.asset.tests
         }
 
         [Theory]
-        [MemberData(nameof(Helper.AssetsStockIdUserId), MemberType = typeof(Helper))]
-        public async Task UpdateAsync_Stock_IsSuccessful(int id, int userId)
-        {
-            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
-
-            var dto = Helper.RandomAssetStockDto();
-
-            var asset = await repo.UpdateAsync(id, dto) as AssetStock;
-
-            Assert.NotNull(asset);
-            Assert.Equal(id, asset.Id);
-            Assert.Equal(dto.Name, asset.Name);
-            Assert.Equal(dto.TypeName, asset.TypeName);
-            Assert.Equal(dto.Value, asset.Value);
-            Assert.Equal(dto.TickerSymbol, asset.TickerSymbol);
-            Assert.Equal(dto.Shares, asset.Shares);
-            Assert.Equal(dto.ExpenseRatio, asset.ExpenseRatio);
-            Assert.Equal(dto.DividendYield, asset.DividendYield);
-            Assert.NotNull(asset.Snapshots.First().ValueChange);
-        }
-
-        [Theory]
-        [MemberData(nameof(Helper.AssetsHomeIdUserId), MemberType = typeof(Helper))]
-        public async Task UpdateAsync_Home_IsSuccessful(int id, int userId)
-        {
-            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
-
-            var dto = Helper.RandomAssetHomeDto();
-
-            var asset = await repo.UpdateAsync(id, dto) as AssetHome;
-
-            Assert.NotNull(asset);
-            Assert.Equal(id, asset.Id);
-            Assert.Equal(dto.Name, asset.Name);
-            Assert.Equal(dto.TypeName, asset.TypeName);
-            Assert.Equal(dto.Value, asset.Value);
-            Assert.Equal(dto.HomeType, asset.HomeType);
-            Assert.Equal(dto.LoanValue, asset.LoanValue);
-            Assert.Equal(dto.MonthlyMortgage, asset.MonthlyMortgage);
-            Assert.Equal(dto.MortgageRate, asset.MortgageRate);
-            Assert.Equal(dto.DownPayment, asset.DownPayment);
-            Assert.Equal(dto.AnnualInsurance, asset.AnnualInsurance);
-            Assert.Equal(dto.AnnualPropertyTax, asset.AnnualPropertyTax);
-            Assert.Equal(dto.ClosingCosts, asset.ClosingCosts);
-            Assert.False(asset.IsRefinanced);
-            Assert.NotNull(asset.Snapshots.First().ValueChange);
-        }
-
-        [Theory]
         [MemberData(nameof(Helper.AssetsIdUserId), MemberType = typeof(Helper))]
         public async Task UpdateAsync_NotFound_ThrowsAssetNotFoundException(int id, int userId)
         {
@@ -615,20 +502,6 @@ namespace aiof.asset.tests
         [Theory]
         [MemberData(nameof(Helper.AssetsIdUserId), MemberType = typeof(Helper))]
         public async Task DeleteAsync_IsSuccessful(int id, int userId)
-        {
-            var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
-
-            await repo.DeleteAsync(id);
-
-            var exception = await Assert.ThrowsAsync<AssetNotFoundException>(() => repo.GetAsync(id));
-
-            Assert.NotNull(exception);
-            Assert.Equal(404, exception.StatusCode);
-        }
-
-        [Theory]
-        [MemberData(nameof(Helper.AssetsStockIdUserId), MemberType = typeof(Helper))]
-        public async Task DeleteAsync_Stock_IsSuccessful(int id, int userId)
         {
             var repo = new ServiceHelper() { UserId = userId }.GetRequiredService<IAssetRepository>();
 

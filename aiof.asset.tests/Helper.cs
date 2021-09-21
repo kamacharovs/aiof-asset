@@ -53,6 +53,8 @@ namespace aiof.asset.tests
             var services = new ServiceCollection();
 
             services.AddScoped<IAssetRepository, AssetRepository>()
+                .AddScoped<IAssetStockRepository, AssetStockRepository>()
+                .AddScoped<IAssetHomeRepository, AssetHomeRepository>()
                 .AddScoped<IEventRepository, EventRepository>()
                 .AddScoped<IEnvConfiguration, EnvConfiguration>()
                 .AddScoped<ITenant, Tenant>()
