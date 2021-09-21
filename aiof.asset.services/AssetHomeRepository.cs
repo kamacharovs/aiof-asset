@@ -32,6 +32,8 @@ namespace aiof.asset.services
         {
             await _dtoValidator.ValidateAndThrowAddHomeAsync(dto);
 
+            dto.TypeName = AssetTypes.Home;
+
             return await base.AddAsync(dto);
         }
 
