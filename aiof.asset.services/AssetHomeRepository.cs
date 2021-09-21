@@ -30,9 +30,9 @@ namespace aiof.asset.services
 
         public new async Task<IAsset> AddAsync(AssetHomeDto dto)
         {
-            await _dtoValidator.ValidateAndThrowAddHomeAsync(dto);
-
             dto.TypeName = AssetTypes.Home;
+
+            await _dtoValidator.ValidateAndThrowAddHomeAsync(dto);
 
             return await base.AddAsync(dto);
         }
