@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   aiofdata:
-    image: aiof-data:latest
+    image: gkama/aiof-data:latest
     container_name: aiof-data
     ports:
       - 5433:5432
