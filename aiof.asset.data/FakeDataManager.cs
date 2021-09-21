@@ -26,6 +26,9 @@ namespace aiof.asset.data
             _context.AssetsStock
                 .AddRange(GetFakeAssetsStock());
 
+            _context.AssetsHome
+                .AddRange(GetFakeAssetsHome());
+
             _context.AssetSnapshots
                 .AddRange(GetFakeAssetSnapshots());
 
@@ -42,7 +45,7 @@ namespace aiof.asset.data
                 },
                 new AssetType
                 {
-                    Name = AssetTypes.House
+                    Name = AssetTypes.Home
                 },
                 new AssetType
                 {
@@ -81,7 +84,7 @@ namespace aiof.asset.data
                 {
                     Id = 2,
                     Name = "house",
-                    TypeName = AssetTypes.House,
+                    TypeName = AssetTypes.Home,
                     Value = 300000M,
                     UserId = 1,
                     Created = DateTime.UtcNow.AddYears(-5),
@@ -123,9 +126,33 @@ namespace aiof.asset.data
                     Created = DateTime.UtcNow.AddYears(-1),
                     IsDeleted = false,
                     TickerSymbol = "VTSAX",
-                    Shares = 149.658,
-                    ExpenseRatio = 0.040,
-                    DividendYield = 1.36
+                    Shares = 149.658M,
+                    ExpenseRatio = 0.040M,
+                    DividendYield = 1.36M
+                }
+            };
+        }
+
+        public IEnumerable<AssetHome> GetFakeAssetsHome()
+        {
+            return new List<AssetHome>
+            {
+                new AssetHome
+                {
+                    Id = 6,
+                    Name = "asset.home",
+                    Value = 375000M,
+                    UserId = 1,
+                    Created = DateTime.UtcNow.AddDays(-1),
+                    IsDeleted = false,
+                    HomeType = "apartment",
+                    LoanValue = 335000M,
+                    MonthlyMortgage = 1756.23M,
+                    MortgageRate = 2.625M,
+                    DownPayment = 40000M,
+                    AnnualInsurance = 1.25M,
+                    AnnualPropertyTax = 1.01M,
+                    ClosingCosts = 16000M
                 }
             };
         }
@@ -199,6 +226,16 @@ namespace aiof.asset.data
                     Value = 10500M,
                     ValueChange = 0,
                     Created = DateTime.UtcNow.AddYears(-1)
+                },
+                new AssetSnapshot
+                {
+                    Id = 8,
+                    AssetId = 6,
+                    Name = "asset.home",
+                    TypeName = AssetTypes.Home,
+                    Value = 375000M,
+                    ValueChange = 0,
+                    Created = DateTime.UtcNow.AddDays(-1)
                 }
             };
         }
@@ -287,12 +324,39 @@ namespace aiof.asset.data
             if (id
                 && userId)
             {
-                foreach (var fakeAssetStok in fakeAssetsStock)
+                foreach (var fakeAssetStock in fakeAssetsStock)
                 {
                     toReturn.Add(new object[]
                     {
-                        fakeAssetStok.Id,
-                        fakeAssetStok.UserId
+                        fakeAssetStock.Id,
+                        fakeAssetStock.UserId
+                    });
+                }
+            }
+
+            return toReturn;
+        }
+
+        public IEnumerable<object[]> GetFakeAssetsHomeData(
+            bool id = false,
+            bool userId = false,
+            bool isDeleted = false)
+        {
+            var fakeAssetsHome = GetFakeAssetsHome()
+                .Where(x => x.IsDeleted == isDeleted)
+                .ToArray();
+
+            var toReturn = new List<object[]>();
+
+            if (id
+                && userId)
+            {
+                foreach (var fakeAssetHome in fakeAssetsHome)
+                {
+                    toReturn.Add(new object[]
+                    {
+                        fakeAssetHome.Id,
+                        fakeAssetHome.UserId
                     });
                 }
             }

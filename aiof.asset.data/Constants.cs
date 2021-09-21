@@ -9,9 +9,11 @@ namespace aiof.asset.data
     {
         public const string AddRuleSet = nameof(AddRuleSet);
         public const string AddStockRuleSet = nameof(AddStockRuleSet);
+        public const string AddHomeRuleSet = nameof(AddHomeRuleSet);
         public const string AddSnapshotRuleSet = nameof(AddSnapshotRuleSet);
         public const string UpdateRuleSet = nameof(UpdateRuleSet);
         public const string UpdateStockRuleSet = nameof(UpdateStockRuleSet);
+        public const string UpdateHomeRuleSet = nameof(UpdateHomeRuleSet);
         public const string UpdateSnapshotRuleSet = nameof(UpdateSnapshotRuleSet);
 
         public const string Accept = nameof(Accept);
@@ -25,6 +27,8 @@ namespace aiof.asset.data
 
         public const string ApiName = "aiof-asset";
         public const string ApiRoute = "v{version:apiVersion}/assets";
+        public const string ApiStockRoute = "v{version:apiVersion}/assets/stock";
+        public const string ApiHomeRoute = "v{version:apiVersion}/assets/home";
         public const string ApiV1 = "1.0";
         public static string ApiV1Full = $"v{ApiV1}";
         public static string[] ApiSupportedVersions
@@ -56,7 +60,8 @@ namespace aiof.asset.data
         public static Dictionary<string, string> ClassToTypeMap
             => new Dictionary<string, string>
             {
-                { typeof(AssetStock).Name, AssetTypes.Stock }
+                { typeof(AssetStock).Name, AssetTypes.Stock },
+                { typeof(AssetHome).Name, AssetTypes.Home }
             };
     }
 
@@ -113,9 +118,10 @@ namespace aiof.asset.data
 
         public static class Entity
         {
+            public static string AssetType = nameof(data.AssetType).ToSnakeCase();
             public static string Asset = nameof(data.Asset).ToSnakeCase();
             public static string AssetStock = nameof(data.AssetStock).ToSnakeCase();
-            public static string AssetType = nameof(data.AssetType).ToSnakeCase();
+            public static string AssetHome = nameof(data.AssetHome).ToSnakeCase();
             public static string AssetSnapshot = nameof(data.AssetSnapshot).ToSnakeCase();
         }
     }
@@ -123,9 +129,9 @@ namespace aiof.asset.data
     public static class AssetTypes
     {
         public const string Car = "car";
-        public const string House = "house";
         public const string Investment = "investment";
         public const string Stock = "stock";
+        public const string Home = "home";
         public const string Cash = "cash";
         public const string Other = "other";
     }

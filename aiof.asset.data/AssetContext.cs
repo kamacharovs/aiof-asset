@@ -11,6 +11,7 @@ namespace aiof.asset.data
         public virtual DbSet<AssetType> AssetTypes { get; set; }
         public virtual DbSet<Asset> Assets { get; set; }
         public virtual DbSet<AssetStock> AssetsStock { get; set; }
+        public virtual DbSet<AssetHome> AssetsHome { get; set; }
         public virtual DbSet<AssetSnapshot> AssetSnapshots { get; set; }
 
         public AssetContext(DbContextOptions<AssetContext> options, ITenant tenant)
@@ -71,6 +72,21 @@ namespace aiof.asset.data
                 e.Property(x => x.Shares).HasSnakeCaseColumnName();
                 e.Property(x => x.ExpenseRatio).HasSnakeCaseColumnName();
                 e.Property(x => x.DividendYield).HasSnakeCaseColumnName();
+            });
+
+            modelBuilder.Entity<AssetHome>(e =>
+            {
+                e.ToTable(Keys.Entity.AssetHome);
+
+                e.Property(x => x.HomeType).HasSnakeCaseColumnName().HasMaxLength(100).IsRequired();
+                e.Property(x => x.LoanValue).HasSnakeCaseColumnName();
+                e.Property(x => x.MonthlyMortgage).HasSnakeCaseColumnName();
+                e.Property(x => x.MortgageRate).HasSnakeCaseColumnName();
+                e.Property(x => x.DownPayment).HasSnakeCaseColumnName();
+                e.Property(x => x.AnnualInsurance).HasSnakeCaseColumnName();
+                e.Property(x => x.AnnualPropertyTax).HasSnakeCaseColumnName();
+                e.Property(x => x.ClosingCosts).HasSnakeCaseColumnName();
+                e.Property(x => x.IsRefinanced).HasSnakeCaseColumnName();
             });
 
             modelBuilder.Entity<AssetSnapshot>(e =>

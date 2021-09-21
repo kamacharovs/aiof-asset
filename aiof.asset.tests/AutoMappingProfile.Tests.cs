@@ -108,6 +108,48 @@ namespace aiof.asset.tests
             Assert.NotNull(assetSnapshotDto.Name);
             Assert.NotNull(assetSnapshotDto.TypeName);
             Assert.NotNull(assetSnapshotDto.Value);
+            Assert.Equal(assetSnapshotDto.Name, assetStockDto.Name);
+            Assert.Equal(assetSnapshotDto.TypeName, assetStockDto.TypeName);
+            Assert.Equal(assetSnapshotDto.Value, assetStockDto.Value);
+        }
+
+        [Fact]
+        public void AssetHomeDto_To_AssetHome_IsSuccessful()
+        {
+            var assetHomeDto = Helper.RandomAssetHomeDto();
+            var assetHome = _mapper.Map<AssetHome>(assetHomeDto);
+
+            Assert.NotNull(assetHome);
+            Assert.NotNull(assetHome.Name);
+            Assert.NotNull(assetHome.TypeName);
+            Assert.True(assetHome.Value > 0);
+            Assert.Equal(assetHome.Name, assetHomeDto.Name);
+            Assert.Equal(assetHome.TypeName, assetHomeDto.TypeName);
+            Assert.Equal(assetHome.Value, assetHomeDto.Value);
+            Assert.NotNull(assetHome.HomeType);
+            Assert.True(assetHome.LoanValue > CommonValidator.MinimumValue);
+            Assert.True(assetHome.MonthlyMortgage > CommonValidator.MinimumValue);
+            Assert.True(assetHome.MortgageRate > CommonValidator.MinimumPercentValue);
+            Assert.True(assetHome.DownPayment > CommonValidator.MinimumValue);
+            Assert.True(assetHome.AnnualInsurance > CommonValidator.MinimumValue);
+            Assert.True(assetHome.AnnualPropertyTax > CommonValidator.MinimumPercentValue);
+            Assert.True(assetHome.ClosingCosts > CommonValidator.MinimumValue);
+            Assert.False(assetHome.IsRefinanced);
+        }
+
+        [Fact]
+        public void AssetHomeDto_To_AssetSnapshotDto_IsSuccessful()
+        {
+            var assetHomeDto = Helper.RandomAssetHomeDto();
+            var assetSnapshotDto = _mapper.Map<AssetSnapshotDto>(assetHomeDto);
+
+            Assert.NotNull(assetSnapshotDto);
+            Assert.NotNull(assetSnapshotDto.Name);
+            Assert.NotNull(assetSnapshotDto.TypeName);
+            Assert.NotNull(assetSnapshotDto.Value);
+            Assert.Equal(assetSnapshotDto.Name, assetHomeDto.Name);
+            Assert.Equal(assetSnapshotDto.TypeName, assetHomeDto.TypeName);
+            Assert.Equal(assetSnapshotDto.Value, assetHomeDto.Value);
         }
     }
 }

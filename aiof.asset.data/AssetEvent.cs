@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace aiof.asset.data
 {
-    public class AssetEvent
+    public abstract class AssetEvent
     {
         public string EventType { get; set; }
         public EventSource Source { get; set; } = new EventSource();
@@ -30,6 +30,7 @@ namespace aiof.asset.data
         public object Payload { get; set; }
     }
 
+    #region Events
     public class AssetAddedEvent : AssetEvent
     {
         public AssetAddedEvent()
@@ -51,4 +52,5 @@ namespace aiof.asset.data
             EventType = Constants.AssetDeletedEvent;
         }
     }
+    #endregion
 }

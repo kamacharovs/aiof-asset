@@ -53,6 +53,8 @@ namespace aiof.asset.tests
             var services = new ServiceCollection();
 
             services.AddScoped<IAssetRepository, AssetRepository>()
+                .AddScoped<IAssetStockRepository, AssetStockRepository>()
+                .AddScoped<IAssetHomeRepository, AssetHomeRepository>()
                 .AddScoped<IEventRepository, EventRepository>()
                 .AddScoped<IEnvConfiguration, EnvConfiguration>()
                 .AddScoped<ITenant, Tenant>()
@@ -81,7 +83,8 @@ namespace aiof.asset.tests
             services.AddScoped<AbstractValidator<string>, AssetTypeValidator>()
                 .AddScoped<AbstractValidator<AssetDto>, AssetDtoValidator>()
                 .AddScoped<AbstractValidator<AssetSnapshotDto>, AssetSnapshotDtoValidator>()
-                .AddScoped<AbstractValidator<AssetStockDto>, AssetStockDtoValidator>();
+                .AddScoped<AbstractValidator<AssetStockDto>, AssetStockDtoValidator>()
+                .AddScoped<AbstractValidator<AssetHomeDto>, AssetHomeDtoValidator>();
 
             services.AddLogging();
             services.AddFeatureManagement();
@@ -143,6 +146,13 @@ namespace aiof.asset.tests
         public static IEnumerable<object[]> AssetsStockIdUserId()
         {
             return _Fake.GetFakeAssetsStockData(
+                id: true,
+                userId: true);
+        }
+
+        public static IEnumerable<object[]> AssetsHomeIdUserId()
+        {
+            return _Fake.GetFakeAssetsHomeData(
                 id: true,
                 userId: true);
         }
@@ -344,9 +354,34 @@ namespace aiof.asset.tests
                 .RuleFor(x => x.TypeName, f => AssetTypes.Stock)
                 .RuleFor(x => x.Value, f => f.Random.Int(1000, 10000))
                 .RuleFor(x => x.TickerSymbol, f => f.Random.String2(5))
-                .RuleFor(x => x.Shares, f => Math.Round(f.Random.Double(10, 150), 2))
-                .RuleFor(x => x.ExpenseRatio, f => Math.Round(f.Random.Double(0.001, 0.005), 5))
-                .RuleFor(x => x.DividendYield, f => Math.Round(f.Random.Double(0.001, 0.05), 5));
+                .RuleFor(x => x.Shares, f => Math.Round(f.Random.Decimal(10, 150), 2))
+                .RuleFor(x => x.ExpenseRatio, f => Math.Round(f.Random.Decimal(0.001M, 0.005M), 5))
+                .RuleFor(x => x.DividendYield, f => Math.Round(f.Random.Decimal(0.001M, 0.05M), 5));
+        }
+
+        public static AssetHomeDto RandomAssetHomeDto()
+        {
+            return FakerAssetHomeDtos().Generate();
+        }
+        public static List<AssetHomeDto> RandomAssetHomeDtos(int? n = null)
+        {
+            return FakerAssetHomeDtos().Generate(n ?? GeneratedAmount);
+        }
+        private static Faker<AssetHomeDto> FakerAssetHomeDtos()
+        {
+            return new Faker<AssetHomeDto>()
+                .RuleFor(x => x.Name, f => f.Random.String2(10))
+                .RuleFor(x => x.TypeName, f => AssetTypes.Home)
+                .RuleFor(x => x.Value, f => f.Random.Int(1000, 10000))
+                .RuleFor(x => x.HomeType, f => f.Random.String2(10))
+                .RuleFor(x => x.LoanValue, f => Math.Round(f.Random.Decimal(150000, 1000000), 3))
+                .RuleFor(x => x.MonthlyMortgage, f => Math.Round(f.Random.Decimal(1500, 2500), 3))
+                .RuleFor(x => x.MortgageRate, f => Math.Round(f.Random.Decimal(1, 1), 3))
+                .RuleFor(x => x.DownPayment, f => Math.Round(f.Random.Decimal(20000, 50000), 3))
+                .RuleFor(x => x.AnnualInsurance, f => f.Random.Decimal(1000, 1500))
+                .RuleFor(x => x.AnnualPropertyTax, f => f.Random.Decimal(1, 3))
+                .RuleFor(x => x.ClosingCosts, f => f.Random.Decimal(10000, 20000))
+                .RuleFor(x => x.IsRefinanced, f => false);
         }
 
         public static AssetSnapshotDto RandomAssetSnapshotDto(int assetId)

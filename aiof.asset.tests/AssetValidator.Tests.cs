@@ -17,6 +17,7 @@ namespace aiof.asset.tests
         private readonly AbstractValidator<string> _typeValidator;
         private readonly AbstractValidator<AssetDto> _dtoValidator;
         private readonly AbstractValidator<AssetStockDto> _stockDtoValidator;
+        private readonly AbstractValidator<AssetHomeDto> _homeDtoValidator;
         private readonly AbstractValidator<AssetSnapshotDto> _snapshotValidator;
 
         private const int _defaultAssetId = 1;
@@ -28,6 +29,7 @@ namespace aiof.asset.tests
             _typeValidator = service.GetRequiredService<AbstractValidator<string>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<string>));
             _dtoValidator = service.GetRequiredService<AbstractValidator<AssetDto>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<AssetDto>));
             _stockDtoValidator = service.GetRequiredService<AbstractValidator<AssetStockDto>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<AssetStockDto>));
+            _homeDtoValidator = service.GetRequiredService<AbstractValidator<AssetHomeDto>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<AssetHomeDto>));
             _snapshotValidator = service.GetRequiredService<AbstractValidator<AssetSnapshotDto>>() ?? throw new ArgumentNullException(nameof(AbstractValidator<AssetSnapshotDto>));
         }
 
@@ -199,7 +201,7 @@ namespace aiof.asset.tests
 
         [Theory]
         [MemberData(nameof(Helper.ValidShares), MemberType = typeof(Helper))]
-        public async Task AssetStockDto_Add_Validation_Shares_IsValid(double shares)
+        public async Task AssetStockDto_Add_Validation_Shares_IsValid(decimal shares)
         {
             var dto = Helper.RandomAssetStockDto();
 
@@ -209,7 +211,7 @@ namespace aiof.asset.tests
         }
         [Theory]
         [MemberData(nameof(Helper.InvalidShares), MemberType = typeof(Helper))]
-        public async Task AssetStockDto_Add_Validation_Shares_IsInvalid(double shares)
+        public async Task AssetStockDto_Add_Validation_Shares_IsInvalid(decimal shares)
         {
             var dto = Helper.RandomAssetStockDto();
 
@@ -220,7 +222,7 @@ namespace aiof.asset.tests
 
         [Theory]
         [MemberData(nameof(Helper.ValidExpenseRatios), MemberType = typeof(Helper))]
-        public async Task AssetStockDto_Add_Validation_ExpenseRatio_IsValid(double expenseRatio)
+        public async Task AssetStockDto_Add_Validation_ExpenseRatio_IsValid(decimal expenseRatio)
         {
             var dto = Helper.RandomAssetStockDto();
 
@@ -230,7 +232,7 @@ namespace aiof.asset.tests
         }
         [Theory]
         [MemberData(nameof(Helper.InvalidExpenseRatios), MemberType = typeof(Helper))]
-        public async Task AssetStockDto_Add_Validation_ExpenseRatio_IsInvalid(double expenseRatio)
+        public async Task AssetStockDto_Add_Validation_ExpenseRatio_IsInvalid(decimal expenseRatio)
         {
             var dto = Helper.RandomAssetStockDto();
 
@@ -241,7 +243,7 @@ namespace aiof.asset.tests
 
         [Theory]
         [MemberData(nameof(Helper.ValidExpenseRatios), MemberType = typeof(Helper))]
-        public async Task AssetStockDto_Add_Validation_DividendYield_IsValid(double dividendYield)
+        public async Task AssetStockDto_Add_Validation_DividendYield_IsValid(decimal dividendYield)
         {
             var dto = Helper.RandomAssetStockDto();
 
@@ -251,7 +253,7 @@ namespace aiof.asset.tests
         }
         [Theory]
         [MemberData(nameof(Helper.InvalidExpenseRatios), MemberType = typeof(Helper))]
-        public async Task AssetStockDto_Add_Validation_DividendYield_IsInvalid(double dividendYield)
+        public async Task AssetStockDto_Add_Validation_DividendYield_IsInvalid(decimal dividendYield)
         {
             var dto = Helper.RandomAssetStockDto();
 
@@ -286,6 +288,39 @@ namespace aiof.asset.tests
             };
 
             Assert.False((await _stockDtoValidator.ValidateUpdateStockAsync(dto)).IsValid);
+        }
+        #endregion
+
+        #region AssetHomeDto
+        [Theory]
+        [MemberData(nameof(Helper.ValidNames), MemberType = typeof(Helper))]
+        public async Task AssetHomeDto_Add_Validation_Name_IsValid(string name)
+        {
+            var dto = Helper.RandomAssetHomeDto();
+
+            dto.Name = name;
+
+            Assert.True((await _homeDtoValidator.ValidateAddHomeAsync(dto)).IsValid);
+            Assert.NotNull(dto.HomeType);
+            Assert.True(dto.LoanValue > CommonValidator.MinimumValue);
+            Assert.True(dto.MonthlyMortgage > CommonValidator.MinimumValue);
+            Assert.True(dto.MortgageRate > CommonValidator.MinimumPercentValue);
+            Assert.True(dto.DownPayment > CommonValidator.MinimumValue);
+            Assert.True(dto.AnnualInsurance > CommonValidator.MinimumValue);
+            Assert.True(dto.AnnualPropertyTax > CommonValidator.MinimumPercentValue);
+            Assert.True(dto.ClosingCosts > CommonValidator.MinimumValue);
+            Assert.False(dto.IsRefinanced);
+        }
+
+        [Theory]
+        [MemberData(nameof(Helper.InvalidNames), MemberType = typeof(Helper))]
+        public async Task AssetHomeDto_Add_Validation_Name_IsInvalid(string name)
+        {
+            var dto = Helper.RandomAssetHomeDto();
+
+            dto.Name = name;
+
+            Assert.False((await _homeDtoValidator.ValidateAddHomeAsync(dto)).IsValid);
         }
         #endregion
 
